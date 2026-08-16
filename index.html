@@ -252,24 +252,135 @@
     opacity:.65;
   }
   .score-edit-btn:hover{opacity:1}
-  .score-row-dual .score-dual-col{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
-  .score-dual-sub{display:flex;align-items:center;gap:8px}
-  .score-dual-side{
+
+  /* ---- sub-metrics panel ---- */
+  .submetrics-panel{
+    margin-top:10px;
+    padding:10px 4px 2px 14px;
+    border-top:1px dashed var(--line);
+    border-left:2px solid var(--line);
+    margin-left:2px;
+  }
+  .submetric{margin-bottom:14px}
+  .submetric:last-of-type{margin-bottom:8px}
+  .submetric-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:5px;
+  }
+  .submetric-label{
+    font-family:'Inter', sans-serif;
+    font-size:12px;
+    font-weight:600;
+    color:var(--chalk);
+  }
+  .submetric-edit-btn{
+    flex:0 0 auto;
+    background:none;
+    border:none;
+    font-size:12px;
+    line-height:1;
+    cursor:pointer;
+    padding:3px;
+    opacity:.6;
+  }
+  .submetric-edit-btn:hover{opacity:1}
+  .key-metric-badge{
+    display:inline-block;
+    background:var(--plate-blue);
+    color:#fff;
     font-family:'DM Mono', monospace;
-    font-size:10px;
+    font-size:9px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    padding:2px 6px;
+    border-radius:3px;
+    vertical-align:middle;
+  }
+  .priority-badge{
+    display:inline-block;
+    background:var(--plate-red);
+    color:#fff;
+    font-family:'DM Mono', monospace;
+    font-size:8.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    padding:1px 5px;
+    border-radius:3px;
+    vertical-align:middle;
+  }
+  .submetric-dual{display:flex;gap:10px}
+  .submetric-side{flex:1;display:flex;align-items:center;gap:6px;min-width:0}
+  .submetric-side-label{
+    font-family:'DM Mono', monospace;
+    font-size:9.5px;
     font-weight:700;
     color:var(--dim);
-    width:12px;
     flex:0 0 auto;
+    white-space:nowrap;
   }
-  .score-pct-sm{
+  .submetric-single{display:flex;align-items:center;gap:8px}
+  .submetric-bar-track{
+    display:block;
+    flex:1;
+    height:8px;
+    background:#e5e7eb;
+    border:1px solid rgba(0,0,0,0.1);
+    border-radius:4px;
+    overflow:hidden;
+    min-width:0;
+  }
+  .submetric-bar-fill{display:block;height:100%;transition:width .3s ease}
+  .submetric-pct{
+    flex:0 0 auto;
+    font-family:'DM Mono', monospace;
+    font-size:10.5px;
+    font-weight:700;
+    color:var(--dim);
+    min-width:30px;
+    text-align:right;
+  }
+  .submetric-status-row{display:flex;gap:14px;margin-top:3px}
+  .submetric-status{
+    font-family:'DM Mono', monospace;
+    font-size:9px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  .submetric-progress{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
+    font-family:'DM Mono', monospace;
+    font-size:10px;
+    color:var(--dim);
+    margin-top:3px;
+  }
+  .submetric-progress .up{color:var(--plate-green);font-weight:700}
+  .submetric-progress .down{color:var(--plate-red);font-weight:700}
+  .submetric-progress-side{font-weight:700;color:var(--chalk)}
+  .submetric-spark-wrap{display:inline-flex;width:56px;height:16px}
+  .submetric-spark-wrap .score-spark{width:56px;height:16px}
+  .view-exercises-btn{
+    display:block;
+    width:100%;
+    background:var(--iron-raised);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:9px;
+    margin-top:6px;
     font-family:'DM Mono', monospace;
     font-size:11px;
     font-weight:700;
-    color:var(--dim);
-    min-width:34px;
-    text-align:right;
-    flex:0 0 auto;
+    color:var(--chalk);
+    cursor:pointer;
+    text-align:center;
   }
 
   /* ---- score editor ---- */
@@ -724,17 +835,32 @@ const MODS = [
   "⬅️ <b>Left side tighter:</b> extra time left side on pigeon, figure-four, hamstring"
 ];
 
-const SCORE_DEFS = [
-  {key:"hipExtRotation", label:"Hip ext. rotation", baseline:0, target:50, timeline:"6 months",
+const CATEGORY_DEFS = [
+  {key:"hips", label:"Hips", overallBaseline:39, target:50, timeline:"6 months",
+    subMetrics:[
+      {key:"hips_extRotation", label:"External Rotation", dual:true, baselineLeft:0, baselineRight:0},
+      {key:"hips_flexion", label:"Flexion", dual:true, baselineLeft:100, baselineRight:100},
+      {key:"hips_abduction", label:"Abduction", dual:false, baseline:75}
+    ],
+    subNote:"External rotation is your most critical restriction. It affects every lower body movement pattern.",
+    mappingNote:null,
     exercises:[
       {name:"Supine Butterfly", session:"Daily Morning, Evening, all Legs pre/post", why:"Most direct passive opener for external rotation at 0% restriction — highest priority exercise"},
       {name:"Elevated Pigeon", session:"Daily Post, Evening, all Legs post", why:"Targets deep external rotators and piriformis directly — do for 3+ min each side"},
       {name:"90/90 Floor Stretch", session:"Daily Morning extended, Evening", why:"Trains hip to hold external rotation actively — use yoga block on highest setting"},
       {name:"Figure-Four Stretch", session:"Desk Break, Legs pre", why:"Accessible external rotation opener — do every desk break without fail"},
       {name:"Clamshells", session:"Daily Pre extended, Legs A pre extended", why:"Strengthens glute medius in external rotation — active control not just passive length"},
-      {name:"Piriformis Prep (ball + gun)", session:"Legs B pre, before bridges", why:"Releases the primary external rotator that's cramping — must do before loading"}
+      {name:"Piriformis Prep (ball + gun)", session:"Legs B pre, before bridges", why:"Releases the primary external rotator that's cramping — must do before loading"},
+      {name:"Hip Flexor Stretch 90/90", session:"Daily Morning, Legs pre", why:"Maintain current flexion range — don't neglect it"},
+      {name:"Couch Stretch", session:"Daily Post, Legs post extended", why:"Prevents hip flexor shortening from desk sitting"},
+      {name:"Child's Pose", session:"Daily Post extended", why:"General hip and lower back maintenance"}
     ]},
-  {key:"postchain", label:"Postchain", baseline:14, target:50, timeline:"6 months",
+  {key:"postchain", label:"Postchain", overallBaseline:14, target:50, timeline:"6 months",
+    subMetrics:[
+      {key:"postchain_side", label:null, dual:true, baselineLeft:11, baselineRight:17}
+    ],
+    subNote:"Left side significantly more restricted — prioritize left side on all posterior chain work.",
+    mappingNote:null,
     exercises:[
       {name:"Standing Hamstring Stretch", session:"All sessions", why:"Open-hip version only — seated version was irritating sciatic nerve not stretching hamstring"},
       {name:"Elevated Pigeon", session:"Daily Post, Evening, Legs post", why:"Posterior hip restriction is a major component of your postchain score"},
@@ -743,42 +869,56 @@ const SCORE_DEFS = [
       {name:"Legs Up the Wall", session:"All post extended, Evening", why:"Passive posterior chain decompression — longer holds are better here"},
       {name:"Dead Bugs", session:"Daily Pre extended, Evening extended", why:"Core strength supports posterior chain — weak core forces posterior chain to compensate"}
     ]},
-  {key:"hipFlexion", label:"Hip flexion", baseline:100, target:null, timeline:null,
-    note:"Your strongest area. Maintain with consistent work — don't let desk sitting erode it.",
+  {key:"overhead", label:"Overhead", overallBaseline:54, target:75, timeline:"4 months",
+    subMetrics:[
+      {key:"overhead_flexion", label:"Flexion", dual:true, baselineLeft:57, baselineRight:57},
+      {key:"overhead_squat", label:"Overhead Squat", dual:false, baseline:42, keyMetric:true}
+    ],
+    subNote:"Overhead squat at 42% directly explains your front squat forward lean and OHP compensation pattern. Primary target.",
+    mappingNote:"Overhead squat at 42% is the key metric here — it combines overhead mobility with hip and thoracic demands simultaneously.",
     exercises:[
-      {name:"Hip Flexor Stretch 90/90", session:"Daily Morning, Legs pre", why:"Maintain current range — don't neglect it"},
-      {name:"Couch Stretch", session:"Daily Post, Legs post extended", why:"Prevents hip flexor shortening from desk sitting"},
-      {name:"Child's Pose", session:"Daily Post extended", why:"General hip and lower back maintenance"}
+      {name:"Overhead Shoulder Stretch", session:"All Push pre", why:"Most direct overhead mobility stretch — highest priority before pressing."},
+      {name:"Pec Minor Stretch", session:"Push pre extended", why:"Often the primary limiter of overhead range — tight pec minor blocks full elevation."},
+      {name:"Wall-Supported ER Stretch", session:"All Push/Pull", why:"External rotation is required for true overhead position — your left side especially."},
+      {name:"Thoracic Extension (foam roller)", session:"Push post", why:"Overhead range requires thoracic extension — without it you compensate through lower back."},
+      {name:"Supine Butterfly", session:"Daily, all Legs", why:"Hip external rotation is a component of overhead squat score — improving it directly raises overhead squat percentage."},
+      {name:"Band Pull-Apart", session:"All Push/Pull pre", why:"Rear delt activation stabilizes the shoulder for overhead position."}
     ]},
-  {key:"thorax", label:"Thorax", baseline:51, target:75, timeline:"4 months",
-    note:"Thorax at 51% contributes to your squat forward lean and limits pressing mechanics.",
+  {key:"thorax", label:"Thorax", overallBaseline:51, target:75, timeline:"4 months",
+    subMetrics:[
+      {key:"thorax_rotation", label:"Rotation", dual:true, baselineLeft:48, baselineRight:54}
+    ],
+    subNote:"Asymmetry explains why rotation feels different each side during cat-cow and World's Greatest Stretch.",
+    mappingNote:"Thorax at 51% contributes to your squat forward lean and limits pressing mechanics.",
     exercises:[
       {name:"Thoracic Extension (foam roller)", session:"All Push post, Pull B pre extended", why:"Most direct thoracic mobility exercise — extension enables rotation"},
       {name:"Cat-Cow", session:"Daily Post", why:"Segmental spinal mobility — thoracic rotation improves with consistent daily work"},
       {name:"Child's Pose", session:"Daily Post extended", why:"Thoracic decompression as a side effect"},
       {name:"World's Greatest Stretch", session:"Desk Break extended", why:"Rotation through thoracic spine under load — most functional thoracic exercise"}
     ]},
-  {key:"overhead", label:"Overhead", baseline:54, target:75, timeline:"4 months",
-    note:"Overhead at 54% directly explains your squat forward lean and OHP compensation pattern.",
+  {key:"shoulders", label:"Shoulders", overallBaseline:67, target:null, timeline:null,
+    subMetrics:[
+      {key:"shoulders_intRotation", label:"Internal Rotation", dual:true, baselineLeft:73, baselineRight:67},
+      {key:"shoulders_extRotation", label:"External Rotation", dual:true, baselineLeft:41, baselineRight:87, priorityLeft:true}
+    ],
+    subNote:"Left shoulder pattern: high internal rotation (73%) + low external rotation (41%) = classic posterior capsule tightness. This is exactly what the wall ER stretch and sleeper stretch are targeting.",
+    mappingNote:"Left shoulder pattern: posterior capsule tightness. High internal rotation (73%) combined with low external rotation (41%) is a classic imbalance under pressing and pulling volume.",
     exercises:[
-      {name:"Overhead Shoulder Stretch", session:"All Push pre", why:"Most direct overhead mobility stretch — highest priority before pressing"},
-      {name:"Pec Minor Stretch", session:"Push pre extended", why:"Tight pec minor is often the primary limiter of overhead range — releases impingement"},
-      {name:"Wall-Supported ER Stretch", session:"All Push/Pull sessions", why:"External rotation is required for true overhead position — your left side especially"},
-      {name:"Thoracic Extension", session:"Push pre extended, Pull B pre", why:"Overhead range requires thoracic extension — compensating with lower back instead"},
-      {name:"Band Pull-Apart", session:"All Push/Pull pre", why:"Rear delt activation balances shoulder for overhead movement"}
+      {name:"Wall-Supported ER Stretch", session:"All Push/Pull sessions, Evening extended, Legs B post extended", why:"Primary fix for left ER deficit — left side always 30s extra. Most important shoulder exercise in your protocol."},
+      {name:"Sleeper Stretch", session:"Push/Pull post extended", why:"Targets posterior capsule directly — the root cause of the L/R ER asymmetry. Floor-based, do when time allows after heavy sessions."},
+      {name:"Pec Minor Stretch", session:"Push pre extended", why:"Tight pec minor contributes to internal rotation dominance — releasing it helps restore ER range."},
+      {name:"Band Pull-Apart", session:"All Push/Pull pre", why:"Rear delt activation balances the internal/external rotation ratio."},
+      {name:"Cross-Body Shoulder Stretch", session:"Push post", why:"Posterior shoulder release after pressing volume — reduces internal rotation dominance."}
     ]},
-  {key:"ankles", label:"Ankles", baseline:100, target:null, timeline:null,
-    note:"Your strongest area. Maintain after calf raise volume — don't let training shorten it.",
+  {key:"ankles", label:"Ankles", overallBaseline:100, target:null, timeline:null,
+    subMetrics:[
+      {key:"ankles_side", label:null, dual:true, baselineLeft:100, baselineRight:100}
+    ],
+    subNote:"Your strongest area. Maintain after calf raise volume.",
+    mappingNote:"Your strongest area. Maintain after calf raise volume — don't let training shorten it.",
     exercises:[
       {name:"Calf Stretch", session:"All Legs post", why:"Maintain current range after calf raise volume"},
       {name:"Ankle Circles", session:"Optional add to morning warmup", why:"Joint mobility maintenance"}
-    ]},
-  {key:"shoulderER", label:"Shoulder ext. rotation", dual:true, baselineLeft:41, baselineRight:87, target:null, timeline:null,
-    note:"Left at 41% vs right at 87% is a significant asymmetry. Consistent daily ER work on left side is essential for long-term shoulder health under pressing and pulling volume.",
-    exercises:[
-      {name:"Wall-Supported ER Stretch", session:"All Push/Pull sessions, Evening extended, Legs B post extended", why:"Primary exercise — left side always 30s extra. Do every single session."},
-      {name:"Sleeper Stretch", session:"Push/Pull post extended", why:"Reaches posterior capsule deeper than wall version — floor-based, do when time allows"},
-      {name:"Band External Rotation", session:"Optional add to Push pre extended", why:"Strengthens external rotators actively — complements the stretching work"}
     ]}
 ];
 
@@ -790,16 +930,27 @@ function saveJSON(key, val){
   try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){}
 }
 
-const SCORE_DEFAULTS = {hipExtRotation:0, postchain:14, hipFlexion:100, thorax:51, overhead:54, ankles:100, shoulderERLeft:41, shoulderERRight:87};
+const SCORE_DEFAULTS = {};
+CATEGORY_DEFS.forEach(cat => {
+  SCORE_DEFAULTS[cat.key + "_overall"] = cat.overallBaseline;
+  cat.subMetrics.forEach(sub => {
+    if (sub.dual) {
+      SCORE_DEFAULTS[sub.key + "_L"] = sub.baselineLeft;
+      SCORE_DEFAULTS[sub.key + "_R"] = sub.baselineRight;
+    } else {
+      SCORE_DEFAULTS[sub.key] = sub.baseline;
+    }
+  });
+});
 
-let scoreValues = loadJSON("mt-scores", Object.assign({}, SCORE_DEFAULTS));
+let scoreValues = Object.assign({}, SCORE_DEFAULTS, loadJSON("mt-scores", {}));
 let scoreHistory = loadJSON("mt-scores-history", {});
 let scoreNotes = loadJSON("mt-score-notes", {});
 let scoresUpdatedAt = localStorage.getItem("mt-scores-updated") || null;
 let streakData = loadJSON("mt-streak", {current:0, longest:0, lastDate:null});
 let lastTrainingTab = localStorage.getItem("mt-last-training-tab") || null;
 let sessionOverride = localStorage.getItem("mt-last-session-override") || null;
-let scoresUI = {editingKey:null, expandedKey:null, notesExpandedKey:null, pickerOpen:false};
+let scoresUI = {editingKey:null, expandedKey:null, mappingKey:null, notesExpandedKey:null, pickerOpen:false};
 
 (function ensureBaselineHistory(){
   let changed = false;
@@ -1709,16 +1860,10 @@ function modsBannerHTML(){
 
 /* ---- scores engine ---- */
 
-function scoreBarColor(pct){
-  if (pct <= 25) return "#ef4444";
-  if (pct <= 50) return "#f97316";
-  if (pct <= 75) return "#eab308";
-  return "#22c55e";
-}
-
 function scoreStatus(pct){
-  if (pct <= 50) return {color:"#ef4444", label:"Critical"};
-  if (pct <= 75) return {color:"#f97316", label:"Needs Work"};
+  if (pct <= 25) return {color:"#ef4444", label:"Critical"};
+  if (pct <= 50) return {color:"#f97316", label:"Needs Work"};
+  if (pct <= 75) return {color:"#eab308", label:"Moderate"};
   return {color:"#22c55e", label:"Good"};
 }
 
@@ -1743,12 +1888,13 @@ function formatNoteDate(iso){
   return d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
 }
 
-function sparklineHTML(history){
+function sparklineHTML(history, w, h){
+  w = w || 160; h = h || 32;
   if (!history || history.length < 2) return "";
-  const vals = history.map(h => h.v);
+  const vals = history.map(entry => entry.v);
   const min = Math.min(...vals), max = Math.max(...vals);
   const range = (max - min) || 1;
-  const w = 160, h = 32, stepX = vals.length > 1 ? w / (vals.length - 1) : 0;
+  const stepX = vals.length > 1 ? w / (vals.length - 1) : 0;
   const points = vals.map((v,i) => `${(i*stepX).toFixed(1)},${(h - ((v-min)/range)*h).toFixed(1)}`).join(" ");
   return `<svg class="score-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
     <polyline points="${points}" fill="none" stroke="var(--plate-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
@@ -1809,46 +1955,6 @@ function scoreEditorHTML(key, pct){
   </div>`;
 }
 
-function scoreDetailHTML(def, pct){
-  const history = scoreHistory[def.key] || [];
-  const baseline = history.length ? history[0].v : def.baseline;
-  const change = pct - baseline;
-  const rows = [
-    {label:"Starting", value:`${baseline}%`},
-    {label:"Current", value:`${pct}%`},
-    {label:"Change", value:changeStr(change), cls: change>0?"up":change<0?"down":""}
-  ];
-  if (def.target != null) rows.push({label:"Target", value:`${def.target}% in ${def.timeline}`});
-  return `<div class="score-detail">
-    <div class="score-detail-title">Exercises targeting ${esc(def.label)}</div>
-    <div class="score-detail-sub">In order of benefit for your restrictions</div>
-    ${exerciseListHTML(def.exercises)}
-    ${def.note ? `<div class="score-note-callout">${esc(def.note)}</div>` : ""}
-    ${progressBlockHTML(rows, history)}
-    ${notesSectionHTML(def.key)}
-  </div>`;
-}
-
-function scoreRowHTML(def){
-  const pct = scoreValues[def.key] != null ? scoreValues[def.key] : def.baseline;
-  const status = scoreStatus(pct);
-  const isEditing = scoresUI.editingKey === def.key;
-  const isExpanded = scoresUI.expandedKey === def.key;
-  return `<div class="score-item">
-    <div class="score-row" data-action="toggleScoreDetail" data-key="${def.key}">
-      <span class="score-label">${esc(def.label)}</span>
-      <div class="score-bar-col">
-        <span class="score-bar-track"><span class="score-bar-fill" style="width:${pct}%;background:${scoreBarColor(pct)}"></span></span>
-        <span class="score-status" style="color:${status.color}">${status.label}</span>
-      </div>
-      <span class="score-pct">${pct}%</span>
-      <button type="button" class="score-edit-btn" data-action="editScore" data-key="${def.key}" aria-label="Edit ${esc(def.label)}">✏️</button>
-    </div>
-    ${isEditing ? scoreEditorHTML(def.key, pct) : ""}
-    ${isExpanded ? scoreDetailHTML(def, pct) : ""}
-  </div>`;
-}
-
 function scoreEditorDualHTML(key, left, right){
   return `<div class="score-editor" data-key="${key}">
     <div class="score-editor-side-label">Left</div>
@@ -1864,52 +1970,117 @@ function scoreEditorDualHTML(key, left, right){
   </div>`;
 }
 
-function scoreDetailDualHTML(def, left, right){
-  const histL = scoreHistory.shoulderERLeft || [];
-  const histR = scoreHistory.shoulderERRight || [];
-  const baseL = histL.length ? histL[0].v : def.baselineLeft;
-  const baseR = histR.length ? histR[0].v : def.baselineRight;
-  const rows = [
-    {label:"Starting (L / R)", value:`${baseL}% / ${baseR}%`},
-    {label:"Current (L / R)", value:`${left}% / ${right}%`},
-    {label:"Change — Left", value:changeStr(left-baseL), cls: (left-baseL)>0?"up":(left-baseL)<0?"down":""},
-    {label:"Change — Right", value:changeStr(right-baseR), cls: (right-baseR)>0?"up":(right-baseR)<0?"down":""}
-  ];
-  const hist = histL.length >= histR.length ? histL : histR;
-  return `<div class="score-detail">
-    <div class="score-detail-title">Exercises targeting ${esc(def.label)}</div>
-    <div class="score-detail-sub">In order of benefit for your restrictions</div>
-    ${exerciseListHTML(def.exercises)}
-    ${def.note ? `<div class="score-note-callout">${esc(def.note)}</div>` : ""}
-    ${progressBlockHTML(rows, hist)}
-    ${notesSectionHTML(def.key)}
+function submetricProgressHTML(storageKey, sideLabel, current, baselineFallback){
+  const history = scoreHistory[storageKey] || [];
+  const baseline = history.length ? history[0].v : baselineFallback;
+  const change = current - baseline;
+  const spark = sparklineHTML(history, 56, 16);
+  return `<div class="submetric-progress">
+    ${sideLabel ? `<span class="submetric-progress-side">${esc(sideLabel)}</span>` : ""}
+    <span>Start ${baseline}% → Now ${current}%</span>
+    <span class="${change>0?"up":change<0?"down":""}">${changeStr(change)}</span>
+    ${spark ? `<span class="submetric-spark-wrap">${spark}</span>` : ""}
   </div>`;
 }
 
-function scoreRowDualHTML(def){
-  const left = scoreValues.shoulderERLeft != null ? scoreValues.shoulderERLeft : def.baselineLeft;
-  const right = scoreValues.shoulderERRight != null ? scoreValues.shoulderERRight : def.baselineRight;
-  const isEditing = scoresUI.editingKey === def.key;
-  const isExpanded = scoresUI.expandedKey === def.key;
-  return `<div class="score-item">
-    <div class="score-row score-row-dual" data-action="toggleScoreDetail" data-key="${def.key}">
-      <span class="score-label">${esc(def.label)}</span>
-      <div class="score-dual-col">
-        <div class="score-dual-sub">
-          <span class="score-dual-side">L</span>
-          <span class="score-bar-track" style="flex:1"><span class="score-bar-fill" style="width:${left}%;background:${scoreBarColor(left)}"></span></span>
-          <span class="score-pct-sm">${left}%</span>
+function subMetricRowHTML(sub){
+  const isEditing = scoresUI.editingKey === sub.key;
+  if (sub.dual) {
+    const left = scoreValues[sub.key+"_L"] != null ? scoreValues[sub.key+"_L"] : sub.baselineLeft;
+    const right = scoreValues[sub.key+"_R"] != null ? scoreValues[sub.key+"_R"] : sub.baselineRight;
+    const sL = scoreStatus(left), sR = scoreStatus(right);
+    return `<div class="submetric">
+      <div class="submetric-head">
+        ${sub.label ? `<span class="submetric-label">${esc(sub.label)}</span>` : `<span class="submetric-label">&nbsp;</span>`}
+        <button type="button" class="submetric-edit-btn" data-action="editScore" data-key="${sub.key}" aria-label="Edit ${esc(sub.label||"")}">✏️</button>
+      </div>
+      <div class="submetric-dual">
+        <div class="submetric-side">
+          <span class="submetric-side-label">L${sub.priorityLeft ? ` <span class="priority-badge">Priority</span>` : ""}</span>
+          <span class="submetric-bar-track"><span class="submetric-bar-fill" style="width:${left}%;background:${sL.color}"></span></span>
+          <span class="submetric-pct">${left}%</span>
         </div>
-        <div class="score-dual-sub">
-          <span class="score-dual-side">R</span>
-          <span class="score-bar-track" style="flex:1"><span class="score-bar-fill" style="width:${right}%;background:${scoreBarColor(right)}"></span></span>
-          <span class="score-pct-sm">${right}%</span>
+        <div class="submetric-side">
+          <span class="submetric-side-label">R</span>
+          <span class="submetric-bar-track"><span class="submetric-bar-fill" style="width:${right}%;background:${sR.color}"></span></span>
+          <span class="submetric-pct">${right}%</span>
         </div>
       </div>
-      <button type="button" class="score-edit-btn" data-action="editScore" data-key="${def.key}" aria-label="Edit ${esc(def.label)}">✏️</button>
+      <div class="submetric-status-row">
+        <span class="submetric-status" style="color:${sL.color}">L: ${sL.label}</span>
+        <span class="submetric-status" style="color:${sR.color}">R: ${sR.label}</span>
+      </div>
+      ${submetricProgressHTML(sub.key+"_L", "L", left, sub.baselineLeft)}
+      ${submetricProgressHTML(sub.key+"_R", "R", right, sub.baselineRight)}
+      ${isEditing ? scoreEditorDualHTML(sub.key, left, right) : ""}
+    </div>`;
+  }
+  const pct = scoreValues[sub.key] != null ? scoreValues[sub.key] : sub.baseline;
+  const status = scoreStatus(pct);
+  return `<div class="submetric">
+    <div class="submetric-head">
+      <span class="submetric-label">${esc(sub.label)}${sub.keyMetric ? ` <span class="key-metric-badge">Key metric</span>` : ""}</span>
+      <button type="button" class="submetric-edit-btn" data-action="editScore" data-key="${sub.key}" aria-label="Edit ${esc(sub.label)}">✏️</button>
     </div>
-    ${isEditing ? scoreEditorDualHTML(def.key, left, right) : ""}
-    ${isExpanded ? scoreDetailDualHTML(def, left, right) : ""}
+    <div class="submetric-single">
+      <span class="submetric-bar-track" style="flex:1"><span class="submetric-bar-fill" style="width:${pct}%;background:${status.color}"></span></span>
+      <span class="submetric-pct">${pct}%</span>
+    </div>
+    <div class="submetric-status" style="color:${status.color}">${status.label}</div>
+    ${submetricProgressHTML(sub.key, null, pct, sub.baseline)}
+    ${isEditing ? scoreEditorHTML(sub.key, pct) : ""}
+  </div>`;
+}
+
+function categoryMappingHTML(cat, overallPct){
+  const overallKey = cat.key + "_overall";
+  const history = scoreHistory[overallKey] || [];
+  const baseline = history.length ? history[0].v : cat.overallBaseline;
+  const change = overallPct - baseline;
+  const rows = [
+    {label:"Starting", value:`${baseline}%`},
+    {label:"Current", value:`${overallPct}%`},
+    {label:"Change", value:changeStr(change), cls: change>0?"up":change<0?"down":""}
+  ];
+  if (cat.target != null) rows.push({label:"Target", value:`${cat.target}% in ${cat.timeline}`});
+  return `<div class="score-detail">
+    <div class="score-detail-title">Exercises targeting ${esc(cat.label)}</div>
+    <div class="score-detail-sub">In order of benefit for your restrictions</div>
+    ${exerciseListHTML(cat.exercises)}
+    ${cat.mappingNote ? `<div class="score-note-callout">${esc(cat.mappingNote)}</div>` : ""}
+    ${progressBlockHTML(rows, history)}
+    ${notesSectionHTML(cat.key)}
+  </div>`;
+}
+
+function subMetricsPanelHTML(cat, overallPct){
+  const mappingOpen = scoresUI.mappingKey === cat.key;
+  return `<div class="submetrics-panel">
+    ${cat.subMetrics.map(subMetricRowHTML).join("")}
+    ${cat.subNote ? `<div class="score-note-callout">${esc(cat.subNote)}</div>` : ""}
+    <button type="button" class="view-exercises-btn" data-action="showMapping" data-key="${cat.key}">${mappingOpen ? "Hide exercises" : `View exercises targeting ${esc(cat.label)} →`}</button>
+    ${mappingOpen ? categoryMappingHTML(cat, overallPct) : ""}
+  </div>`;
+}
+
+function categoryRowHTML(cat){
+  const overallKey = cat.key + "_overall";
+  const pct = scoreValues[overallKey] != null ? scoreValues[overallKey] : cat.overallBaseline;
+  const status = scoreStatus(pct);
+  const isEditing = scoresUI.editingKey === overallKey;
+  const isExpanded = scoresUI.expandedKey === cat.key;
+  return `<div class="score-item">
+    <div class="score-row" data-action="toggleCategoryDetail" data-key="${cat.key}">
+      <span class="score-label">${esc(cat.label)}</span>
+      <div class="score-bar-col">
+        <span class="score-bar-track"><span class="score-bar-fill" style="width:${pct}%;background:${status.color}"></span></span>
+        <span class="score-status" style="color:${status.color}">${status.label}</span>
+      </div>
+      <span class="score-pct">${pct}%</span>
+      <button type="button" class="score-edit-btn" data-action="editScore" data-key="${overallKey}" aria-label="Edit ${esc(cat.label)}">✏️</button>
+    </div>
+    ${isEditing ? scoreEditorHTML(overallKey, pct) : ""}
+    ${isExpanded ? subMetricsPanelHTML(cat, pct) : ""}
   </div>`;
 }
 
@@ -1919,7 +2090,7 @@ function scoresCardHTML(){
       <h2>Mobility Scores</h2>
       <div class="scores-updated">${esc(formatUpdatedAt(scoresUpdatedAt))}</div>
     </div>
-    ${SCORE_DEFS.map(def => def.dual ? scoreRowDualHTML(def) : scoreRowHTML(def)).join("")}
+    ${CATEGORY_DEFS.map(categoryRowHTML).join("")}
   </div>`;
 }
 
@@ -1991,7 +2162,7 @@ function refreshReminderBanner(){
 
 function editScore(key){
   scoresUI.editingKey = key;
-  scoresUI.expandedKey = null;
+  if (key.endsWith("_overall")) scoresUI.expandedKey = null;
   refreshScoresCard();
 }
 function cancelEditScore(){
@@ -2023,20 +2194,33 @@ function saveScoreDual(key){
   if (!editor) return;
   const leftEl = editor.querySelector('.score-slider[data-side="left"]');
   const rightEl = editor.querySelector('.score-slider[data-side="right"]');
-  const left = leftEl ? parseInt(leftEl.value, 10) : scoreValues.shoulderERLeft;
-  const right = rightEl ? parseInt(rightEl.value, 10) : scoreValues.shoulderERRight;
-  scoreValues.shoulderERLeft = left;
-  scoreValues.shoulderERRight = right;
+  const left = leftEl ? parseInt(leftEl.value, 10) : (scoreValues[key+"_L"] != null ? scoreValues[key+"_L"] : 0);
+  const right = rightEl ? parseInt(rightEl.value, 10) : (scoreValues[key+"_R"] != null ? scoreValues[key+"_R"] : 0);
+  scoreValues[key+"_L"] = left;
+  scoreValues[key+"_R"] = right;
   saveJSON("mt-scores", scoreValues);
-  pushHistory("shoulderERLeft", left);
-  pushHistory("shoulderERRight", right);
+  pushHistory(key+"_L", left);
+  pushHistory(key+"_R", right);
   markScoresUpdated();
   scoresUI.editingKey = null;
   refreshScoresCard();
 }
-function toggleScoreDetail(key){
-  scoresUI.expandedKey = scoresUI.expandedKey === key ? null : key;
+function toggleCategoryDetail(key){
+  if (scoresUI.expandedKey !== key) {
+    scoresUI.expandedKey = key;
+    scoresUI.mappingKey = null;
+  } else if (scoresUI.mappingKey !== key) {
+    scoresUI.mappingKey = key;
+  } else {
+    scoresUI.expandedKey = null;
+    scoresUI.mappingKey = null;
+  }
   scoresUI.editingKey = null;
+  refreshScoresCard();
+}
+function showMapping(key){
+  scoresUI.expandedKey = key;
+  scoresUI.mappingKey = scoresUI.mappingKey === key ? null : key;
   refreshScoresCard();
 }
 function saveNote(key){
@@ -2622,7 +2806,8 @@ document.addEventListener("click", e => {
     if (action === "pause") { togglePause(); return; }
     if (action === "cancel") { cancelTimer(); return; }
     if (action === "tapRep") { decrementRep(); return; }
-    if (action === "toggleScoreDetail") { toggleScoreDetail(actionEl.dataset.key); return; }
+    if (action === "toggleCategoryDetail") { toggleCategoryDetail(actionEl.dataset.key); return; }
+    if (action === "showMapping") { showMapping(actionEl.dataset.key); return; }
     if (action === "editScore") { editScore(actionEl.dataset.key); return; }
     if (action === "cancelEditScore") { cancelEditScore(); return; }
     if (action === "saveScore") { saveScore(actionEl.dataset.key); return; }
