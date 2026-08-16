@@ -424,76 +424,41 @@ const SCORES = [
 // exercise: {name, dur, feel, cues:[...], tip, critical, mod}
 
 const DAILY = {
-  note: "Training days → use Quick. Rest days → use Extended.",
+  note: "Training days: Morning → training day pre → train → training day post → Evening. Rest days: use Extended versions of all three.",
   sessions: [
     {
-      id:"pre-workout", title:"Pre-Workout", quickTime:"2–3 min", extTime:"8–10 min",
+      id:"morning", title:"Morning", quickTime:"5 min", extTime:"10 min",
       quick:[
-        {name:"90/90 Hip Flexor Stretch", dur:"60s each side",
-          feel:"Front of hip, upper thigh of back leg",
-          cues:["Tuck pelvis under","Breathe out and let hip sink","If nothing, shift back knee further behind"],
-          tip:"Keep front shin parallel to wall"},
-        {name:"Glute Bridges", dur:"15 reps, 2s hold", critical:true, mod:true,
-          feel:"Deep in both glutes — not hamstrings, not lower back",
-          cues:["Drive through heels","Squeeze hard at top 2s","If right outer hip cramps, do piriformis prep first"],
-          tip:"⚠️ Right piriformis prep before bridges: massage ball 30–60s outer right glute → massage gun 20–30s same spot → figure-four stretch 45s right side → then bridge"}
-      ],
-      extendedAdds:[
-        {name:"Dead Bugs", dur:"3×5 slow reps",
-          feel:"Deep core below navel — not hip flexors",
-          cues:["Exhale fully, press lower back flat before each rep","3s down 3s up","Lower back lifts = reset"],
-          tip:"This is activation not cardio — slow is everything"},
-        {name:"Clamshells", dur:"15 reps each side",
-          feel:"Outer glute (glute medius) — side of hip",
-          cues:["Feet and hips stacked","Only rotate as far as hip allows without pelvis tilting","2s lowering"],
-          tip:"Band makes this significantly more effective"}
-      ]
-    },
-    {
-      id:"post-workout", title:"Post-Workout / Home", quickTime:"10 min", extTime:"20–25 min",
-      quick:[
-        {name:"Pso-Rite Release", dur:"60–90s each side", critical:true,
-          feel:"Deep dull ache inside front of hip — different from surface muscle pressure",
-          cues:["One inch inside and below hip bone (ASIS)","Breathe into belly — inhale increases pressure, exhale releases","Slow knee bend and straighten on that side","Left side first, 90s — right side 60s"],
-          tip:"Pulsing sensation = near femoral artery, shift slightly outward. Sharp = support more weight through forearms."},
-        {name:"Elevated Pigeon Pose", dur:"90s each side", critical:true, mod:true,
-          feel:"Deep outer hip and glute of front leg",
-          cues:["Shin as parallel to bench as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
-          tip:"Elevated only — not floor pigeon"},
-        {name:"Couch Stretch", dur:"90s each side", mod:true,
-          feel:"Deep front of hip — deeper than a quad stretch",
-          cues:["Squeeze glute of back leg — unlocks hip flexor","Torso upright","If knee unhappy even with padding, stop"],
-          tip:"⚠️ ACL: thick padding under back knee. Non-negotiable."},
-        {name:"Standing Hamstring Stretch", dur:"60s each side", mod:true,
-          feel:"Back of thigh — pulling sensation, never sharp",
-          cues:["Open hip version (not squared off)","Flat back hinge","Left side extra 15–20s, go more gently"],
-          tip:"Left significantly tighter — treat it as priority side"},
-        {name:"Cat-Cow", dur:"10 slow reps",
-          feel:"Each spinal segment from tailbone to neck",
-          cues:["3s each direction","Cat: push ceiling with mid-back","Cow: belly first, lower back, then head"],
-          tip:"Slower than feels natural"},
-        {name:"Sciatic Nerve Floss", dur:"10 reps each side", mod:true,
-          feel:"Mild tension down back of leg — never sharp or electrical",
-          cues:["Sit upright, one leg hanging","Straighten knee while tilting chin to chest — reverse both together","2s out 2s back","Back off if sharp sensation"],
-          tip:"⚠️ Never hold. Never force. Gentle and rhythmic only."}
-      ],
-      extendedAdds:[
-        {name:"90/90 Floor Stretch", dur:"2 min each side", mod:true,
-          feel:"Outer hip back leg, inner thigh front leg",
-          cues:["Sit bones on yoga block highest setting","Both knees 90 degrees","Rotate pelvis toward front leg not spine","Lean forward only once sitting upright without rounding"],
-          tip:"🧱 Block on highest setting — don't attempt flat on floor yet"},
-        {name:"Supine Butterfly", dur:"2.5 min", critical:true,
+        {name:"Pso-Rite Release", dur:"60s each side", critical:true,
+          feel:"Deep dull ache inside front of hip — different from surface pressure",
+          cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten on that side","Left side first 60s, right side 45s"],
+          tip:"Pulsing = near femoral artery, shift outward. Sharp = support more weight through forearms."},
+        {name:"Supine Butterfly", dur:"90s", critical:true,
           feel:"Inner thighs and deep outer hips — gravity-driven opening",
-          cues:["Lie on back, knees bent, feet flat — let knees fall outward","Hands lightly on inner thighs, no pushing","After 90s try feet closer to hips","Progress to Phase 2 (small pulses) when knees reach floor"],
-          tip:"Directly targets your 0% external rotation — highest priority"},
-        {name:"Child's Pose", dur:"2.5 min",
-          feel:"Lower back expanding on inhale, hips sinking on exhale",
-          cues:["Walk hands forward","Hips sink toward heels each exhale","After 90s walk hands each side 30s for lateral lower back"],
-          tip:"Let gravity do the work"},
-        {name:"Sciatic Nerve Floss (Extended)", dur:"2×10 reps each side", mod:true,
-          feel:"Mild tension down back of leg — never sharp or electrical",
-          cues:["Same as quick version for set 1","Set 2 adds ankle dorsiflexion","2s out 2s back, gentle and rhythmic"],
-          tip:"⚠️ Never hold. Never force."}
+          cues:["Lie on back, knees bent, feet flat — let knees fall outward naturally","Hands lightly on inner thighs, no pushing","Every exhale knees drop further"],
+          tip:"Directly targets 0% external rotation — do this every single morning without exception"},
+        {name:"Glute Bridges", dur:"10 reps, 2s hold", mod:true,
+          feel:"Deep in both glutes — not hamstrings or lower back",
+          cues:["Piriformis prep first if cramping: ball 30s → gun 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
+          tip:"Wakes up glutes before the day starts — especially important before sitting at a desk"}
+      ],
+      extendedAdds:[
+        {name:"Pso-Rite Release (Extended)", dur:"90s each side", critical:true,
+          feel:"Deep dull ache inside front of hip — different from surface pressure",
+          cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten on that side","90s each side now — both sides equal time"],
+          tip:"Pulsing = near femoral artery, shift outward. Sharp = support more weight through forearms."},
+        {name:"Supine Butterfly (Extended)", dur:"2.5 min", critical:true,
+          feel:"Inner thighs and deep outer hips — gravity-driven opening",
+          cues:["After 90s try feet slightly closer to hips to change the angle","Every exhale release further","Progress marker: when knees reach floor, move to Phase 2 — small active pulses outward"],
+          tip:"Directly targets 0% external rotation — highest priority stretch in the entire program"},
+        {name:"90/90 Hip Flexor Stretch", dur:"60s each side", mod:true,
+          feel:"Front of hip and upper thigh of back leg",
+          cues:["Tuck pelvis slightly under","Breathe out and let hip sink forward","If nothing, shift back knee further behind you"],
+          tip:"🧱 Yoga block on highest setting if doing floor 90/90 afterward"},
+        {name:"Glute Bridges (Extended)", dur:"15 reps, 2s hold", mod:true,
+          feel:"Deep in both glutes — not hamstrings or lower back",
+          cues:["Piriformis prep first if cramping: ball 30s → gun 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
+          tip:"Same cues as quick version, just more reps"}
       ]
     },
     {
