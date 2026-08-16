@@ -427,7 +427,7 @@ const DAILY = {
   note: "Training days: Morning → training day pre → train → training day post → Evening. Rest days: use Extended versions of all three.",
   sessions: [
     {
-      id:"morning", title:"Morning", quickTime:"5 min", extTime:"10 min",
+      id:"morning", title:"Morning", quickTime:"5 min", extTime:"10 min", replaceOnExtended:true,
       quick:[
         {name:"Pso-Rite Release", dur:"60s each side", critical:true,
           feel:"Deep dull ache inside front of hip — different from surface pressure",
@@ -809,7 +809,8 @@ function scoresCardHTML(){
 
 function sessionCardHTML(session){
   const hasExtended = session.extendedAdds && session.extendedAdds.length;
-  return `<div class="session-card" data-session-id="${session.id}">
+  const extendedMode = session.replaceOnExtended ? "replace" : "append";
+  return `<div class="session-card" data-session-id="${session.id}" data-extended-mode="${extendedMode}">
     <div class="session-head">
       <h3>${esc(session.title)}</h3>
       <div class="toggle" role="group">
@@ -819,7 +820,7 @@ function sessionCardHTML(session){
     </div>
     ${session.note ? `<p class="session-note">${esc(session.note)}</p>` : ""}
     <div class="ex-list">
-      ${session.quick.map(exerciseHTML).join("")}
+      <div class="quick-only">${session.quick.map(exerciseHTML).join("")}</div>
       ${hasExtended ? `<div class="extended-only" hidden>${session.extendedAdds.map(exerciseHTML).join("")}</div>` : ""}
     </div>
   </div>`;
@@ -887,9 +888,14 @@ document.addEventListener("click", e => {
   const modeBtn = e.target.closest(".mode-btn");
   if (modeBtn) {
     const card = modeBtn.closest(".session-card");
+    const isExtended = modeBtn.dataset.mode === "extended";
     card.querySelectorAll(".mode-btn").forEach(b => b.classList.toggle("active", b === modeBtn));
     const extendedOnly = card.querySelector(".extended-only");
-    if (extendedOnly) extendedOnly.hidden = modeBtn.dataset.mode !== "extended";
+    if (extendedOnly) extendedOnly.hidden = !isExtended;
+    if (card.dataset.extendedMode === "replace") {
+      const quickOnly = card.querySelector(".quick-only");
+      if (quickOnly) quickOnly.hidden = isExtended;
+    }
     return;
   }
 });
