@@ -386,6 +386,84 @@
     text-align:center;
     line-height:1.6;
   }
+
+  /* ---- exercise timer ---- */
+  .ex-timer-wrap{margin-top:10px}
+  .ex-start-btn{
+    width:100%;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    padding:11px;
+    font-family:'DM Mono', monospace;
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    cursor:pointer;
+  }
+  .ex-timer-view{margin-top:4px}
+  .timer-stage{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    padding:14px 8px 4px;
+    border-top:1px dashed var(--line);
+  }
+  .timer-stage.warn .timer-number{color:var(--plate-red)}
+  .timer-exname{font-family:'Bebas Neue', sans-serif;font-size:18px;letter-spacing:.01em;color:var(--chalk);margin-bottom:2px}
+  .timer-side{font-family:'DM Mono', monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:10px}
+  .timer-setnote{font-family:'DM Mono', monospace;font-size:11px;color:var(--dim);margin-bottom:6px}
+  .timer-ring-wrap{position:relative;width:140px;height:140px;margin-bottom:12px}
+  .reps-tap{position:relative;width:140px;height:140px;margin-bottom:10px;background:none;border:none;padding:0;cursor:pointer}
+  .timer-ring{width:140px;height:140px;transform:rotate(-90deg)}
+  .timer-ring-track{fill:none;stroke:var(--iron-raised);stroke-width:8}
+  .timer-ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .3s linear}
+  .timer-number{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:'DM Mono', monospace;font-weight:700;font-variant-numeric:tabular-nums;
+    font-size:32px;color:var(--chalk);
+  }
+  .timer-hint{font-family:'DM Mono', monospace;font-size:10.5px;color:var(--dim);margin-bottom:10px}
+  .timer-adjust-row{display:flex;gap:6px;margin-bottom:8px;width:100%;max-width:280px}
+  .timer-adjust-row button{
+    flex:1;background:var(--iron-raised);border:2px solid var(--line);border-radius:5px;
+    font-family:'DM Mono', monospace;font-size:11.5px;font-weight:700;color:var(--chalk);padding:8px 4px;cursor:pointer;
+  }
+  .timer-action-row{display:flex;gap:8px;width:100%;max-width:280px;margin-bottom:4px}
+  .timer-pause-btn,.timer-cancel-btn{
+    flex:1;border-radius:5px;font-family:'DM Mono', monospace;font-size:12px;font-weight:700;
+    padding:10px;cursor:pointer;letter-spacing:.03em;
+  }
+  .timer-pause-btn{background:var(--accent);border:2px solid var(--accent);color:#fff}
+  .timer-cancel-btn{background:transparent;border:2px solid var(--line);color:var(--dim)}
+  .timer-switch{display:flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:14px}
+  .timer-switch-icon{font-size:36px;color:var(--accent)}
+  .timer-switch-label{font-family:'Bebas Neue', sans-serif;font-size:22px;color:var(--chalk)}
+  .timer-switch-note{font-family:'DM Mono', monospace;font-size:11px;color:var(--plate-amber);text-transform:uppercase;letter-spacing:.05em}
+  .timer-switch-count{font-family:'DM Mono', monospace;font-weight:700;font-size:20px;color:var(--dim)}
+  .timer-done{display:flex;flex-direction:column;align-items:center;gap:6px;padding-bottom:10px}
+  .timer-done-check{font-size:44px;color:var(--plate-green)}
+  .timer-done-name{font-family:'Bebas Neue', sans-serif;font-size:20px;color:var(--chalk)}
+  .timer-done-label{font-family:'DM Mono', monospace;font-size:13px;font-weight:700;color:var(--plate-green);text-transform:uppercase;letter-spacing:.05em}
+
+  /* ---- sticky timer bar ---- */
+  #stickyTimerBar{
+    position:fixed;left:14px;right:14px;bottom:14px;z-index:100;
+    border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.3);
+    padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    color:#fff;cursor:pointer;
+  }
+  #stickyTimerBar[hidden]{display:none}
+  .sticky-timer-main{font-family:'DM Mono', monospace;font-weight:700;font-size:20px;font-variant-numeric:tabular-nums}
+  .sticky-timer-sub{font-family:'DM Mono', monospace;font-size:11px;opacity:.85;margin-top:1px}
+  .sticky-timer-actions{display:flex;gap:8px}
+  .sticky-timer-actions button{
+    background:rgba(255,255,255,.18);border:none;color:#fff;width:34px;height:34px;border-radius:8px;
+    font-size:15px;cursor:pointer;
+  }
 </style>
 
 <header class="topbar">
@@ -397,6 +475,8 @@
 <main id="content"></main>
 
 <footer class="app-footer">Personal mobility & activation reference — not medical advice. Stop on any sharp or shooting pain.</footer>
+
+<div id="stickyTimerBar" hidden></div>
 
 <script>
 /* ============================= DATA ============================= */
@@ -1271,6 +1351,8 @@ const TAB_ORDER = ["daily","pushA","pullA","legsA","pushB","pullB","legsB"];
 
 /* ============================= RENDER ============================= */
 
+const EXERCISE_REGISTRY = {};
+
 function esc(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
@@ -1282,8 +1364,9 @@ function badgesHTML(ex){
   return h;
 }
 
-function exerciseHTML(ex){
-  return `<details class="exercise">
+function exerciseHTML(ex, key){
+  EXERCISE_REGISTRY[key] = ex;
+  return `<details class="exercise" data-ex-key="${key}">
     <summary>
       <span class="ex-name">${esc(ex.name)}</span>
       <span class="ex-dur">${esc(ex.dur)}</span>
@@ -1296,6 +1379,10 @@ function exerciseHTML(ex){
         <ul>${ex.cues.map(c => `<li>${esc(c)}</li>`).join("")}</ul>
       </div>
       <p class="ex-tip">💡 <strong>Tip:</strong> ${ex.tip}</p>
+      <div class="ex-timer-wrap">
+        <button class="ex-start-btn" type="button" data-action="start">▶ Start</button>
+        <div class="ex-timer-view" hidden></div>
+      </div>
     </div>
   </details>`;
 }
@@ -1335,8 +1422,8 @@ function sessionCardHTML(session){
     </div>
     ${session.note ? `<p class="session-note">${esc(session.note)}</p>` : ""}
     <div class="ex-list">
-      <div class="quick-only">${session.quick.map(exerciseHTML).join("")}</div>
-      ${hasExtended ? `<div class="extended-only" hidden>${session.extendedAdds.map(exerciseHTML).join("")}</div>` : ""}
+      <div class="quick-only">${session.quick.map((ex,i) => exerciseHTML(ex, `daily__${session.id}__quick__${i}`)).join("")}</div>
+      ${hasExtended ? `<div class="extended-only" hidden>${session.extendedAdds.map((ex,i) => exerciseHTML(ex, `daily__${session.id}__ext__${i}`)).join("")}</div>` : ""}
     </div>
   </div>`;
 }
@@ -1350,7 +1437,7 @@ function renderDaily(){
   `;
 }
 
-function renderTraining(tab){
+function renderTraining(tab, tabKey){
   const sections = tab.sections();
   return `
     <p class="tab-subtitle">${esc(tab.subtitle)}</p>
@@ -1362,7 +1449,7 @@ function renderTraining(tab){
             <span class="sec-time">${esc(sec.time)}</span>
           </summary>
           <div class="sec-body ex-list">
-            ${sec.exercises.map(exerciseHTML).join("")}
+            ${sec.exercises.map((ex,i) => exerciseHTML(ex, `${tabKey}__${sec.id}__${i}`)).join("")}
           </div>
         </details>
       `).join("")}
@@ -1374,7 +1461,8 @@ function renderTab(key){
   const tab = TABS[key];
   document.body.dataset.theme = tab.theme;
   const content = document.getElementById("content");
-  content.innerHTML = tab.type === "daily" ? renderDaily() : renderTraining(tab);
+  content.innerHTML = tab.type === "daily" ? renderDaily() : renderTraining(tab, key);
+  renderActiveTimer();
 }
 
 function renderTabs(){
@@ -1391,6 +1479,432 @@ function setActiveTab(key){
   renderTab(key);
   try { localStorage.setItem("mt-active-tab", key); } catch(e){}
 }
+
+/* ============================= TIMER ENGINE ============================= */
+
+const PLATE_RED = "#a8351f";
+const PLATE_BLUE = "#2a5694";
+
+let timerState = null;
+let tickHandle = null;
+let wakeLockSentinel = null;
+let noSleepInstance = null;
+
+function parseDuration(dur){
+  const d = String(dur).trim();
+
+  function toSeconds(numStr, unit){
+    const n = parseFloat(numStr);
+    return /min/i.test(unit) ? Math.round(n * 60) : Math.round(n);
+  }
+
+  const setsMatch = d.match(/(\d+)\s*[×xX]\s*(\d+)\s*reps/);
+  if (setsMatch) {
+    return { mode:"reps", sets:parseInt(setsMatch[1],10), repsPerSet:parseInt(setsMatch[2],10), eachSide:/each side/i.test(d) };
+  }
+  const repsMatch = d.match(/(\d+)\s*reps/i);
+  if (repsMatch) {
+    return { mode:"reps", sets:1, repsPerSet:parseInt(repsMatch[1],10), eachSide:/each side/i.test(d) };
+  }
+
+  const rightMatch = d.match(/(\d+(?:\.\d+)?)\s*(min|s)\w*\s*right/i);
+  const leftMatch = d.match(/(\d+(?:\.\d+)?)\s*(min|s)\w*\s*left/i);
+  if (rightMatch && leftMatch) {
+    return { mode:"timer", eachSide:true, left:toSeconds(leftMatch[1], leftMatch[2]), right:toSeconds(rightMatch[1], rightMatch[2]) };
+  }
+
+  const eachSideMatch = d.match(/(\d+(?:\.\d+)?)\s*(min|s)\w*\s*each side/i);
+  if (eachSideMatch) {
+    const secs = toSeconds(eachSideMatch[1], eachSideMatch[2]);
+    return { mode:"timer", eachSide:true, left:secs, right:secs };
+  }
+
+  const rangeMatch = d.match(/(\d+(?:\.\d+)?)\s*[–-]\s*(\d+(?:\.\d+)?)\s*(min|s)/i);
+  if (rangeMatch) {
+    const avg = (parseFloat(rangeMatch[1]) + parseFloat(rangeMatch[2])) / 2;
+    const secs = /min/i.test(rangeMatch[3]) ? Math.round(avg * 60) : Math.round(avg);
+    return { mode:"timer", eachSide:false, total:secs };
+  }
+
+  const plainMatch = d.match(/(\d+(?:\.\d+)?)\s*(min|s)/i);
+  if (plainMatch) {
+    return { mode:"timer", eachSide:false, total:toSeconds(plainMatch[1], plainMatch[2]) };
+  }
+
+  return { mode:"timer", eachSide:false, total:30 };
+}
+
+function buildPlan(parsed){
+  if (parsed.mode === "reps") {
+    const sides = parsed.eachSide ? [{label:"Left"},{label:"Right"}] : [{label:"—"}];
+    return { mode:"reps", sides, sets: parsed.sets, repsPerSet: parsed.repsPerSet };
+  }
+  const sides = parsed.eachSide
+    ? [{label:"Left", seconds: parsed.left}, {label:"Right", seconds: parsed.right}]
+    : [{label:"—", seconds: parsed.total}];
+  return { mode:"timer", sides };
+}
+
+function formatTime(s){
+  s = Math.max(0, Math.round(s));
+  const m = Math.floor(s / 60), sec = s % 60;
+  return `${m}:${String(sec).padStart(2, "0")}`;
+}
+
+function vibrate(){
+  try { if (navigator.vibrate) navigator.vibrate(200); } catch(e){}
+}
+
+function loadScript(src){
+  return new Promise((resolve, reject) => {
+    const s = document.createElement("script");
+    s.src = src; s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+async function acquireWakeLock(){
+  try {
+    if ("wakeLock" in navigator) {
+      wakeLockSentinel = await navigator.wakeLock.request("screen");
+      wakeLockSentinel.addEventListener("release", () => { wakeLockSentinel = null; });
+      return;
+    }
+  } catch(e) { /* fall through to NoSleep fallback */ }
+  try {
+    if (!noSleepInstance) {
+      if (!window.NoSleep) {
+        await loadScript("https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.12.0/NoSleep.min.js");
+      }
+      noSleepInstance = new NoSleep();
+    }
+    noSleepInstance.enable();
+  } catch(e) { /* best effort only */ }
+}
+
+function releaseWakeLock(){
+  if (wakeLockSentinel) { wakeLockSentinel.release().catch(()=>{}); wakeLockSentinel = null; }
+  if (noSleepInstance) { try { noSleepInstance.disable(); } catch(e){} }
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && timerState && !wakeLockSentinel && "wakeLock" in navigator) {
+    acquireWakeLock();
+  }
+});
+
+function beginSide(idx){
+  timerState.sideIdx = idx;
+  timerState.isRest = false;
+  const side = timerState.plan.sides[idx];
+  if (timerState.plan.mode === "timer") {
+    timerState.phase = "timer";
+    timerState.remaining = side.seconds;
+    timerState.totalForSide = side.seconds;
+  } else {
+    timerState.setIdx = 0;
+    timerState.repsRemaining = timerState.plan.repsPerSet;
+    timerState.phase = "reps";
+  }
+}
+
+function completeSide(){
+  if (timerState.sideIdx + 1 < timerState.plan.sides.length) {
+    timerState.sideIdx++;
+    timerState.phase = "switch";
+    timerState.remaining = 5;
+  } else {
+    finishExercise();
+  }
+}
+
+function finishExercise(){
+  timerState.phase = "done";
+  renderActiveTimer();
+  const key = timerState.key;
+  setTimeout(() => {
+    stopTimer();
+    collapseExercise(key);
+  }, 2000);
+}
+
+function handlePhaseZero(){
+  vibrate();
+  if (timerState.phase === "switch") {
+    beginSide(timerState.sideIdx);
+    return;
+  }
+  if (timerState.isRest) {
+    timerState.isRest = false;
+    timerState.setIdx++;
+    if (timerState.setIdx >= timerState.plan.sets) {
+      completeSide();
+    } else {
+      timerState.repsRemaining = timerState.plan.repsPerSet;
+      timerState.phase = "reps";
+    }
+    return;
+  }
+  completeSide();
+}
+
+function tick(){
+  if (!timerState) return;
+  if (timerState.phase === "paused" || timerState.phase === "reps" || timerState.phase === "done") return;
+  timerState.remaining--;
+  if (timerState.remaining <= 0) handlePhaseZero();
+  renderActiveTimer();
+}
+
+function decrementRep(){
+  if (!timerState || timerState.phase !== "reps") return;
+  timerState.repsRemaining--;
+  if (timerState.repsRemaining <= 0) {
+    timerState.setIdx++;
+    if (timerState.setIdx >= timerState.plan.sets) {
+      vibrate();
+      completeSide();
+    } else {
+      timerState.isRest = true;
+      timerState.phase = "timer";
+      timerState.remaining = 20;
+      timerState.totalForSide = 20;
+    }
+  }
+  renderActiveTimer();
+}
+
+function adjustTime(delta){
+  if (!timerState || (timerState.phase !== "timer" && timerState.phase !== "switch")) return;
+  timerState.remaining = Math.max(10, timerState.remaining + delta);
+  if (timerState.phase === "timer") timerState.totalForSide = Math.max(timerState.totalForSide, timerState.remaining);
+  renderActiveTimer();
+}
+
+function adjustReps(delta){
+  if (!timerState || timerState.phase !== "reps") return;
+  timerState.repsRemaining = Math.max(1, timerState.repsRemaining + delta);
+  renderActiveTimer();
+}
+
+function togglePause(){
+  if (!timerState) return;
+  if (timerState.phase === "paused") {
+    timerState.phase = timerState.pausedFrom;
+    timerState.pausedFrom = null;
+  } else if (timerState.phase === "timer" || timerState.phase === "switch") {
+    timerState.pausedFrom = timerState.phase;
+    timerState.phase = "paused";
+  }
+  renderActiveTimer();
+}
+
+function stopTimer(){
+  if (tickHandle) { clearInterval(tickHandle); tickHandle = null; }
+  releaseWakeLock();
+  const prevKey = timerState ? timerState.key : null;
+  timerState = null;
+  if (prevKey) resetExerciseDOM(prevKey);
+  hideStickyBar();
+}
+
+function cancelTimer(){
+  stopTimer();
+}
+
+function collapseExercise(key){
+  const el = document.querySelector(`details[data-ex-key="${CSS.escape(key)}"]`);
+  if (el) el.open = false;
+}
+
+function resetExerciseDOM(key){
+  const el = document.querySelector(`details[data-ex-key="${CSS.escape(key)}"]`);
+  if (!el) return;
+  const startBtn = el.querySelector(".ex-start-btn");
+  const view = el.querySelector(".ex-timer-view");
+  if (startBtn) startBtn.hidden = false;
+  if (view) { view.hidden = true; view.innerHTML = ""; }
+}
+
+function startExercise(key){
+  const ex = EXERCISE_REGISTRY[key];
+  if (!ex) return;
+  if (timerState && timerState.key !== key) stopTimer();
+
+  const el = document.querySelector(`details[data-ex-key="${CSS.escape(key)}"]`);
+  const accentColor = el ? getComputedStyle(el).getPropertyValue("--accent").trim() : "";
+  const plan = buildPlan(parseDuration(ex.dur));
+
+  timerState = {
+    key, name: ex.name, plan,
+    sideIdx: -1, setIdx: 0, repsRemaining: 0, remaining: 0, totalForSide: 0,
+    phase: "timer", isRest: false, pausedFrom: null,
+    accentColor: accentColor || PLATE_BLUE
+  };
+  beginSide(0);
+
+  acquireWakeLock();
+  if (tickHandle) clearInterval(tickHandle);
+  tickHandle = setInterval(tick, 1000);
+  renderActiveTimer();
+}
+
+function ringSVG(pct, warn){
+  const r = 52, c = 2 * Math.PI * r;
+  const offset = c * (1 - Math.max(0, Math.min(1, pct)));
+  const color = warn ? PLATE_RED : (timerState ? timerState.accentColor : PLATE_BLUE);
+  return `<div class="timer-ring-wrap">
+    <svg class="timer-ring" viewBox="0 0 120 120">
+      <circle class="timer-ring-track" cx="60" cy="60" r="${r}"></circle>
+      <circle class="timer-ring-fill" cx="60" cy="60" r="${r}" stroke="${color}" stroke-dasharray="${c.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}"></circle>
+    </svg>
+    <div class="timer-number">__NUMBER__</div>
+  </div>`;
+}
+
+function timerControlsHTML(isReps){
+  if (!timerState) return "";
+  const paused = timerState.phase === "paused";
+  const pauseLabel = paused ? "▶ Resume" : "⏸ Pause";
+  const showPause = timerState.phase === "timer" || timerState.phase === "switch" || timerState.phase === "paused";
+  if (isReps) {
+    return `
+      <div class="timer-adjust-row">
+        <button type="button" data-action="adjustReps" data-delta="-5">-5</button>
+        <button type="button" data-action="adjustReps" data-delta="-1">-1</button>
+        <button type="button" data-action="adjustReps" data-delta="1">+1</button>
+        <button type="button" data-action="adjustReps" data-delta="5">+5</button>
+      </div>
+      <div class="timer-action-row">
+        <button type="button" class="timer-cancel-btn" data-action="cancel">Cancel</button>
+      </div>`;
+  }
+  return `
+    <div class="timer-adjust-row">
+      <button type="button" data-action="adjustTime" data-delta="-30">-30s</button>
+      <button type="button" data-action="adjustTime" data-delta="-15">-15s</button>
+      <button type="button" data-action="adjustTime" data-delta="15">+15s</button>
+      <button type="button" data-action="adjustTime" data-delta="30">+30s</button>
+    </div>
+    <div class="timer-action-row">
+      ${showPause ? `<button type="button" class="timer-pause-btn" data-action="pause">${pauseLabel}</button>` : ""}
+      <button type="button" class="timer-cancel-btn" data-action="cancel">Cancel</button>
+    </div>`;
+}
+
+function renderTimerView(){
+  if (!timerState) return "";
+  const t = timerState;
+  const sideLabel = t.plan.sides[t.sideIdx] ? t.plan.sides[t.sideIdx].label : "—";
+
+  if (t.phase === "switch") {
+    return `<div class="timer-stage">
+      <div class="timer-exname">${esc(t.name)}</div>
+      <div class="timer-switch">
+        <div class="timer-switch-icon">⇄</div>
+        <div class="timer-switch-label">Switch sides</div>
+        <div class="timer-switch-note">Left side first</div>
+        <div class="timer-switch-count">${t.remaining}</div>
+      </div>
+      ${timerControlsHTML(false)}
+    </div>`;
+  }
+
+  if (t.phase === "done") {
+    return `<div class="timer-stage">
+      <div class="timer-done">
+        <div class="timer-done-check">✓</div>
+        <div class="timer-done-name">${esc(t.name)}</div>
+        <div class="timer-done-label">Done ✓</div>
+      </div>
+    </div>`;
+  }
+
+  if (t.phase === "reps") {
+    const pct = t.plan.repsPerSet ? t.repsRemaining / t.plan.repsPerSet : 0;
+    const setNote = t.plan.sets > 1 ? `Set ${t.setIdx + 1} of ${t.plan.sets}` : "";
+    return `<div class="timer-stage">
+      <div class="timer-exname">${esc(t.name)}</div>
+      <div class="timer-side">${esc(sideLabel)}</div>
+      ${setNote ? `<div class="timer-setnote">${esc(setNote)}</div>` : ""}
+      <button class="reps-tap" type="button" data-action="tapRep">${ringSVG(pct, false).replace("__NUMBER__", t.repsRemaining)}</button>
+      <div class="timer-hint">Tap to count down reps</div>
+      ${timerControlsHTML(true)}
+    </div>`;
+  }
+
+  const pct = t.totalForSide ? t.remaining / t.totalForSide : 0;
+  const warn = t.remaining <= 10 && t.phase !== "paused";
+  const label = t.isRest ? "Rest" : esc(sideLabel);
+  return `<div class="timer-stage ${warn ? "warn" : ""}">
+    <div class="timer-exname">${esc(t.name)}</div>
+    <div class="timer-side">${label}</div>
+    ${ringSVG(pct, warn).replace("__NUMBER__", formatTime(t.remaining))}
+    ${timerControlsHTML(false)}
+  </div>`;
+}
+
+function hideStickyBar(){
+  const bar = document.getElementById("stickyTimerBar");
+  if (bar) bar.hidden = true;
+}
+
+function updateStickyBar(){
+  const bar = document.getElementById("stickyTimerBar");
+  if (!bar || !timerState) return;
+  const t = timerState;
+  let mainText, subText;
+  if (t.phase === "done") { mainText = "Done ✓"; subText = t.name; }
+  else if (t.phase === "switch") { mainText = "Switch sides"; subText = `${t.remaining}s · Left side first`; }
+  else if (t.phase === "reps") { mainText = `${t.repsRemaining} reps left`; subText = t.name; }
+  else if (t.phase === "paused") { mainText = "Paused"; subText = t.name; }
+  else { mainText = formatTime(t.remaining) + (t.isRest ? " · Rest" : ""); subText = t.name; }
+
+  bar.hidden = false;
+  const warn = t.phase === "timer" && t.remaining <= 10;
+  bar.style.background = warn ? PLATE_RED : (t.accentColor || PLATE_BLUE);
+  bar.innerHTML = `
+    <div class="sticky-timer-text">
+      <div class="sticky-timer-main">${esc(mainText)}</div>
+      <div class="sticky-timer-sub">${esc(subText)}</div>
+    </div>
+    <div class="sticky-timer-actions">
+      ${(t.phase === "timer" || t.phase === "switch" || t.phase === "paused") ? `<button type="button" data-action="pause">${t.phase === "paused" ? "▶" : "⏸"}</button>` : ""}
+      <button type="button" data-action="cancel">✕</button>
+    </div>`;
+}
+
+function scrollToActiveExercise(){
+  if (!timerState) return;
+  const el = document.querySelector(`details[data-ex-key="${CSS.escape(timerState.key)}"]`);
+  if (el) el.scrollIntoView({behavior:"smooth", block:"center"});
+}
+
+function renderActiveTimer(){
+  if (!timerState) { hideStickyBar(); return; }
+  const el = document.querySelector(`details[data-ex-key="${CSS.escape(timerState.key)}"]`);
+  if (el) {
+    el.open = true;
+    let ancestor = el.parentElement;
+    while (ancestor) {
+      if (ancestor instanceof HTMLDetailsElement) ancestor.open = true;
+      ancestor = ancestor.parentElement;
+    }
+    const startBtn = el.querySelector(".ex-start-btn");
+    const view = el.querySelector(".ex-timer-view");
+    if (startBtn) startBtn.hidden = true;
+    if (view) { view.hidden = false; view.innerHTML = renderTimerView(); }
+  }
+  updateStickyBar();
+}
+
+document.addEventListener("toggle", e => {
+  const el = e.target;
+  if (!(el instanceof HTMLDetailsElement) || !el.classList.contains("exercise")) return;
+  if (!el.open && timerState && timerState.key === el.dataset.exKey) {
+    cancelTimer();
+  }
+}, true);
 
 /* ============================= EVENTS ============================= */
 
@@ -1411,6 +1925,26 @@ document.addEventListener("click", e => {
       const quickOnly = card.querySelector(".quick-only");
       if (quickOnly) quickOnly.hidden = isExtended;
     }
+    return;
+  }
+
+  const actionEl = e.target.closest("[data-action]");
+  if (actionEl) {
+    const action = actionEl.dataset.action;
+    if (action === "start") {
+      const details = actionEl.closest("details.exercise");
+      if (details) startExercise(details.dataset.exKey);
+      return;
+    }
+    if (action === "adjustTime") { adjustTime(parseInt(actionEl.dataset.delta, 10)); return; }
+    if (action === "adjustReps") { adjustReps(parseInt(actionEl.dataset.delta, 10)); return; }
+    if (action === "pause") { togglePause(); return; }
+    if (action === "cancel") { cancelTimer(); return; }
+    if (action === "tapRep") { decrementRep(); return; }
+  }
+
+  if (e.target.closest("#stickyTimerBar .sticky-timer-text")) {
+    scrollToActiveExercise();
     return;
   }
 });
