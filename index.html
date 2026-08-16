@@ -1,365 +1,395 @@
 <title>Mobility Tracker</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Mobile-first mobility & activation tracker">
-<meta name="theme-color" content="#0a0b0d">
+<meta name="theme-color" content="#f5f2ea">
 <style>
-:root{
-  --bg:#0a0b0d;
-  --bg-elev:#131519;
-  --bg-elev-2:#1a1d23;
-  --border:#262a31;
-  --border-soft:#1e2127;
-  --text:#eef0f2;
-  --text-dim:#9aa1ab;
-  --text-faint:#6b7280;
-  --blue:#5b9dff;
-  --orange:#ff9c4a;
-  --purple:#b585ff;
-  --green:#41d999;
-  --red:#ff5d5d;
-  --yellow:#ffc94a;
-  --accent:var(--blue);
-  --accent-dim:rgba(91,157,255,.14);
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;
-  padding-bottom:48px;
-  min-height:100vh;
-}
-[data-theme="push"]{--accent:var(--orange);--accent-dim:rgba(255,156,74,.14)}
-[data-theme="pull"]{--accent:var(--purple);--accent-dim:rgba(181,133,255,.14)}
-[data-theme="legs"]{--accent:var(--green);--accent-dim:rgba(65,217,153,.14)}
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap');
 
-header.topbar{
-  position:sticky;top:0;z-index:20;
-  background:rgba(10,11,13,.92);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--border);
-  padding:14px 16px 10px;
-}
-header.topbar h1{
-  margin:0 0 10px;
-  font-size:17px;
-  font-weight:700;
-  letter-spacing:.2px;
-  display:flex;align-items:center;gap:8px;
-}
-header.topbar h1 .dot{
-  width:9px;height:9px;border-radius:50%;
-  background:var(--accent);
-  transition:background .2s;
-  box-shadow:0 0 0 4px var(--accent-dim);
-}
+  :root{
+    --chalk:#1a1a16;
+    --iron:#f5f2ea;
+    --iron-soft:#ffffff;
+    --iron-raised:#ebe6d9;
+    --line:#b8b0a0;
+    --dim:#4a463e;
+    --plate-red:#a8351f;
+    --plate-blue:#2a5694;
+    --plate-green:#3d7d40;
+    --plate-amber:#96680f;
+    --accent:var(--plate-blue);
+    --accent-dim:rgba(42,86,148,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--iron);
+    color:var(--chalk);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+    padding-bottom:48px;
+  }
+  [data-theme="daily"]{--accent:var(--plate-blue);--accent-dim:rgba(42,86,148,.10)}
+  [data-theme="push"]{--accent:var(--plate-red);--accent-dim:rgba(168,53,31,.10)}
+  [data-theme="pull"]{--accent:var(--plate-amber);--accent-dim:rgba(150,104,15,.10)}
+  [data-theme="legs"]{--accent:var(--plate-green);--accent-dim:rgba(61,125,64,.10)}
 
-nav.tabs{
-  display:flex;
-  gap:6px;
-  overflow-x:auto;
-  scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;
-  padding-bottom:2px;
-}
-nav.tabs::-webkit-scrollbar{display:none}
-nav.tabs button{
-  flex:0 0 auto;
-  background:var(--bg-elev);
-  color:var(--text-dim);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:8px 14px;
-  font-size:13px;
-  font-weight:600;
-  white-space:nowrap;
-  cursor:pointer;
-  transition:all .15s;
-}
-nav.tabs button.active{
-  background:var(--tab-accent,var(--blue));
-  border-color:var(--tab-accent,var(--blue));
-  color:#0a0b0d;
-}
-nav.tabs button[data-tab="daily"].active{--tab-accent:var(--blue)}
-nav.tabs button[data-tab^="push"].active{--tab-accent:var(--orange)}
-nav.tabs button[data-tab^="pull"].active{--tab-accent:var(--purple)}
-nav.tabs button[data-tab^="legs"].active{--tab-accent:var(--green)}
+  header.topbar{
+    position:sticky;top:0;z-index:20;
+    background:rgba(245,242,234,.94);
+    backdrop-filter:blur(6px);
+    border-bottom:2px solid var(--chalk);
+    padding:16px 16px 12px;
+  }
+  .eyebrow{
+    font-family:'DM Mono', monospace;
+    font-size:11px;
+    letter-spacing:.18em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin-bottom:2px;
+  }
+  header.topbar h1{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:28px;
+    letter-spacing:.02em;
+    line-height:1;
+    display:flex;align-items:center;gap:8px;
+    margin:2px 0 12px;
+    color:var(--chalk);
+  }
+  header.topbar h1 .dot{
+    width:10px;height:10px;border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 4px var(--accent-dim);
+  }
 
-main{
-  max-width:640px;
-  margin:0 auto;
-  padding:16px 14px 8px;
-}
+  nav.tabs{
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:2px;
+  }
+  nav.tabs::-webkit-scrollbar{display:none}
+  nav.tabs button{
+    flex:0 0 auto;
+    background:var(--iron-soft);
+    color:var(--chalk);
+    border:2px solid var(--line);
+    border-radius:5px;
+    padding:9px 13px;
+    font-family:'DM Mono', monospace;
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    white-space:nowrap;
+    cursor:pointer;
+  }
+  nav.tabs button.active{
+    background:var(--tab-accent,var(--plate-blue));
+    border-color:var(--tab-accent,var(--plate-blue));
+    color:#fff;
+    font-weight:700;
+  }
+  nav.tabs button[data-tab="daily"].active{--tab-accent:var(--plate-blue)}
+  nav.tabs button[data-tab^="push"].active{--tab-accent:var(--plate-red)}
+  nav.tabs button[data-tab^="pull"].active{--tab-accent:var(--plate-amber)}
+  nav.tabs button[data-tab^="legs"].active{--tab-accent:var(--plate-green)}
 
-.intro-note{
-  background:var(--accent-dim);
-  border:1px solid var(--accent);
-  color:var(--text);
-  font-size:13.5px;
-  line-height:1.5;
-  padding:10px 12px;
-  border-radius:10px;
-  margin-bottom:14px;
-}
+  main{
+    max-width:640px;
+    margin:0 auto;
+    padding:18px 14px 8px;
+  }
 
-/* ---- personal mods banner ---- */
-details.mods-banner{
-  background:var(--bg-elev);
-  border:1px solid var(--yellow);
-  border-radius:12px;
-  margin-bottom:14px;
-  overflow:hidden;
-}
-details.mods-banner summary{
-  list-style:none;
-  cursor:pointer;
-  padding:12px 14px;
-  font-weight:700;
-  font-size:14px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  color:var(--yellow);
-}
-details.mods-banner summary::-webkit-details-marker{display:none}
-details.mods-banner summary::after{
-  content:"›";
-  transform:rotate(90deg);
-  transition:transform .15s;
-  font-size:20px;
-  line-height:1;
-  color:var(--text-faint);
-}
-details.mods-banner[open] summary::after{transform:rotate(270deg)}
-.mods-list{
-  padding:2px 14px 14px;
-  display:flex;
-  flex-direction:column;
-  gap:9px;
-}
-.mods-list div{
-  font-size:13.5px;
-  line-height:1.45;
-  color:var(--text-dim);
-}
-.mods-list b{color:var(--text);font-weight:600}
+  .intro-note{
+    background:var(--iron-soft);
+    border:1px dashed var(--line);
+    color:var(--dim);
+    font-family:'DM Mono', monospace;
+    font-size:12.5px;
+    line-height:1.6;
+    padding:10px 14px;
+    border-radius:6px;
+    margin-bottom:14px;
+  }
 
-/* ---- mobility scores ---- */
-.scores-card{
-  background:var(--bg-elev);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:16px;
-}
-.scores-card h2{
-  margin:0 0 12px;
-  font-size:14px;
-  font-weight:700;
-  color:var(--text-dim);
-  text-transform:uppercase;
-  letter-spacing:.5px;
-}
-.score-row{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:10px;
-}
-.score-row:last-child{margin-bottom:0}
-.score-label{
-  flex:0 0 118px;
-  font-size:13px;
-  color:var(--text);
-  font-weight:600;
-}
-.score-bar-track{
-  flex:1;
-  height:8px;
-  background:var(--bg-elev-2);
-  border-radius:6px;
-  overflow:hidden;
-}
-.score-bar-fill{height:100%;border-radius:6px}
-.score-pct{
-  flex:0 0 auto;
-  font-size:12.5px;
-  font-weight:700;
-  color:var(--text-dim);
-  min-width:44px;
-  text-align:right;
-}
+  /* ---- personal mods banner ---- */
+  details.mods-banner{
+    background:var(--iron-soft);
+    border:1.5px dashed var(--plate-amber);
+    border-radius:6px;
+    margin-bottom:14px;
+    overflow:hidden;
+  }
+  details.mods-banner summary{
+    list-style:none;
+    cursor:pointer;
+    padding:12px 14px;
+    font-family:'DM Mono', monospace;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    color:var(--plate-amber);
+  }
+  details.mods-banner summary::-webkit-details-marker{display:none}
+  details.mods-banner summary::after{
+    content:"›";
+    transform:rotate(90deg);
+    transition:transform .15s;
+    font-size:20px;
+    line-height:1;
+    color:var(--dim);
+  }
+  details.mods-banner[open] summary::after{transform:rotate(270deg)}
+  .mods-list{
+    padding:2px 14px 14px;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    border-top:1px dashed var(--line);
+  }
+  .mods-list div{
+    font-family:'DM Mono', monospace;
+    font-size:12.5px;
+    line-height:1.5;
+    color:var(--dim);
+    padding-top:9px;
+  }
+  .mods-list div:first-child{padding-top:10px}
+  .mods-list b{color:var(--chalk);font-weight:600}
 
-/* ---- session cards (daily) ---- */
-.session-card{
-  background:var(--bg-elev);
-  border:1px solid var(--border);
-  border-left:3px solid var(--accent);
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:14px;
-}
-.session-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:6px;
-  flex-wrap:wrap;
-}
-.session-head h3{
-  margin:0;
-  font-size:16px;
-  font-weight:700;
-}
-.session-note{
-  font-size:12.5px;
-  color:var(--text-faint);
-  margin:0 0 10px;
-  font-style:italic;
-}
-.toggle{
-  display:flex;
-  background:var(--bg-elev-2);
-  border-radius:8px;
-  padding:3px;
-  gap:3px;
-}
-.toggle-btn{
-  background:transparent;
-  border:none;
-  color:var(--text-dim);
-  font-size:11.5px;
-  font-weight:700;
-  padding:6px 10px;
-  border-radius:6px;
-  cursor:pointer;
-  line-height:1.3;
-  text-align:center;
-}
-.toggle-btn span{display:block;font-weight:500;font-size:10px;opacity:.8}
-.toggle-btn.active{background:var(--accent);color:#0a0b0d}
+  /* ---- mobility scores ---- */
+  .scores-card{
+    background:var(--iron-soft);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:14px;
+    margin-bottom:16px;
+  }
+  .scores-card h2{
+    font-family:'DM Mono', monospace;
+    margin:0 0 12px;
+    font-size:12px;
+    font-weight:700;
+    color:var(--dim);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+  }
+  .score-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .score-row:last-child{margin-bottom:0}
+  .score-label{
+    flex:0 0 118px;
+    font-family:'Inter', sans-serif;
+    font-size:13px;
+    color:var(--chalk);
+    font-weight:600;
+  }
+  .score-bar-track{
+    flex:1;
+    height:8px;
+    background:var(--iron-raised);
+    border:1px solid var(--line);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .score-bar-fill{height:100%}
+  .score-pct{
+    flex:0 0 auto;
+    font-family:'DM Mono', monospace;
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--dim);
+    min-width:48px;
+    text-align:right;
+  }
 
-/* ---- exercise list / accordion ---- */
-.ex-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-details.exercise{
-  background:var(--bg-elev-2);
-  border:1px solid var(--border-soft);
-  border-radius:10px;
-  overflow:hidden;
-}
-details.exercise summary{
-  list-style:none;
-  cursor:pointer;
-  padding:10px 12px;
-  display:flex;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:6px 8px;
-}
-details.exercise summary::-webkit-details-marker{display:none}
-.ex-name{font-size:13.5px;font-weight:600;color:var(--text)}
-.ex-dur{font-size:12px;color:var(--text-faint);font-weight:500}
-.ex-chevron{
-  margin-left:auto;
-  color:var(--text-faint);
-  font-size:18px;
-  transform:rotate(90deg);
-  transition:transform .15s;
-}
-details.exercise[open] .ex-chevron{transform:rotate(270deg)}
-.badge{
-  font-size:10.5px;
-  font-weight:700;
-  padding:2px 7px;
-  border-radius:20px;
-  letter-spacing:.2px;
-  white-space:nowrap;
-}
-.badge-critical{background:rgba(255,93,93,.15);color:var(--red);border:1px solid rgba(255,93,93,.4)}
-.badge-mod{background:rgba(255,201,74,.15);color:var(--yellow);border:1px solid rgba(255,201,74,.4)}
-.ex-body{
-  padding:0 12px 14px;
-  border-top:1px solid var(--border-soft);
-  padding-top:10px;
-}
-.ex-body p{margin:0 0 10px;font-size:13px;line-height:1.5;color:var(--text-dim)}
-.ex-body p strong{color:var(--text);font-weight:600}
-.ex-cues{margin:0 0 10px}
-.ex-cues > span{font-size:13px;color:var(--text-dim)}
-.ex-cues strong{color:var(--text);font-weight:600;font-size:13px}
-.ex-cues ul{margin:6px 0 0;padding-left:18px}
-.ex-cues li{font-size:13px;line-height:1.5;color:var(--text-dim);margin-bottom:3px}
-.ex-tip{
-  background:var(--accent-dim);
-  border-radius:8px;
-  padding:8px 10px;
-  margin-bottom:0 !important;
-}
+  /* ---- session cards (daily) ---- */
+  .session-card{
+    background:var(--iron-soft);
+    border:1px solid var(--line);
+    border-left:4px solid var(--accent);
+    border-radius:6px;
+    padding:14px;
+    margin-bottom:14px;
+  }
+  .session-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:6px;
+    flex-wrap:wrap;
+  }
+  .session-head h3{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:26px;
+    letter-spacing:.02em;
+    color:var(--chalk);
+    margin:0;
+  }
+  .session-note{
+    font-family:'DM Mono', monospace;
+    font-size:12px;
+    color:var(--dim);
+    margin:0 0 10px;
+    font-style:italic;
+  }
+  .toggle{
+    display:flex;
+    gap:6px;
+  }
+  .toggle-btn{
+    background:var(--iron-raised);
+    border:2px solid var(--line);
+    color:var(--chalk);
+    font-family:'DM Mono', monospace;
+    font-size:11px;
+    font-weight:600;
+    padding:6px 10px;
+    border-radius:5px;
+    cursor:pointer;
+    line-height:1.3;
+    text-align:center;
+  }
+  .toggle-btn span{display:block;font-weight:500;font-size:9.5px;color:var(--dim);margin-top:1px}
+  .toggle-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .toggle-btn.active span{color:rgba(255,255,255,.85)}
 
-/* ---- training tab grid ---- */
-.tab-subtitle{
-  font-size:12.5px;
-  color:var(--text-faint);
-  margin:0 0 14px;
-  line-height:1.5;
-}
-.section-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-@media (max-width:420px){
-  .section-grid{grid-template-columns:1fr}
-}
-details.section-card{
-  background:var(--bg-elev);
-  border:1px solid var(--border);
-  border-top:3px solid var(--accent);
-  border-radius:12px;
-  overflow:hidden;
-  grid-column:span 1;
-}
-details.section-card[open]{grid-column:1 / -1}
-details.section-card summary{
-  list-style:none;
-  cursor:pointer;
-  padding:13px 12px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:6px;
-}
-details.section-card summary::-webkit-details-marker{display:none}
-details.section-card summary h3{
-  margin:0;
-  font-size:13.5px;
-  font-weight:700;
-  line-height:1.3;
-}
-details.section-card summary .sec-time{
-  font-size:11px;
-  color:var(--text-faint);
-  font-weight:600;
-  white-space:nowrap;
-}
-details.section-card .sec-body{padding:0 12px 12px}
+  /* ---- exercise list / accordion ---- */
+  .ex-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+  details.exercise{
+    background:var(--iron-soft);
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  details.exercise summary{
+    list-style:none;
+    cursor:pointer;
+    padding:11px 12px;
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:6px 8px;
+  }
+  details.exercise summary::-webkit-details-marker{display:none}
+  .ex-name{font-family:'Bebas Neue', sans-serif;font-size:18px;letter-spacing:.01em;color:var(--chalk)}
+  .ex-dur{font-family:'DM Mono', monospace;font-size:11.5px;color:var(--dim)}
+  .ex-chevron{
+    margin-left:auto;
+    color:var(--dim);
+    font-size:18px;
+    transform:rotate(90deg);
+    transition:transform .15s;
+  }
+  details.exercise[open] .ex-chevron{transform:rotate(270deg)}
+  .badge{
+    font-family:'DM Mono', monospace;
+    font-size:10px;
+    font-weight:700;
+    padding:4px 8px;
+    border-radius:4px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:#fff;
+    white-space:nowrap;
+  }
+  .badge-critical{background:var(--plate-red)}
+  .badge-mod{background:var(--plate-amber)}
+  .ex-body{
+    padding:0 12px 14px;
+    border-top:1px solid var(--line);
+    padding-top:10px;
+    font-family:'DM Mono', monospace;
+    color:var(--dim);
+  }
+  .ex-body p{margin:0 0 10px;font-size:12.5px;line-height:1.55}
+  .ex-body p strong{color:var(--chalk);font-weight:600}
+  .ex-cues{margin:0 0 10px}
+  .ex-cues > strong{color:var(--chalk);font-weight:600;font-size:12.5px}
+  .ex-cues ul{margin:6px 0 0;padding-left:18px}
+  .ex-cues li{font-size:12.5px;line-height:1.55;font-style:italic;margin-bottom:3px}
+  .ex-tip{background:var(--accent-dim);border-radius:5px;padding:8px 10px;margin-bottom:0 !important}
+  .ex-tip, .ex-tip strong{color:var(--accent)}
 
-footer.app-footer{
-  max-width:640px;
-  margin:24px auto 0;
-  padding:0 14px;
-  font-size:11.5px;
-  color:var(--text-faint);
-  text-align:center;
-  line-height:1.6;
-}
+  /* ---- training tab grid ---- */
+  .tab-subtitle{
+    font-family:'DM Mono', monospace;
+    font-size:12px;
+    color:var(--dim);
+    margin:0 0 14px;
+    line-height:1.6;
+  }
+  .section-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  @media (max-width:420px){
+    .section-grid{grid-template-columns:1fr}
+  }
+  details.section-card{
+    background:var(--iron-soft);
+    border:1px solid var(--line);
+    border-top:4px solid var(--accent);
+    border-radius:6px;
+    overflow:hidden;
+    grid-column:span 1;
+  }
+  details.section-card[open]{grid-column:1 / -1}
+  details.section-card summary{
+    list-style:none;
+    cursor:pointer;
+    padding:13px 12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:6px;
+  }
+  details.section-card summary::-webkit-details-marker{display:none}
+  details.section-card summary h3{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:21px;
+    letter-spacing:.02em;
+    color:var(--chalk);
+    margin:0;
+    line-height:1.2;
+  }
+  details.section-card summary .sec-time{
+    font-family:'DM Mono', monospace;
+    font-size:11px;
+    color:var(--dim);
+    font-weight:600;
+    white-space:nowrap;
+  }
+  details.section-card .sec-body{padding:0 12px 12px}
+
+  footer.app-footer{
+    max-width:640px;
+    margin:24px auto 0;
+    padding:0 14px;
+    font-family:'DM Mono', monospace;
+    font-size:11px;
+    color:var(--dim);
+    text-align:center;
+    line-height:1.6;
+  }
 </style>
 
 <header class="topbar">
+  <div class="eyebrow">Mobility &amp; Activation</div>
   <h1><span class="dot" id="themeDot"></span> Mobility Tracker</h1>
   <nav class="tabs" id="tabs"></nav>
 </header>
@@ -383,12 +413,12 @@ const MODS = [
 ];
 
 const SCORES = [
-  {label:"Hip ext. rotation", pct:0,  icon:"🔴", color:"var(--red)"},
-  {label:"Postchain",         pct:14, icon:"🔴", color:"var(--red)"},
-  {label:"Hip flexion",       pct:100,icon:"✅", color:"var(--green)"},
-  {label:"Thorax",            pct:51, icon:"🟡", color:"var(--yellow)"},
-  {label:"Overhead",          pct:54, icon:"🟡", color:"var(--yellow)"},
-  {label:"Ankles",            pct:100,icon:"✅", color:"var(--green)"}
+  {label:"Hip ext. rotation", pct:0,  icon:"🔴", color:"var(--plate-red)"},
+  {label:"Postchain",         pct:14, icon:"🔴", color:"var(--plate-red)"},
+  {label:"Hip flexion",       pct:100,icon:"✅", color:"var(--plate-green)"},
+  {label:"Thorax",            pct:51, icon:"🟡", color:"var(--plate-amber)"},
+  {label:"Overhead",          pct:54, icon:"🟡", color:"var(--plate-amber)"},
+  {label:"Ankles",            pct:100,icon:"✅", color:"var(--plate-green)"}
 ];
 
 // exercise: {name, dur, feel, cues:[...], tip, critical, mod}
