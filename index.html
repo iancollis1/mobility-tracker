@@ -173,46 +173,281 @@
     padding:14px;
     margin-bottom:16px;
   }
+  .scores-card-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:12px;
+  }
   .scores-card h2{
     font-family:'DM Mono', monospace;
-    margin:0 0 12px;
+    margin:0;
     font-size:12px;
     font-weight:700;
     color:var(--dim);
     text-transform:uppercase;
     letter-spacing:.08em;
   }
+  .scores-updated{
+    font-family:'DM Mono', monospace;
+    font-size:10.5px;
+    color:var(--dim);
+    white-space:nowrap;
+  }
+  .score-item{
+    border-bottom:1px dashed var(--line);
+    padding-bottom:10px;
+    margin-bottom:10px;
+  }
+  .score-item:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0}
   .score-row{
     display:flex;
     align-items:center;
-    gap:10px;
-    margin-bottom:10px;
+    gap:8px;
+    cursor:pointer;
   }
-  .score-row:last-child{margin-bottom:0}
   .score-label{
-    flex:0 0 118px;
+    flex:0 0 96px;
     font-family:'Inter', sans-serif;
-    font-size:13px;
+    font-size:12.5px;
     color:var(--chalk);
     font-weight:600;
+    line-height:1.25;
   }
+  .score-bar-col{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
   .score-bar-track{
-    flex:1;
     height:8px;
     background:var(--iron-raised);
     border:1px solid var(--line);
     border-radius:4px;
     overflow:hidden;
   }
-  .score-bar-fill{height:100%}
+  .score-bar-fill{height:100%;transition:width .3s ease}
+  .score-status{
+    font-family:'DM Mono', monospace;
+    font-size:9.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
   .score-pct{
     flex:0 0 auto;
     font-family:'DM Mono', monospace;
     font-size:12.5px;
     font-weight:700;
     color:var(--dim);
-    min-width:48px;
+    min-width:38px;
     text-align:right;
+  }
+  .score-edit-btn{
+    flex:0 0 auto;
+    background:none;
+    border:none;
+    font-size:14px;
+    line-height:1;
+    cursor:pointer;
+    padding:4px;
+    opacity:.65;
+  }
+  .score-edit-btn:hover{opacity:1}
+  .score-row-dual .score-dual-col{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
+  .score-dual-sub{display:flex;align-items:center;gap:8px}
+  .score-dual-side{
+    font-family:'DM Mono', monospace;
+    font-size:10px;
+    font-weight:700;
+    color:var(--dim);
+    width:12px;
+    flex:0 0 auto;
+  }
+  .score-pct-sm{
+    font-family:'DM Mono', monospace;
+    font-size:11px;
+    font-weight:700;
+    color:var(--dim);
+    min-width:34px;
+    text-align:right;
+    flex:0 0 auto;
+  }
+
+  /* ---- score editor ---- */
+  .score-editor{padding:10px 2px 2px}
+  .score-editor-side-label{
+    font-family:'DM Mono', monospace;
+    font-size:10.5px;
+    color:var(--dim);
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    margin-bottom:2px;
+  }
+  .score-slider{width:100%;accent-color:var(--plate-blue);margin-bottom:4px}
+  .score-slider-readout{
+    font-family:'DM Mono', monospace;
+    font-size:13px;
+    font-weight:700;
+    color:var(--chalk);
+    text-align:center;
+    margin-bottom:8px;
+  }
+  .score-editor-actions{display:flex;gap:8px}
+  .score-save-btn,.score-cancel-btn{
+    flex:1;
+    border-radius:5px;
+    font-family:'DM Mono', monospace;
+    font-size:12px;
+    font-weight:700;
+    padding:9px;
+    cursor:pointer;
+  }
+  .score-save-btn{background:var(--plate-blue);border:2px solid var(--plate-blue);color:#fff}
+  .score-cancel-btn{background:transparent;border:2px solid var(--line);color:var(--dim)}
+
+  /* ---- score detail / exercise mapping ---- */
+  .score-detail{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+  .score-detail-title{font-family:'Bebas Neue', sans-serif;font-size:17px;letter-spacing:.01em;color:var(--chalk)}
+  .score-detail-sub{font-family:'DM Mono', monospace;font-size:11px;color:var(--dim);margin-bottom:10px}
+  .score-ex-list{display:flex;flex-direction:column;gap:9px;margin-bottom:10px}
+  .score-ex-item{display:flex;gap:8px;align-items:flex-start}
+  .score-ex-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;margin-top:5px}
+  .score-ex-name{font-family:'Inter', sans-serif;font-size:12.5px;font-weight:600;color:var(--chalk)}
+  .score-ex-session{font-family:'DM Mono', monospace;font-size:10.5px;color:var(--dim);margin:1px 0 2px}
+  .score-ex-why{font-family:'Inter', sans-serif;font-size:12px;color:var(--dim);line-height:1.4}
+  .score-note-callout{
+    background:var(--accent-dim);
+    border-radius:5px;
+    padding:9px 11px;
+    font-family:'DM Mono', monospace;
+    font-size:11.5px;
+    color:var(--dim);
+    line-height:1.5;
+    margin-bottom:10px;
+  }
+  .score-progress{background:var(--iron-raised);border:1px solid var(--line);border-radius:5px;padding:10px;margin-bottom:10px}
+  .score-progress-row{display:flex;justify-content:space-between;gap:8px;font-family:'DM Mono', monospace;font-size:11.5px;color:var(--dim);padding:2px 0}
+  .score-progress-row strong{color:var(--chalk);font-weight:700}
+  .score-progress-row strong.up{color:var(--plate-green)}
+  .score-progress-row strong.down{color:var(--plate-red)}
+  .score-progress-spark{margin-top:6px}
+  .score-spark{width:100%;height:32px;display:block}
+
+  /* ---- score notes ---- */
+  .score-notes{margin-top:2px}
+  .score-notes-label{font-family:'DM Mono', monospace;font-size:11px;color:var(--dim);margin-bottom:6px}
+  .score-notes-input{
+    width:100%;
+    min-height:50px;
+    background:var(--iron-raised);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:8px;
+    font-family:'Inter', sans-serif;
+    font-size:12.5px;
+    color:var(--chalk);
+    resize:vertical;
+    margin-bottom:6px;
+  }
+  .score-notes-save{
+    background:var(--iron-soft);
+    border:2px solid var(--line);
+    border-radius:5px;
+    padding:7px 12px;
+    font-family:'DM Mono', monospace;
+    font-size:11px;
+    font-weight:700;
+    color:var(--chalk);
+    cursor:pointer;
+    margin-bottom:8px;
+  }
+  .score-notes-list{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+  .score-note-entry{font-family:'Inter', sans-serif;font-size:12px;color:var(--dim);line-height:1.4}
+  .score-note-date{font-family:'DM Mono', monospace;font-size:10px;color:var(--dim);font-weight:700;margin-right:6px}
+  .score-notes-toggle{
+    background:none;
+    border:none;
+    color:var(--plate-blue);
+    font-family:'DM Mono', monospace;
+    font-size:11px;
+    font-weight:700;
+    text-decoration:underline;
+    cursor:pointer;
+    padding:0;
+  }
+
+  .scores-update-btn{
+    width:100%;
+    margin-top:4px;
+    background:var(--iron-raised);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:11px;
+    font-family:'DM Mono', monospace;
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--chalk);
+    cursor:pointer;
+  }
+
+  /* ---- streak card ---- */
+  .streak-card{
+    background:var(--iron-soft);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:14px;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .streak-label{font-family:'DM Mono', monospace;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}
+  .streak-value{font-family:'Bebas Neue', sans-serif;font-size:26px;color:var(--chalk);line-height:1.15}
+  .streak-sub{font-family:'DM Mono', monospace;font-size:10.5px;color:var(--dim)}
+  .streak-btn{
+    flex:0 0 auto;
+    background:var(--plate-blue);
+    border:2px solid var(--plate-blue);
+    color:#fff;
+    border-radius:5px;
+    padding:10px 14px;
+    font-family:'DM Mono', monospace;
+    font-size:11.5px;
+    font-weight:700;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .streak-btn.done{background:var(--plate-green);border-color:var(--plate-green)}
+  .streak-btn:disabled{opacity:.85;cursor:default}
+
+  /* ---- next session reminder ---- */
+  .reminder-banner{
+    background:var(--iron-soft);
+    border:1px solid var(--line);
+    border-left:4px solid var(--plate-blue);
+    border-radius:6px;
+    padding:12px 14px;
+    margin-bottom:14px;
+    font-family:'DM Mono', monospace;
+    font-size:12.5px;
+    color:var(--chalk);
+  }
+  .reminder-text{cursor:pointer}
+  .reminder-edit{opacity:.6;font-size:11px}
+  .reminder-picker{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+  .reminder-picker-label{font-family:'DM Mono', monospace;font-size:11px;color:var(--dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+  .reminder-picker-row{display:flex;flex-wrap:wrap;gap:6px}
+  .reminder-picker-btn{
+    background:var(--iron-raised);
+    border:2px solid var(--line);
+    border-radius:5px;
+    padding:7px 10px;
+    font-family:'DM Mono', monospace;
+    font-size:11px;
+    font-weight:600;
+    color:var(--chalk);
+    cursor:pointer;
   }
 
   /* ---- session cards (daily) ---- */
@@ -492,14 +727,93 @@ const MODS = [
   "⬅️ <b>Left side tighter:</b> extra time left side on pigeon, figure-four, hamstring"
 ];
 
-const SCORES = [
-  {label:"Hip ext. rotation", pct:0,  icon:"🔴", color:"var(--plate-red)"},
-  {label:"Postchain",         pct:14, icon:"🔴", color:"var(--plate-red)"},
-  {label:"Hip flexion",       pct:100,icon:"✅", color:"var(--plate-green)"},
-  {label:"Thorax",            pct:51, icon:"🟡", color:"var(--plate-amber)"},
-  {label:"Overhead",          pct:54, icon:"🟡", color:"var(--plate-amber)"},
-  {label:"Ankles",            pct:100,icon:"✅", color:"var(--plate-green)"}
+const SCORE_DEFS = [
+  {key:"hipExtRotation", label:"Hip ext. rotation", baseline:0, target:50, timeline:"6 months",
+    exercises:[
+      {name:"Supine Butterfly", session:"Daily Morning, Evening, all Legs pre/post", why:"Most direct passive opener for external rotation at 0% restriction — highest priority exercise"},
+      {name:"Elevated Pigeon", session:"Daily Post, Evening, all Legs post", why:"Targets deep external rotators and piriformis directly — do for 3+ min each side"},
+      {name:"90/90 Floor Stretch", session:"Daily Morning extended, Evening", why:"Trains hip to hold external rotation actively — use yoga block on highest setting"},
+      {name:"Figure-Four Stretch", session:"Desk Break, Legs pre", why:"Accessible external rotation opener — do every desk break without fail"},
+      {name:"Clamshells", session:"Daily Pre extended, Legs A pre extended", why:"Strengthens glute medius in external rotation — active control not just passive length"},
+      {name:"Piriformis Prep (ball + gun)", session:"Legs B pre, before bridges", why:"Releases the primary external rotator that's cramping — must do before loading"}
+    ]},
+  {key:"postchain", label:"Postchain", baseline:14, target:50, timeline:"6 months",
+    exercises:[
+      {name:"Standing Hamstring Stretch", session:"All sessions", why:"Open-hip version only — seated version was irritating sciatic nerve not stretching hamstring"},
+      {name:"Elevated Pigeon", session:"Daily Post, Evening, Legs post", why:"Posterior hip restriction is a major component of your postchain score"},
+      {name:"Pso-Rite Release", session:"Daily Morning, all post sessions", why:"Psoas restriction pulls pelvis forward, artificially shortening the entire posterior chain"},
+      {name:"Sciatic Nerve Floss", session:"Daily Post extended, Legs post extended, Evening extended", why:"Neural tension mimics postchain tightness — flossing improves apparent flexibility"},
+      {name:"Legs Up the Wall", session:"All post extended, Evening", why:"Passive posterior chain decompression — longer holds are better here"},
+      {name:"Dead Bugs", session:"Daily Pre extended, Evening extended", why:"Core strength supports posterior chain — weak core forces posterior chain to compensate"}
+    ]},
+  {key:"hipFlexion", label:"Hip flexion", baseline:100, target:null, timeline:null,
+    note:"Your strongest area. Maintain with consistent work — don't let desk sitting erode it.",
+    exercises:[
+      {name:"Hip Flexor Stretch 90/90", session:"Daily Morning, Legs pre", why:"Maintain current range — don't neglect it"},
+      {name:"Couch Stretch", session:"Daily Post, Legs post extended", why:"Prevents hip flexor shortening from desk sitting"},
+      {name:"Child's Pose", session:"Daily Post extended", why:"General hip and lower back maintenance"}
+    ]},
+  {key:"thorax", label:"Thorax", baseline:51, target:75, timeline:"4 months",
+    note:"Thorax at 51% contributes to your squat forward lean and limits pressing mechanics.",
+    exercises:[
+      {name:"Thoracic Extension (foam roller)", session:"All Push post, Pull B pre extended", why:"Most direct thoracic mobility exercise — extension enables rotation"},
+      {name:"Cat-Cow", session:"Daily Post", why:"Segmental spinal mobility — thoracic rotation improves with consistent daily work"},
+      {name:"Child's Pose", session:"Daily Post extended", why:"Thoracic decompression as a side effect"},
+      {name:"World's Greatest Stretch", session:"Desk Break extended", why:"Rotation through thoracic spine under load — most functional thoracic exercise"}
+    ]},
+  {key:"overhead", label:"Overhead", baseline:54, target:75, timeline:"4 months",
+    note:"Overhead at 54% directly explains your squat forward lean and OHP compensation pattern.",
+    exercises:[
+      {name:"Overhead Shoulder Stretch", session:"All Push pre", why:"Most direct overhead mobility stretch — highest priority before pressing"},
+      {name:"Pec Minor Stretch", session:"Push pre extended", why:"Tight pec minor is often the primary limiter of overhead range — releases impingement"},
+      {name:"Wall-Supported ER Stretch", session:"All Push/Pull sessions", why:"External rotation is required for true overhead position — your left side especially"},
+      {name:"Thoracic Extension", session:"Push pre extended, Pull B pre", why:"Overhead range requires thoracic extension — compensating with lower back instead"},
+      {name:"Band Pull-Apart", session:"All Push/Pull pre", why:"Rear delt activation balances shoulder for overhead movement"}
+    ]},
+  {key:"ankles", label:"Ankles", baseline:100, target:null, timeline:null,
+    note:"Your strongest area. Maintain after calf raise volume — don't let training shorten it.",
+    exercises:[
+      {name:"Calf Stretch", session:"All Legs post", why:"Maintain current range after calf raise volume"},
+      {name:"Ankle Circles", session:"Optional add to morning warmup", why:"Joint mobility maintenance"}
+    ]},
+  {key:"shoulderER", label:"Shoulder ext. rotation", dual:true, baselineLeft:41, baselineRight:87, target:null, timeline:null,
+    note:"Left at 41% vs right at 87% is a significant asymmetry. Consistent daily ER work on left side is essential for long-term shoulder health under pressing and pulling volume.",
+    exercises:[
+      {name:"Wall-Supported ER Stretch", session:"All Push/Pull sessions, Evening extended, Legs B post extended", why:"Primary exercise — left side always 30s extra. Do every single session."},
+      {name:"Sleeper Stretch", session:"Push/Pull post extended", why:"Reaches posterior capsule deeper than wall version — floor-based, do when time allows"},
+      {name:"Band External Rotation", session:"Optional add to Push pre extended", why:"Strengthens external rotators actively — complements the stretching work"}
+    ]}
 ];
+
+function loadJSON(key, fallback){
+  try { const v = JSON.parse(localStorage.getItem(key)); return v && typeof v === "object" ? v : fallback; }
+  catch(e){ return fallback; }
+}
+function saveJSON(key, val){
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){}
+}
+
+const SCORE_DEFAULTS = {hipExtRotation:0, postchain:14, hipFlexion:100, thorax:51, overhead:54, ankles:100, shoulderERLeft:41, shoulderERRight:87};
+
+let scoreValues = loadJSON("mt-scores", Object.assign({}, SCORE_DEFAULTS));
+let scoreHistory = loadJSON("mt-scores-history", {});
+let scoreNotes = loadJSON("mt-score-notes", {});
+let scoresUpdatedAt = localStorage.getItem("mt-scores-updated") || null;
+let streakData = loadJSON("mt-streak", {current:0, longest:0, lastDate:null});
+let lastTrainingTab = localStorage.getItem("mt-last-training-tab") || null;
+let sessionOverride = localStorage.getItem("mt-last-session-override") || null;
+let scoresUI = {editingKey:null, expandedKey:null, notesExpandedKey:null, pickerOpen:false};
+
+(function ensureBaselineHistory(){
+  let changed = false;
+  Object.keys(SCORE_DEFAULTS).forEach(k => {
+    if (!scoreHistory[k] || !scoreHistory[k].length) {
+      scoreHistory[k] = [{v: SCORE_DEFAULTS[k], t:"baseline"}];
+      changed = true;
+    }
+  });
+  if (changed) saveJSON("mt-scores-history", scoreHistory);
+})();
 
 // exercise: {name, dur, feel, cues:[...], tip, critical, mod}
 
@@ -1396,17 +1710,365 @@ function modsBannerHTML(){
   </details>`;
 }
 
-function scoresCardHTML(){
-  return `<div class="scores-card">
-    <h2>Mobility Scores</h2>
-    ${SCORES.map(s => `
-      <div class="score-row">
-        <span class="score-label">${esc(s.label)}</span>
-        <span class="score-bar-track"><span class="score-bar-fill" style="width:${s.pct}%;background:${s.color}"></span></span>
-        <span class="score-pct">${s.icon} ${s.pct}%</span>
+/* ---- scores engine ---- */
+
+function scoreStatus(pct){
+  if (pct <= 25) return {color:"#ef4444", label:"Needs work"};
+  if (pct <= 50) return {color:"#f97316", label:"Restricted"};
+  if (pct <= 75) return {color:"#eab308", label:"Moderate"};
+  return {color:"#22c55e", label:"Good"};
+}
+
+function dotThemeColor(sessionText){
+  const s = sessionText.toLowerCase();
+  if (s.includes("push")) return "var(--plate-red)";
+  if (s.includes("pull")) return "var(--plate-amber)";
+  if (s.includes("legs")) return "var(--plate-green)";
+  return "var(--plate-blue)";
+}
+
+function formatUpdatedAt(iso){
+  if (!iso) return "Not yet updated";
+  const d = new Date(iso);
+  if (isNaN(d)) return "Not yet updated";
+  return "Updated " + d.toLocaleDateString(undefined,{month:"short",day:"numeric"}) + " · " + d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+}
+
+function formatNoteDate(iso){
+  const d = new Date(iso);
+  if (isNaN(d)) return "";
+  return d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
+}
+
+function sparklineHTML(history){
+  if (!history || history.length < 2) return "";
+  const vals = history.map(h => h.v);
+  const min = Math.min(...vals), max = Math.max(...vals);
+  const range = (max - min) || 1;
+  const w = 160, h = 32, stepX = vals.length > 1 ? w / (vals.length - 1) : 0;
+  const points = vals.map((v,i) => `${(i*stepX).toFixed(1)},${(h - ((v-min)/range)*h).toFixed(1)}`).join(" ");
+  return `<svg class="score-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <polyline points="${points}" fill="none" stroke="var(--plate-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+  </svg>`;
+}
+
+function exerciseListHTML(exercises){
+  return `<div class="score-ex-list">
+    ${exercises.map((ex,i) => `
+      <div class="score-ex-item">
+        <span class="score-ex-dot" style="background:${dotThemeColor(ex.session)}"></span>
+        <div class="score-ex-body">
+          <div class="score-ex-name">${i+1}. ${esc(ex.name)}</div>
+          <div class="score-ex-session">${esc(ex.session)}</div>
+          <div class="score-ex-why">${esc(ex.why)}</div>
+        </div>
       </div>
     `).join("")}
   </div>`;
+}
+
+function notesSectionHTML(key){
+  const notes = (scoreNotes[key] || []).slice().reverse();
+  const showAll = scoresUI.notesExpandedKey === key;
+  const visible = showAll ? notes : notes.slice(0,3);
+  return `<div class="score-notes">
+    <div class="score-notes-label">Session notes — what did you feel today?</div>
+    <textarea class="score-notes-input" data-key="${key}" placeholder="Optional notes..."></textarea>
+    <button type="button" class="score-notes-save" data-action="saveNote" data-key="${key}">Save note</button>
+    ${visible.length ? `<div class="score-notes-list">
+      ${visible.map(n => `<div class="score-note-entry"><span class="score-note-date">${esc(formatNoteDate(n.t))}</span>${esc(n.text)}</div>`).join("")}
+    </div>` : ""}
+    ${notes.length > 3 ? `<button type="button" class="score-notes-toggle" data-action="toggleNotes" data-key="${key}">${showAll ? "Show less" : `Show all ${notes.length}`}</button>` : ""}
+  </div>`;
+}
+
+function progressBlockHTML(rows, history){
+  const spark = sparklineHTML(history);
+  return `<div class="score-progress">
+    ${rows.map(r => `<div class="score-progress-row"><span>${esc(r.label)}</span><strong class="${r.cls||""}">${esc(r.value)}</strong></div>`).join("")}
+    ${spark ? `<div class="score-progress-spark">${spark}</div>` : ""}
+  </div>`;
+}
+
+function changeStr(change){
+  if (change === 0) return "No change";
+  return change > 0 ? `▲ +${change}%` : `▼ ${change}%`;
+}
+
+function scoreEditorHTML(key, pct){
+  return `<div class="score-editor" data-key="${key}">
+    <input type="range" min="0" max="100" value="${pct}" class="score-slider" data-key="${key}">
+    <div class="score-slider-readout"><span class="score-slider-value">${pct}</span>%</div>
+    <div class="score-editor-actions">
+      <button type="button" class="score-save-btn" data-action="saveScore" data-key="${key}">Save</button>
+      <button type="button" class="score-cancel-btn" data-action="cancelEditScore">Cancel</button>
+    </div>
+  </div>`;
+}
+
+function scoreDetailHTML(def, pct){
+  const history = scoreHistory[def.key] || [];
+  const baseline = history.length ? history[0].v : def.baseline;
+  const change = pct - baseline;
+  const rows = [
+    {label:"Starting", value:`${baseline}%`},
+    {label:"Current", value:`${pct}%`},
+    {label:"Change", value:changeStr(change), cls: change>0?"up":change<0?"down":""}
+  ];
+  if (def.target != null) rows.push({label:"Target", value:`${def.target}% in ${def.timeline}`});
+  return `<div class="score-detail">
+    <div class="score-detail-title">Exercises targeting ${esc(def.label)}</div>
+    <div class="score-detail-sub">In order of benefit for your restrictions</div>
+    ${exerciseListHTML(def.exercises)}
+    ${def.note ? `<div class="score-note-callout">${esc(def.note)}</div>` : ""}
+    ${progressBlockHTML(rows, history)}
+    ${notesSectionHTML(def.key)}
+  </div>`;
+}
+
+function scoreRowHTML(def){
+  const pct = scoreValues[def.key] != null ? scoreValues[def.key] : def.baseline;
+  const status = scoreStatus(pct);
+  const isEditing = scoresUI.editingKey === def.key;
+  const isExpanded = scoresUI.expandedKey === def.key;
+  return `<div class="score-item">
+    <div class="score-row" data-action="toggleScoreDetail" data-key="${def.key}">
+      <span class="score-label">${esc(def.label)}</span>
+      <div class="score-bar-col">
+        <span class="score-bar-track"><span class="score-bar-fill" style="width:${pct}%;background:${status.color}"></span></span>
+        <span class="score-status" style="color:${status.color}">${status.label}</span>
+      </div>
+      <span class="score-pct">${pct}%</span>
+      <button type="button" class="score-edit-btn" data-action="editScore" data-key="${def.key}" aria-label="Edit ${esc(def.label)}">✏️</button>
+    </div>
+    ${isEditing ? scoreEditorHTML(def.key, pct) : ""}
+    ${isExpanded ? scoreDetailHTML(def, pct) : ""}
+  </div>`;
+}
+
+function scoreEditorDualHTML(key, left, right){
+  return `<div class="score-editor" data-key="${key}">
+    <div class="score-editor-side-label">Left</div>
+    <input type="range" min="0" max="100" value="${left}" class="score-slider" data-key="${key}" data-side="left">
+    <div class="score-slider-readout"><span class="score-slider-value" data-side="left">${left}</span>%</div>
+    <div class="score-editor-side-label">Right</div>
+    <input type="range" min="0" max="100" value="${right}" class="score-slider" data-key="${key}" data-side="right">
+    <div class="score-slider-readout"><span class="score-slider-value" data-side="right">${right}</span>%</div>
+    <div class="score-editor-actions">
+      <button type="button" class="score-save-btn" data-action="saveScoreDual" data-key="${key}">Save</button>
+      <button type="button" class="score-cancel-btn" data-action="cancelEditScore">Cancel</button>
+    </div>
+  </div>`;
+}
+
+function scoreDetailDualHTML(def, left, right){
+  const histL = scoreHistory.shoulderERLeft || [];
+  const histR = scoreHistory.shoulderERRight || [];
+  const baseL = histL.length ? histL[0].v : def.baselineLeft;
+  const baseR = histR.length ? histR[0].v : def.baselineRight;
+  const rows = [
+    {label:"Starting (L / R)", value:`${baseL}% / ${baseR}%`},
+    {label:"Current (L / R)", value:`${left}% / ${right}%`},
+    {label:"Change — Left", value:changeStr(left-baseL), cls: (left-baseL)>0?"up":(left-baseL)<0?"down":""},
+    {label:"Change — Right", value:changeStr(right-baseR), cls: (right-baseR)>0?"up":(right-baseR)<0?"down":""}
+  ];
+  const hist = histL.length >= histR.length ? histL : histR;
+  return `<div class="score-detail">
+    <div class="score-detail-title">Exercises targeting ${esc(def.label)}</div>
+    <div class="score-detail-sub">In order of benefit for your restrictions</div>
+    ${exerciseListHTML(def.exercises)}
+    ${def.note ? `<div class="score-note-callout">${esc(def.note)}</div>` : ""}
+    ${progressBlockHTML(rows, hist)}
+    ${notesSectionHTML(def.key)}
+  </div>`;
+}
+
+function scoreRowDualHTML(def){
+  const left = scoreValues.shoulderERLeft != null ? scoreValues.shoulderERLeft : def.baselineLeft;
+  const right = scoreValues.shoulderERRight != null ? scoreValues.shoulderERRight : def.baselineRight;
+  const sL = scoreStatus(left), sR = scoreStatus(right);
+  const isEditing = scoresUI.editingKey === def.key;
+  const isExpanded = scoresUI.expandedKey === def.key;
+  return `<div class="score-item">
+    <div class="score-row score-row-dual" data-action="toggleScoreDetail" data-key="${def.key}">
+      <span class="score-label">${esc(def.label)}</span>
+      <div class="score-dual-col">
+        <div class="score-dual-sub">
+          <span class="score-dual-side">L</span>
+          <span class="score-bar-track" style="flex:1"><span class="score-bar-fill" style="width:${left}%;background:${sL.color}"></span></span>
+          <span class="score-pct-sm">${left}%</span>
+        </div>
+        <div class="score-dual-sub">
+          <span class="score-dual-side">R</span>
+          <span class="score-bar-track" style="flex:1"><span class="score-bar-fill" style="width:${right}%;background:${sR.color}"></span></span>
+          <span class="score-pct-sm">${right}%</span>
+        </div>
+      </div>
+      <button type="button" class="score-edit-btn" data-action="editScore" data-key="${def.key}" aria-label="Edit ${esc(def.label)}">✏️</button>
+    </div>
+    ${isEditing ? scoreEditorDualHTML(def.key, left, right) : ""}
+    ${isExpanded ? scoreDetailDualHTML(def, left, right) : ""}
+  </div>`;
+}
+
+function scoresCardHTML(){
+  return `<div class="scores-card">
+    <div class="scores-card-head">
+      <h2>Mobility Scores</h2>
+      <div class="scores-updated">${esc(formatUpdatedAt(scoresUpdatedAt))}</div>
+    </div>
+    ${SCORE_DEFS.map(def => def.dual ? scoreRowDualHTML(def) : scoreRowHTML(def)).join("")}
+    <button type="button" class="scores-update-btn" data-action="updateScoresBtn">Update scores</button>
+  </div>`;
+}
+
+/* ---- streak card ---- */
+
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+function yesterdayStr(){
+  const d = new Date(); d.setDate(d.getDate()-1);
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+
+function streakCardHTML(){
+  const doneToday = streakData.lastDate === todayStr();
+  return `<div class="streak-card">
+    <div class="streak-main">
+      <div class="streak-label">Daily protocol streak</div>
+      <div class="streak-value">${streakData.current} day${streakData.current === 1 ? "" : "s"}</div>
+      <div class="streak-sub">Longest: ${streakData.longest} day${streakData.longest === 1 ? "" : "s"}</div>
+    </div>
+    <button type="button" class="streak-btn ${doneToday ? "done" : ""}" data-action="markComplete" ${doneToday ? "disabled" : ""}>${doneToday ? "✓ Done today" : "Mark today complete"}</button>
+  </div>`;
+}
+
+/* ---- next session reminder ---- */
+
+const PPL_SEQUENCE = ["pushA","pullA","legsA","pushB","pullB","legsB"];
+
+function reminderBannerHTML(){
+  const lastKey = sessionOverride || lastTrainingTab;
+  let text;
+  if (lastKey && TABS[lastKey]) {
+    const idx = PPL_SEQUENCE.indexOf(lastKey);
+    const nextKey = idx >= 0 ? PPL_SEQUENCE[(idx+1) % PPL_SEQUENCE.length] : null;
+    text = `Last session: ${TABS[lastKey].label}${nextKey ? " — next up: " + TABS[nextKey].label : ""}`;
+  } else {
+    text = "No training session logged yet — next up: Push A";
+  }
+  return `<div class="reminder-banner">
+    <div class="reminder-text" data-action="toggleReminderPicker">${esc(text)} <span class="reminder-edit">✏️</span></div>
+    ${scoresUI.pickerOpen ? `<div class="reminder-picker">
+      <div class="reminder-picker-label">Which was your last session?</div>
+      <div class="reminder-picker-row">
+        ${PPL_SEQUENCE.map(k => `<button type="button" class="reminder-picker-btn" data-action="setLastSession" data-key="${k}">${esc(TABS[k].label)}</button>`).join("")}
+      </div>
+    </div>` : ""}
+  </div>`;
+}
+
+/* ---- scores actions ---- */
+
+function refreshScoresCard(){
+  const el = document.querySelector(".scores-card");
+  if (el) el.outerHTML = scoresCardHTML();
+}
+function refreshStreakCard(){
+  const el = document.querySelector(".streak-card");
+  if (el) el.outerHTML = streakCardHTML();
+}
+function refreshReminderBanner(){
+  const el = document.querySelector(".reminder-banner");
+  if (el) el.outerHTML = reminderBannerHTML();
+}
+
+function editScore(key){
+  scoresUI.editingKey = key;
+  scoresUI.expandedKey = null;
+  refreshScoresCard();
+}
+function cancelEditScore(){
+  scoresUI.editingKey = null;
+  refreshScoresCard();
+}
+function pushHistory(key, val){
+  if (!scoreHistory[key]) scoreHistory[key] = [];
+  scoreHistory[key].push({v: val, t: new Date().toISOString()});
+  saveJSON("mt-scores-history", scoreHistory);
+}
+function markScoresUpdated(){
+  scoresUpdatedAt = new Date().toISOString();
+  localStorage.setItem("mt-scores-updated", scoresUpdatedAt);
+}
+function saveScore(key){
+  const editor = document.querySelector(`.score-editor[data-key="${CSS.escape(key)}"]`);
+  const slider = editor ? editor.querySelector(".score-slider") : null;
+  const val = slider ? parseInt(slider.value, 10) : (scoreValues[key] != null ? scoreValues[key] : 0);
+  scoreValues[key] = val;
+  saveJSON("mt-scores", scoreValues);
+  pushHistory(key, val);
+  markScoresUpdated();
+  scoresUI.editingKey = null;
+  refreshScoresCard();
+}
+function saveScoreDual(key){
+  const editor = document.querySelector(`.score-editor[data-key="${CSS.escape(key)}"]`);
+  if (!editor) return;
+  const leftEl = editor.querySelector('.score-slider[data-side="left"]');
+  const rightEl = editor.querySelector('.score-slider[data-side="right"]');
+  const left = leftEl ? parseInt(leftEl.value, 10) : scoreValues.shoulderERLeft;
+  const right = rightEl ? parseInt(rightEl.value, 10) : scoreValues.shoulderERRight;
+  scoreValues.shoulderERLeft = left;
+  scoreValues.shoulderERRight = right;
+  saveJSON("mt-scores", scoreValues);
+  pushHistory("shoulderERLeft", left);
+  pushHistory("shoulderERRight", right);
+  markScoresUpdated();
+  scoresUI.editingKey = null;
+  refreshScoresCard();
+}
+function toggleScoreDetail(key){
+  scoresUI.expandedKey = scoresUI.expandedKey === key ? null : key;
+  scoresUI.editingKey = null;
+  refreshScoresCard();
+}
+function saveNote(key){
+  const ta = document.querySelector(`.score-notes-input[data-key="${CSS.escape(key)}"]`);
+  const text = ta ? ta.value.trim() : "";
+  if (!text) return;
+  if (!scoreNotes[key]) scoreNotes[key] = [];
+  scoreNotes[key].push({text, t: new Date().toISOString()});
+  saveJSON("mt-score-notes", scoreNotes);
+  refreshScoresCard();
+}
+function toggleNotes(key){
+  scoresUI.notesExpandedKey = scoresUI.notesExpandedKey === key ? null : key;
+  refreshScoresCard();
+}
+function updateScoresBtn(){
+  scoresUI.editingKey = SCORE_DEFS[0].key;
+  scoresUI.expandedKey = null;
+  refreshScoresCard();
+  const el = document.querySelector(".scores-card");
+  if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
+}
+function markStreakComplete(){
+  const today = todayStr(), yest = yesterdayStr();
+  if (streakData.lastDate === today) return;
+  streakData.current = streakData.lastDate === yest ? streakData.current + 1 : 1;
+  streakData.longest = Math.max(streakData.longest, streakData.current);
+  streakData.lastDate = today;
+  saveJSON("mt-streak", streakData);
+  refreshStreakCard();
+}
+function setLastSession(key){
+  sessionOverride = key;
+  try { localStorage.setItem("mt-last-session-override", key); } catch(e){}
+  scoresUI.pickerOpen = false;
+  refreshReminderBanner();
 }
 
 function sessionCardHTML(session){
@@ -1430,9 +2092,11 @@ function sessionCardHTML(session){
 
 function renderDaily(){
   return `
+    ${reminderBannerHTML()}
     <div class="intro-note">${esc(DAILY.note)}</div>
     ${modsBannerHTML()}
     ${scoresCardHTML()}
+    ${streakCardHTML()}
     ${DAILY.sessions.map(sessionCardHTML).join("")}
   `;
 }
@@ -1477,7 +2141,13 @@ function setActiveTab(key){
     b.classList.toggle("active", b.dataset.tab === key);
   });
   renderTab(key);
-  try { localStorage.setItem("mt-active-tab", key); } catch(e){}
+  try {
+    localStorage.setItem("mt-active-tab", key);
+    if (key !== "daily") {
+      lastTrainingTab = key;
+      localStorage.setItem("mt-last-training-tab", key);
+    }
+  } catch(e){}
 }
 
 /* ============================= TIMER ENGINE ============================= */
@@ -1941,12 +2611,35 @@ document.addEventListener("click", e => {
     if (action === "pause") { togglePause(); return; }
     if (action === "cancel") { cancelTimer(); return; }
     if (action === "tapRep") { decrementRep(); return; }
+    if (action === "toggleScoreDetail") { toggleScoreDetail(actionEl.dataset.key); return; }
+    if (action === "editScore") { editScore(actionEl.dataset.key); return; }
+    if (action === "cancelEditScore") { cancelEditScore(); return; }
+    if (action === "saveScore") { saveScore(actionEl.dataset.key); return; }
+    if (action === "saveScoreDual") { saveScoreDual(actionEl.dataset.key); return; }
+    if (action === "saveNote") { saveNote(actionEl.dataset.key); return; }
+    if (action === "toggleNotes") { toggleNotes(actionEl.dataset.key); return; }
+    if (action === "updateScoresBtn") { updateScoresBtn(); return; }
+    if (action === "markComplete") { markStreakComplete(); return; }
+    if (action === "toggleReminderPicker") { scoresUI.pickerOpen = !scoresUI.pickerOpen; refreshReminderBanner(); return; }
+    if (action === "setLastSession") { setLastSession(actionEl.dataset.key); return; }
   }
 
   if (e.target.closest("#stickyTimerBar .sticky-timer-text")) {
     scrollToActiveExercise();
     return;
   }
+});
+
+document.addEventListener("input", e => {
+  const slider = e.target.closest(".score-slider");
+  if (!slider) return;
+  const side = slider.dataset.side;
+  const editor = slider.closest(".score-editor");
+  if (!editor) return;
+  const readout = side
+    ? editor.querySelector(`.score-slider-value[data-side="${side}"]`)
+    : editor.querySelector(".score-slider-value");
+  if (readout) readout.textContent = slider.value;
 });
 
 /* ============================= INIT ============================= */
