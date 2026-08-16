@@ -215,15 +215,16 @@
     font-weight:600;
     line-height:1.25;
   }
-  .score-bar-col{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+  .score-bar-col{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0}
   .score-bar-track{
-    height:8px;
-    background:var(--iron-raised);
-    border:1px solid var(--line);
-    border-radius:4px;
+    display:block;
+    height:12px;
+    background:#e5e7eb;
+    border:1px solid rgba(0,0,0,0.1);
+    border-radius:6px;
     overflow:hidden;
   }
-  .score-bar-fill{height:100%;transition:width .3s ease}
+  .score-bar-fill{display:block;height:100%;transition:width .3s ease}
   .score-status{
     font-family:'DM Mono', monospace;
     font-size:9.5px;
@@ -374,22 +375,6 @@
     padding:0;
   }
 
-  .scores-update-btn{
-    width:100%;
-    margin-top:4px;
-    background:var(--iron-raised);
-    border:1px solid var(--line);
-    border-radius:5px;
-    padding:11px;
-    font-family:'DM Mono', monospace;
-    font-size:12.5px;
-    font-weight:700;
-    letter-spacing:.04em;
-    text-transform:uppercase;
-    color:var(--chalk);
-    cursor:pointer;
-  }
-
   /* ---- streak card ---- */
   .streak-card{
     background:var(--iron-soft);
@@ -420,6 +405,18 @@
   }
   .streak-btn.done{background:var(--plate-green);border-color:var(--plate-green)}
   .streak-btn:disabled{opacity:.85;cursor:default}
+  .streak-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:0 0 auto}
+  .streak-undo-btn{
+    background:none;
+    border:none;
+    color:var(--dim);
+    font-family:'DM Mono', monospace;
+    font-size:10.5px;
+    font-weight:700;
+    text-decoration:underline;
+    cursor:pointer;
+    padding:0;
+  }
 
   /* ---- next session reminder ---- */
   .reminder-banner{
@@ -1712,10 +1709,16 @@ function modsBannerHTML(){
 
 /* ---- scores engine ---- */
 
+function scoreBarColor(pct){
+  if (pct <= 25) return "#ef4444";
+  if (pct <= 50) return "#f97316";
+  if (pct <= 75) return "#eab308";
+  return "#22c55e";
+}
+
 function scoreStatus(pct){
-  if (pct <= 25) return {color:"#ef4444", label:"Needs work"};
-  if (pct <= 50) return {color:"#f97316", label:"Restricted"};
-  if (pct <= 75) return {color:"#eab308", label:"Moderate"};
+  if (pct <= 50) return {color:"#ef4444", label:"Critical"};
+  if (pct <= 75) return {color:"#f97316", label:"Needs Work"};
   return {color:"#22c55e", label:"Good"};
 }
 
@@ -1835,7 +1838,7 @@ function scoreRowHTML(def){
     <div class="score-row" data-action="toggleScoreDetail" data-key="${def.key}">
       <span class="score-label">${esc(def.label)}</span>
       <div class="score-bar-col">
-        <span class="score-bar-track"><span class="score-bar-fill" style="width:${pct}%;background:${status.color}"></span></span>
+        <span class="score-bar-track"><span class="score-bar-fill" style="width:${pct}%;background:${scoreBarColor(pct)}"></span></span>
         <span class="score-status" style="color:${status.color}">${status.label}</span>
       </div>
       <span class="score-pct">${pct}%</span>
@@ -1886,7 +1889,6 @@ function scoreDetailDualHTML(def, left, right){
 function scoreRowDualHTML(def){
   const left = scoreValues.shoulderERLeft != null ? scoreValues.shoulderERLeft : def.baselineLeft;
   const right = scoreValues.shoulderERRight != null ? scoreValues.shoulderERRight : def.baselineRight;
-  const sL = scoreStatus(left), sR = scoreStatus(right);
   const isEditing = scoresUI.editingKey === def.key;
   const isExpanded = scoresUI.expandedKey === def.key;
   return `<div class="score-item">
@@ -1895,12 +1897,12 @@ function scoreRowDualHTML(def){
       <div class="score-dual-col">
         <div class="score-dual-sub">
           <span class="score-dual-side">L</span>
-          <span class="score-bar-track" style="flex:1"><span class="score-bar-fill" style="width:${left}%;background:${sL.color}"></span></span>
+          <span class="score-bar-track" style="flex:1"><span class="score-bar-fill" style="width:${left}%;background:${scoreBarColor(left)}"></span></span>
           <span class="score-pct-sm">${left}%</span>
         </div>
         <div class="score-dual-sub">
           <span class="score-dual-side">R</span>
-          <span class="score-bar-track" style="flex:1"><span class="score-bar-fill" style="width:${right}%;background:${sR.color}"></span></span>
+          <span class="score-bar-track" style="flex:1"><span class="score-bar-fill" style="width:${right}%;background:${scoreBarColor(right)}"></span></span>
           <span class="score-pct-sm">${right}%</span>
         </div>
       </div>
@@ -1918,7 +1920,6 @@ function scoresCardHTML(){
       <div class="scores-updated">${esc(formatUpdatedAt(scoresUpdatedAt))}</div>
     </div>
     ${SCORE_DEFS.map(def => def.dual ? scoreRowDualHTML(def) : scoreRowHTML(def)).join("")}
-    <button type="button" class="scores-update-btn" data-action="updateScoresBtn">Update scores</button>
   </div>`;
 }
 
@@ -1941,7 +1942,10 @@ function streakCardHTML(){
       <div class="streak-value">${streakData.current} day${streakData.current === 1 ? "" : "s"}</div>
       <div class="streak-sub">Longest: ${streakData.longest} day${streakData.longest === 1 ? "" : "s"}</div>
     </div>
-    <button type="button" class="streak-btn ${doneToday ? "done" : ""}" data-action="markComplete" ${doneToday ? "disabled" : ""}>${doneToday ? "✓ Done today" : "Mark today complete"}</button>
+    <div class="streak-actions">
+      <button type="button" class="streak-btn ${doneToday ? "done" : ""}" data-action="markComplete" ${doneToday ? "disabled" : ""}>${doneToday ? "✓ Done today" : "Mark today complete"}</button>
+      ${doneToday ? `<button type="button" class="streak-undo-btn" data-action="undoStreak">Undo</button>` : ""}
+    </div>
   </div>`;
 }
 
@@ -2048,19 +2052,26 @@ function toggleNotes(key){
   scoresUI.notesExpandedKey = scoresUI.notesExpandedKey === key ? null : key;
   refreshScoresCard();
 }
-function updateScoresBtn(){
-  scoresUI.editingKey = SCORE_DEFS[0].key;
-  scoresUI.expandedKey = null;
-  refreshScoresCard();
-  const el = document.querySelector(".scores-card");
-  if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
-}
 function markStreakComplete(){
   const today = todayStr(), yest = yesterdayStr();
   if (streakData.lastDate === today) return;
+  streakData.undoSnapshot = {current: streakData.current, lastDate: streakData.lastDate};
   streakData.current = streakData.lastDate === yest ? streakData.current + 1 : 1;
   streakData.longest = Math.max(streakData.longest, streakData.current);
   streakData.lastDate = today;
+  saveJSON("mt-streak", streakData);
+  refreshStreakCard();
+}
+function undoStreakComplete(){
+  if (streakData.lastDate !== todayStr() || !streakData.undoSnapshot) return;
+  const snap = streakData.undoSnapshot;
+  if (streakData.current === 1) {
+    const ok = window.confirm(`This will reset your streak to ${snap.current}. Are you sure?`);
+    if (!ok) return;
+  }
+  streakData.current = snap.current;
+  streakData.lastDate = snap.lastDate;
+  delete streakData.undoSnapshot;
   saveJSON("mt-streak", streakData);
   refreshStreakCard();
 }
@@ -2618,8 +2629,8 @@ document.addEventListener("click", e => {
     if (action === "saveScoreDual") { saveScoreDual(actionEl.dataset.key); return; }
     if (action === "saveNote") { saveNote(actionEl.dataset.key); return; }
     if (action === "toggleNotes") { toggleNotes(actionEl.dataset.key); return; }
-    if (action === "updateScoresBtn") { updateScoresBtn(); return; }
     if (action === "markComplete") { markStreakComplete(); return; }
+    if (action === "undoStreak") { undoStreakComplete(); return; }
     if (action === "toggleReminderPicker") { scoresUI.pickerOpen = !scoresUI.pickerOpen; refreshReminderBanner(); return; }
     if (action === "setLastSession") { setLastSession(actionEl.dataset.key); return; }
   }
