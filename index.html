@@ -675,6 +675,30 @@
     margin:0 0 14px;
     line-height:1.6;
   }
+  .view-toggle{
+    display:flex;
+    gap:6px;
+    margin-bottom:14px;
+    background:var(--iron-raised);
+    border-radius:6px;
+    padding:3px;
+  }
+  .view-btn{
+    flex:1;
+    background:transparent;
+    border:none;
+    border-radius:4px;
+    padding:9px 4px;
+    font-family:'DM Mono', monospace;
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    color:var(--dim);
+    cursor:pointer;
+    text-align:center;
+  }
+  .view-btn.active{background:var(--accent);color:#fff}
   .band-selector{
     display:flex;
     gap:5px;
@@ -846,7 +870,7 @@ const MODS = [
   "🦵 <b>Hamstring:</b> standing open-hip version only",
   "⚠️ <b>Sharp/shooting sensation</b> = stop immediately",
   "🧠 <b>Nerve flossing:</b> never hold, never force",
-  "🍑 <b>Right piriformis</b> cramps during bridges: ball → gun → figure-four before bridges",
+  "🍑 <b>Right piriformis</b> cramps during bridges: ball → foam roller → figure-four before bridges",
   "⬅️ <b>Left side tighter:</b> extra time left side on pigeon, figure-four, hamstring"
 ];
 
@@ -865,7 +889,7 @@ const CATEGORY_DEFS = [
       {name:"90/90 Floor Stretch", session:"Daily Morning extended, Evening", why:"Trains hip to hold external rotation actively — use yoga block on highest setting"},
       {name:"Figure-Four Stretch", session:"Desk Break, Legs pre", why:"Accessible external rotation opener — do every desk break without fail"},
       {name:"Clamshells", session:"Daily Pre extended, Legs A pre extended", why:"Strengthens glute medius in external rotation — active control not just passive length"},
-      {name:"Piriformis Prep (ball + gun)", session:"Legs B pre, before bridges", why:"Releases the primary external rotator that's cramping — must do before loading"},
+      {name:"Piriformis Prep (ball + foam roller)", session:"Legs B pre, before bridges", why:"Releases the primary external rotator that's cramping — must do before loading"},
       {name:"Hip Flexor Stretch 90/90", session:"Daily Morning, Legs pre", why:"Maintain current flexion range — don't neglect it"},
       {name:"Couch Stretch", session:"Daily Post, Legs post extended", why:"Prevents hip flexor shortening from desk sitting"},
       {name:"Child's Pose", session:"Daily Post extended", why:"General hip and lower back maintenance"}
@@ -992,7 +1016,7 @@ const MORNING = {
       tip:"Directly targets 0% external rotation — do this every single morning without exception"},
     {name:"Glute Bridges", dur:"10 reps, 2s hold", mod:true,
       feel:"Deep in both glutes — not hamstrings or lower back",
-      cues:["Piriformis prep first if cramping: ball 30s → gun 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
+      cues:["Piriformis prep first if cramping: ball 30s → foam roller 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
       tip:"Wakes up glutes before the day starts — especially important before sitting at a desk"}
   ]},
   standard: {time:"8 min", exercises:[
@@ -1010,7 +1034,7 @@ const MORNING = {
       tip:"🧱 Yoga block on highest setting if doing floor 90/90 afterward"},
     {name:"Glute Bridges", dur:"12 reps, 2s hold", mod:true,
       feel:"Deep in both glutes — not hamstrings or lower back",
-      cues:["Piriformis prep first if cramping: ball 30s → gun 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
+      cues:["Piriformis prep first if cramping: ball 30s → foam roller 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
       tip:"Wakes up glutes before the day starts — especially important before sitting at a desk"}
   ]},
   full: {time:"10 min", exercises:[
@@ -1028,7 +1052,7 @@ const MORNING = {
       tip:"🧱 Yoga block on highest setting if doing floor 90/90 afterward"},
     {name:"Glute Bridges (Extended)", dur:"15 reps, 2s hold", mod:true,
       feel:"Deep in both glutes — not hamstrings or lower back",
-      cues:["Piriformis prep first if cramping: ball 30s → gun 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
+      cues:["Piriformis prep first if cramping: ball 30s → foam roller 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
       tip:"Same cues as quick version, just more reps"}
   ]}
 };
@@ -1379,7 +1403,7 @@ function legsBTimeBands(){
     tip:"Full sequence skipped due to time — prioritize right side since that's where cramping occurs"};
   const piriformisFull = {name:"Piriformis Prep (full sequence)", dur:"3 min", critical:true,
     feel:"Deep outer glute releasing progressively",
-    cues:["Ball → gun → figure-four both sides","Right side first","30–60s ball on tender spots","20–30s gun same area","45s figure-four each side"],
+    cues:["Ball → foam roller → figure-four both sides","Right side first","30–60s ball on tender spots","20–30s foam roller same area","45s figure-four each side"],
     tip:"Full sequence non-negotiable at this session length before hip thrust and cable pull-through"};
   const elevatedPigeon = (dur) => ({name:"Elevated Pigeon", dur, critical:true,
     feel:"Deep outer glute",
@@ -1436,14 +1460,348 @@ function legsBTimeBands(){
   };
 }
 
+function pushAHomeBands(){
+  const sleeper = (dur) => ({name:"Sleeper Stretch", dur, critical:true, mod:true,
+    feel:"Deep posterior shoulder capsule",
+    cues:["Lie on side arm at 90 degrees","Other hand gently presses forearm toward floor","Don't force — subtle movement only","Left side longer always — 41% vs 87% right"],
+    tip:"Reaches posterior capsule deeper than wall version — most important post-push home exercise"});
+  const psoRite = (dur) => ({name:"Pso-Rite Release", dur, critical:true, mod:true,
+    feel:"Deep dull ache inside front of hip — different from surface pressure",
+    cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten","Left side first always"],
+    tip:"Daily psoas release regardless of training day — left side priority"});
+  const supine = (dur) => ({name:"Supine Butterfly", dur, critical:true,
+    feel:"Inner thighs and deep outer hips — gravity-driven opening",
+    cues:["Lie on back knees bent feet flat — let knees fall outward naturally","Hands lightly on inner thighs no pushing","Every exhale knees drop further"],
+    tip:"Directly targets 0% external rotation — do every evening without exception"});
+  const legsUpWall = (dur) => ({name:"Legs Up the Wall", dur,
+    feel:"Gentle release across lower back and sacrum",
+    cues:["Hips touching wall","Arms out palms up","Close eyes and breathe slowly"],
+    tip:"Pure decompression — nothing to think about"});
+  const pecMinor = (dur) => ({name:"Pec Minor Stretch", dur, critical:true,
+    feel:"Deep chest just inside shoulder joint",
+    cues:["Arm at 90/90 on wall slightly below shoulder height","Rotate chest away gently","Don't force"],
+    tip:"Tight pec minor forces shoulder into impingement during pressing — releasing it daily accelerates overhead improvement"});
+  const overheadShoulder = (dur) => ({name:"Overhead Shoulder Stretch", dur,
+    feel:"Lat and tricep of reaching arm, side of shoulder",
+    cues:["Arm overhead elbow bent","Pull elbow with other hand","Ribs stay down"],
+    tip:"Your overhead scores 54% — consistent daily work here moves that number"});
+  const childsPoseLatReach = (dur) => ({name:"Child's Pose with Lat Reach", dur,
+    feel:"Full lat from hip to armpit",
+    cues:["From child's pose walk both hands to one side","Let hip sink opposite direction","Breathe into the stretch"],
+    tip:"Ab wheel loads lats significantly — deeper release here than overhead stretch"});
+  const hipFlexor9090 = (dur) => ({name:"90/90 Hip Flexor Stretch", dur,
+    feel:"Front of hip and upper thigh of back leg",
+    cues:["Yoga block highest setting","Tuck pelvis under","Breathe out and sink","If nothing shift back knee further"],
+    tip:"Daily hip flexor work — desk sitting erodes this constantly"});
+  const diaphragmatic = {name:"Diaphragmatic Breathing", dur:"10 breaths",
+    feel:"Belly rising and falling — chest stays mostly still",
+    cues:["Inhale 4 counts nose","Hold 2","Exhale 6 counts mouth"],
+    tip:"Longer exhale activates parasympathetic system — signal to nervous system day is done"};
+  const elevatedPigeon = (dur) => ({name:"Elevated Pigeon", dur,
+    feel:"Deep outer hip and glute of front leg",
+    cues:["Bench or elevated surface — elevated version only, not floor pigeon","Shin as parallel as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
+    tip:"Hip external rotation work — relevant every day not just leg days"});
+  const sciaticFloss = {name:"Sciatic Nerve Floss", dur:"10 reps each side",
+    feel:"Mild tension down back of leg — never sharp or electrical",
+    cues:["Sit upright one leg hanging","Straighten knee while tilting chin to chest — reverse both together","2s out 2s back","Back off if sharp sensation"],
+    tip:"⚠️ Never hold. Never force. Rhythmic and gentle only."};
+
+  return {
+    15: [sleeper("2 min left, 90s right"), psoRite("90s each side"), supine("3 min"), legsUpWall("3 min")],
+    30: [sleeper("2.5 min left, 90s right"), psoRite("90s each side"), pecMinor("90s each side"), overheadShoulder("90s each side"), supine("2.5 min"), legsUpWall("3 min"), childsPoseLatReach("60s each side")],
+    45: [sleeper("3 min left, 2 min right"), psoRite("90s each side"), pecMinor("2 min each side"), overheadShoulder("90s each side"), hipFlexor9090("60s each side"), supine("3 min"), legsUpWall("4 min"), childsPoseLatReach("90s each side"), diaphragmatic],
+    60: [sleeper("3 min left, 2 min right"), psoRite("90s each side"), pecMinor("2.5 min each side"), overheadShoulder("2 min each side"), childsPoseLatReach("2 min each side"), hipFlexor9090("75s each side"), supine("3.5 min"), elevatedPigeon("2 min each side"), legsUpWall("5 min"), sciaticFloss, diaphragmatic]
+  };
+}
+
+function pushBHomeBands(){
+  const sleeper = (dur) => ({name:"Sleeper Stretch", dur, critical:true, mod:true,
+    feel:"Deep posterior shoulder capsule",
+    cues:["Lie on side arm at 90 degrees","Other hand gently presses forearm toward floor","Don't force — subtle movement only","Left side longer always — 41% vs 87% right"],
+    tip:"Reaches posterior capsule deeper than wall version — most important post-push home exercise"});
+  const psoRite = (dur) => ({name:"Pso-Rite Release", dur, critical:true, mod:true,
+    feel:"Deep dull ache inside front of hip — different from surface pressure",
+    cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten","Left side first always"],
+    tip:"Daily psoas release regardless of training day — left side priority"});
+  const supine = (dur) => ({name:"Supine Butterfly", dur, critical:true,
+    feel:"Inner thighs and deep outer hips — gravity-driven opening",
+    cues:["Lie on back knees bent feet flat — let knees fall outward naturally","Hands lightly on inner thighs no pushing","Every exhale knees drop further"],
+    tip:"Directly targets 0% external rotation — do every evening without exception"});
+  const legsUpWall = (dur) => ({name:"Legs Up the Wall", dur,
+    feel:"Gentle release across lower back and sacrum",
+    cues:["Hips touching wall","Arms out palms up","Close eyes and breathe slowly"],
+    tip:"Pure decompression — nothing to think about"});
+  const pecMinor = (dur) => ({name:"Pec Minor Stretch", dur, critical:true,
+    feel:"Deep chest just inside shoulder joint",
+    cues:["Arm at 90/90 on wall slightly below shoulder height","Rotate chest away gently","Don't force"],
+    tip:"Tight pec minor forces shoulder into impingement during pressing — releasing it daily accelerates overhead improvement"});
+  const overheadShoulder = (dur) => ({name:"Overhead Shoulder Stretch", dur, critical:true,
+    feel:"Lat and tricep of reaching arm, side of shoulder",
+    cues:["Arm overhead elbow bent","Pull elbow with other hand","Ribs stay down"],
+    tip:"OHP specifically demands overhead range — higher priority here than Push A"});
+  const lateralChildsPose = (dur) => ({name:"Lateral Child's Pose", dur,
+    feel:"QL and lateral lower back",
+    cues:["From child's pose walk hands to one side","Let hip sink opposite direction","Breathe into the stretch"],
+    tip:"Suitcase carry creates asymmetric QL loading — finish this release at home"});
+  const childsPoseLatReach = (dur) => ({name:"Child's Pose with Lat Reach", dur,
+    feel:"Full lat from hip to armpit",
+    cues:["From child's pose walk both hands to one side","Let hip sink opposite direction","Breathe into the stretch"],
+    tip:"Ab wheel loads lats significantly — deeper release here than overhead stretch"});
+  const hipFlexor9090 = (dur) => ({name:"90/90 Hip Flexor Stretch", dur,
+    feel:"Front of hip and upper thigh of back leg",
+    cues:["Yoga block highest setting","Tuck pelvis under","Breathe out and sink","If nothing shift back knee further"],
+    tip:"Daily hip flexor work — desk sitting erodes this constantly"});
+  const diaphragmatic = {name:"Diaphragmatic Breathing", dur:"10 breaths",
+    feel:"Belly rising and falling — chest stays mostly still",
+    cues:["Inhale 4 counts nose","Hold 2","Exhale 6 counts mouth"],
+    tip:"Longer exhale activates parasympathetic system — signal to nervous system day is done"};
+  const elevatedPigeon = (dur) => ({name:"Elevated Pigeon", dur,
+    feel:"Deep outer hip and glute of front leg",
+    cues:["Bench or elevated surface — elevated version only, not floor pigeon","Shin as parallel as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
+    tip:"Hip external rotation work — relevant every day not just leg days"});
+  const sciaticFloss = {name:"Sciatic Nerve Floss", dur:"10 reps each side",
+    feel:"Mild tension down back of leg — never sharp or electrical",
+    cues:["Sit upright one leg hanging","Straighten knee while tilting chin to chest — reverse both together","2s out 2s back","Back off if sharp sensation"],
+    tip:"⚠️ Never hold. Never force. Rhythmic and gentle only."};
+
+  return {
+    15: [sleeper("2 min left, 90s right"), psoRite("90s each side"), supine("2.5 min"), legsUpWall("3 min")],
+    30: [sleeper("2.5 min left, 90s right"), psoRite("90s each side"), pecMinor("90s each side"), overheadShoulder("90s each side"), lateralChildsPose("60s each side"), supine("2.5 min"), legsUpWall("3 min")],
+    45: [sleeper("3 min left, 2 min right"), psoRite("90s each side"), pecMinor("2 min each side"), overheadShoulder("90s each side"), lateralChildsPose("75s each side"), hipFlexor9090("60s each side"), supine("3 min"), legsUpWall("4 min"), diaphragmatic],
+    60: [sleeper("3 min left, 2 min right"), psoRite("90s each side"), pecMinor("2.5 min each side"), overheadShoulder("2 min each side"), lateralChildsPose("90s each side"), childsPoseLatReach("90s each side"), hipFlexor9090("75s each side"), supine("3.5 min"), elevatedPigeon("2 min each side"), legsUpWall("5 min"), sciaticFloss, diaphragmatic]
+  };
+}
+
+function pullAHomeBands(){
+  const childsPoseLatReach = (dur, tip) => ({name:"Child's Pose with Lat Reach", dur, critical:true,
+    feel:"Full lat from hip to armpit",
+    cues:["From child's pose walk both hands to one side","Let hip sink opposite direction","Breathe into the stretch"],
+    tip:tip || "Deepest lat release — more effective than overhead stretch for tissue length"});
+  const psoRite = (dur) => ({name:"Pso-Rite Release", dur, critical:true, mod:true,
+    feel:"Deep dull ache inside front of hip — different from surface pressure",
+    cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten","Left side first always"],
+    tip:"Daily psoas release regardless of training day — left side priority"});
+  const supine = (dur) => ({name:"Supine Butterfly", dur, critical:true,
+    feel:"Inner thighs and deep outer hips — gravity-driven opening",
+    cues:["Lie on back knees bent feet flat — let knees fall outward naturally","Hands lightly on inner thighs no pushing","Every exhale knees drop further"],
+    tip:"Directly targets 0% external rotation — do every evening without exception"});
+  const legsUpWall = (dur) => ({name:"Legs Up the Wall", dur,
+    feel:"Gentle release across lower back and sacrum",
+    cues:["Hips touching wall","Arms out palms up","Close eyes and breathe slowly"],
+    tip:"Pure decompression — nothing to think about"});
+  const thoracicRotation = (dur) => ({name:"Thoracic Rotation Stretch", dur,
+    feel:"Mid-back rotating — not lower back",
+    cues:["Seated or kneeling hand behind head","Rotate elbow toward ceiling","Movement from mid-back only"],
+    tip:"Rows and pulls compress thoracic rotation — restore it fully at home"});
+  const posteriorShoulder = (dur) => ({name:"Posterior Shoulder Stretch", dur,
+    feel:"Rear delt and posterior capsule",
+    cues:["Cross-body arm pull","Shoulder stays down — don't shrug"],
+    tip:"Deeper release than gym cooldown covers"});
+  const hipFlexor9090 = (dur) => ({name:"90/90 Hip Flexor Stretch", dur,
+    feel:"Front of hip and upper thigh of back leg",
+    cues:["Yoga block highest setting","Tuck pelvis under","Breathe out and sink","If nothing shift back knee further"],
+    tip:"Daily hip flexor work — desk sitting erodes this constantly"});
+  const sleeper = (dur) => ({name:"Sleeper Stretch", dur, mod:true,
+    feel:"Deep posterior shoulder capsule",
+    cues:["Lie on side arm at 90 degrees","Other hand gently presses forearm toward floor","Don't force — subtle movement only","Left side longer always"],
+    tip:"Pull volume compresses posterior capsule — sleeper stretch reaches deeper than cross-body"});
+  const elevatedPigeon = (dur) => ({name:"Elevated Pigeon", dur,
+    feel:"Deep outer hip and glute of front leg",
+    cues:["Bench or elevated surface — elevated version only, not floor pigeon","Shin as parallel as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
+    tip:"Hip external rotation work — relevant every day not just leg days"});
+  const diaphragmatic = {name:"Diaphragmatic Breathing", dur:"10 breaths",
+    feel:"Belly rising and falling — chest stays mostly still",
+    cues:["Inhale 4 counts nose","Hold 2","Exhale 6 counts mouth"],
+    tip:"Longer exhale activates parasympathetic system — signal to nervous system day is done"};
+  const sciaticFloss = {name:"Sciatic Nerve Floss", dur:"10 reps each side",
+    feel:"Mild tension down back of leg — never sharp or electrical",
+    cues:["Sit upright one leg hanging","Straighten knee while tilting chin to chest — reverse both together","2s out 2s back","Back off if sharp sensation"],
+    tip:"⚠️ Never hold. Never force. Rhythmic and gentle only."};
+
+  return {
+    15: [childsPoseLatReach("90s each side"), psoRite("90s each side"), supine("2.5 min"), legsUpWall("3 min")],
+    30: [childsPoseLatReach("2 min each side"), psoRite("90s each side"), thoracicRotation("60s each side"), posteriorShoulder("60s each side"), supine("2.5 min"), legsUpWall("3 min"), hipFlexor9090("60s each side")],
+    45: [childsPoseLatReach("2 min each side"), psoRite("90s each side"), thoracicRotation("75s each side"), posteriorShoulder("75s each side"), sleeper("90s left, 60s right"), hipFlexor9090("60s each side"), supine("3 min"), legsUpWall("4 min"), diaphragmatic],
+    60: [childsPoseLatReach("2.5 min each side"), psoRite("90s each side"), thoracicRotation("90s each side"), posteriorShoulder("90s each side"), sleeper("2 min left, 90s right"), elevatedPigeon("90s each side"), hipFlexor9090("75s each side"), supine("3.5 min"), legsUpWall("5 min"), sciaticFloss, diaphragmatic]
+  };
+}
+
+function pullBHomeBands(){
+  const childsPoseLatReach = (dur) => ({name:"Child's Pose with Lat Reach", dur, critical:true,
+    feel:"Full lat from hip to armpit",
+    cues:["From child's pose walk both hands to one side","Let hip sink opposite direction","Breathe into the stretch"],
+    tip:"Deepest lat release — more effective than overhead stretch for tissue length"});
+  const lateralChildsPose = (dur, critical, tip) => ({name:"Lateral Child's Pose", dur, critical,
+    feel:"QL and lateral lower back",
+    cues:["From child's pose walk hands to one side","Let hip sink opposite direction","Breathe into the stretch"],
+    tip});
+  const psoRite = (dur) => ({name:"Pso-Rite Release", dur, critical:true, mod:true,
+    feel:"Deep dull ache inside front of hip — different from surface pressure",
+    cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten","Left side first always"],
+    tip:"Daily psoas release regardless of training day — left side priority"});
+  const supine = (dur) => ({name:"Supine Butterfly", dur, critical:true,
+    feel:"Inner thighs and deep outer hips — gravity-driven opening",
+    cues:["Lie on back knees bent feet flat — let knees fall outward naturally","Hands lightly on inner thighs no pushing","Every exhale knees drop further"],
+    tip:"Directly targets 0% external rotation — do every evening without exception"});
+  const legsUpWall = (dur) => ({name:"Legs Up the Wall", dur,
+    feel:"Gentle release across lower back and sacrum",
+    cues:["Hips touching wall","Arms out palms up","Close eyes and breathe slowly"],
+    tip:"Pure decompression — nothing to think about"});
+  const thoracicRotation = (dur, critical, tip) => ({name:"Thoracic Rotation Stretch", dur, critical,
+    feel:"Mid-back rotating — not lower back",
+    cues:["Seated or kneeling hand behind head","Rotate elbow toward ceiling","Movement from mid-back only"],
+    tip});
+  const posteriorShoulder = (dur) => ({name:"Posterior Shoulder Stretch", dur,
+    feel:"Rear delt and posterior capsule",
+    cues:["Cross-body arm pull","Shoulder stays down — don't shrug"],
+    tip:"Deeper release than gym cooldown covers"});
+  const sleeper = (dur) => ({name:"Sleeper Stretch", dur, mod:true,
+    feel:"Deep posterior shoulder capsule",
+    cues:["Lie on side arm at 90 degrees","Other hand gently presses forearm toward floor","Don't force — subtle movement only","Left side longer always"],
+    tip:"Pull volume compresses posterior capsule — sleeper stretch reaches deeper than cross-body"});
+  const hipFlexor9090 = (dur) => ({name:"90/90 Hip Flexor Stretch", dur,
+    feel:"Front of hip and upper thigh of back leg",
+    cues:["Yoga block highest setting","Tuck pelvis under","Breathe out and sink","If nothing shift back knee further"],
+    tip:"Daily hip flexor work — desk sitting erodes this constantly"});
+  const elevatedPigeon = (dur) => ({name:"Elevated Pigeon", dur,
+    feel:"Deep outer hip and glute of front leg",
+    cues:["Bench or elevated surface — elevated version only, not floor pigeon","Shin as parallel as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
+    tip:"Hip external rotation work — relevant every day not just leg days"});
+  const diaphragmatic = {name:"Diaphragmatic Breathing", dur:"10 breaths",
+    feel:"Belly rising and falling — chest stays mostly still",
+    cues:["Inhale 4 counts nose","Hold 2","Exhale 6 counts mouth"],
+    tip:"Longer exhale activates parasympathetic system — signal to nervous system day is done"};
+  const sciaticFloss = {name:"Sciatic Nerve Floss", dur:"10 reps each side",
+    feel:"Mild tension down back of leg — never sharp or electrical",
+    cues:["Sit upright one leg hanging","Straighten knee while tilting chin to chest — reverse both together","2s out 2s back","Back off if sharp sensation"],
+    tip:"⚠️ Never hold. Never force. Rhythmic and gentle only."};
+
+  const thoracicTip = "Pull B has heaviest row compression — thoracic rotation restore is highest priority here";
+
+  return {
+    15: [childsPoseLatReach("90s each side"), lateralChildsPose("60s each side", false, "Side plank QL demand — finish this release at home if short on gym time"), psoRite("90s each side"), supine("2 min")],
+    30: [childsPoseLatReach("2 min each side"), lateralChildsPose("75s each side", false, "Side plank QL demand — finish this release at home if short on gym time"), psoRite("90s each side"), thoracicRotation("75s each side", true, thoracicTip), posteriorShoulder("60s each side"), supine("2.5 min"), legsUpWall("3 min")],
+    45: [childsPoseLatReach("2 min each side"), lateralChildsPose("90s each side", false, "Side plank QL demand — finish this release at home if short on gym time"), psoRite("90s each side"), thoracicRotation("90s each side", true, thoracicTip), posteriorShoulder("75s each side"), sleeper("90s left, 60s right"), hipFlexor9090("60s each side"), supine("3 min"), legsUpWall("4 min"), diaphragmatic],
+    60: [childsPoseLatReach("2.5 min each side"), lateralChildsPose("90s each side", false, "Side plank QL demand — finish this release at home if short on gym time"), psoRite("90s each side"), thoracicRotation("90s each side", true, thoracicTip), posteriorShoulder("90s each side"), sleeper("2 min left, 90s right"), elevatedPigeon("90s each side"), hipFlexor9090("75s each side"), supine("3.5 min"), legsUpWall("5 min"), sciaticFloss, diaphragmatic]
+  };
+}
+
+function legsAHomeBands(){
+  const psoRite = (dur) => ({name:"Pso-Rite Release", dur, critical:true, mod:true,
+    feel:"Deep dull ache inside front of hip — different from surface pressure",
+    cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten","Left side first always"],
+    tip:"Daily psoas release regardless of training day — left side priority"});
+  const elevatedPigeon = (dur, tip) => ({name:"Elevated Pigeon", dur, critical:true,
+    feel:"Deep outer hip and glute of front leg",
+    cues:["Elevated surface only — not floor pigeon","Shin as parallel as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
+    tip:tip || "Gym cooldown had shorter holds — extend here while tissue is still warm"});
+  const supine = (dur) => ({name:"Supine Butterfly", dur, critical:true,
+    feel:"Inner thighs and deep outer hips — gravity-driven opening",
+    cues:["Lie on back knees bent feet flat — let knees fall outward naturally","Hands lightly on inner thighs no pushing","Every exhale knees drop further"],
+    tip:"Directly targets 0% external rotation — do every evening without exception"});
+  const legsUpWall = (dur) => ({name:"Legs Up the Wall", dur,
+    feel:"Gentle release across lower back and sacrum",
+    cues:["Hips touching wall","Arms out palms up","Close eyes and breathe slowly"],
+    tip:"Pure decompression — nothing to think about"});
+  const hipFlexorStretch = (dur) => ({name:"Hip Flexor Stretch", dur, critical:true,
+    feel:"Front of hip and upper thigh of back leg",
+    cues:["Tuck pelvis under","Breathe out and sink","Shift back knee further if nothing felt"],
+    tip:"Hanging leg raise loads psoas heavily — deeper release at home after gym cooldown"});
+  const floor9090 = (dur) => ({name:"90/90 Floor Stretch", dur, mod:true,
+    feel:"Outer hip of back leg, inner thigh front leg",
+    cues:["Yoga block highest setting","Sit bones on block not floor","Rotate pelvis toward front leg not spine","Lean forward only once sitting upright"],
+    tip:"Hip external rotation work — relevant after every leg session"});
+  const sciaticFloss = (tip) => ({name:"Sciatic Nerve Floss", dur:"10 reps each side",
+    feel:"Mild tension down back of leg — never sharp or electrical",
+    cues:["Sit upright one leg hanging","Straighten knee while tilting chin to chest — reverse both together","2s out 2s back","Back off if sharp sensation"],
+    tip:tip || "⚠️ Never hold. Never force. Rhythmic and gentle only."});
+  const deadBugs = {name:"Dead Bugs", dur:"3 × 5 reps",
+    feel:"Deep core below navel — not hip flexors",
+    cues:["Exhale fully before each rep","Maintain neutral lumbar — don't flatten aggressively into floor","3s down 3s up","Reset if lower back lifts"],
+    tip:"Neutral spine throughout — aggressive posterior tilt creates flexion which is contraindicated given your history"};
+  const diaphragmatic = {name:"Diaphragmatic Breathing", dur:"10 breaths",
+    feel:"Belly rising and falling — chest stays mostly still",
+    cues:["Inhale 4 counts nose","Hold 2","Exhale 6 counts mouth"],
+    tip:"Longer exhale activates parasympathetic system — signal to nervous system day is done"};
+  const couchStretch = (dur) => ({name:"Couch Stretch", dur, mod:true,
+    feel:"Deep front of hip — deeper than quad stretch",
+    cues:["⚠️ ACL: thick padding under back knee","Squeeze glute of back leg — unlocks hip flexor","Torso upright — leaning back cheats the stretch"],
+    tip:"Deeper hip flexor release than 90/90 — worth the setup time"});
+  const standingHamstring = (dur) => ({name:"Standing Hamstring Stretch", dur, mod:true,
+    feel:"Back of thigh — pulling not sharp",
+    cues:["Open hip version","Left side extra time","Flat back hinge"],
+    tip:"Additional hamstring release beyond gym cooldown"});
+
+  return {
+    15: [psoRite("90s each side"), elevatedPigeon("2 min each side"), supine("2.5 min"), legsUpWall("3 min")],
+    30: [psoRite("90s each side"), elevatedPigeon("2.5 min each side"), hipFlexorStretch("90s each side"), supine("3 min"), floor9090("60s each side"), legsUpWall("3 min")],
+    45: [psoRite("90s each side"), elevatedPigeon("3 min each side", "3 min is where real tissue change starts at your restriction level"), hipFlexorStretch("90s each side"), supine("3 min"), floor9090("75s each side"), sciaticFloss("⚠️ Never hold. Never force. Mild tension only."), legsUpWall("4 min"), deadBugs, diaphragmatic],
+    60: [psoRite("90s each side"), elevatedPigeon("3.5 min each side"), hipFlexorStretch("2 min each side"), supine("3.5 min"), floor9090("90s each side"), couchStretch("2 min each side"), sciaticFloss(), standingHamstring("90s each side"), legsUpWall("5 min"), deadBugs, diaphragmatic]
+  };
+}
+
+function legsBHomeBands(){
+  const psoRite = (dur) => ({name:"Pso-Rite Release", dur, critical:true, mod:true,
+    feel:"Deep dull ache inside front of hip — different from surface pressure",
+    cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten","Left side first always"],
+    tip:"Daily psoas release regardless of training day — left side priority"});
+  const elevatedPigeon = (dur, tip) => ({name:"Elevated Pigeon", dur, critical:true,
+    feel:"Deep outer hip and glute of front leg",
+    cues:["Elevated surface only — not floor pigeon","Shin as parallel as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
+    tip});
+  const supine = (dur, tip) => ({name:"Supine Butterfly", dur, critical:true,
+    feel:"Inner thighs and deep outer hips — gravity-driven opening",
+    cues:["Lie on back knees bent feet flat — let knees fall outward naturally","Hands lightly on inner thighs no pushing","Every exhale knees drop further"],
+    tip:tip || "Directly targets 0% external rotation — do every evening without exception"});
+  const legsUpWall = (dur) => ({name:"Legs Up the Wall", dur,
+    feel:"Gentle release across lower back and sacrum",
+    cues:["Hips touching wall","Arms out palms up","Close eyes and breathe slowly"],
+    tip:"Pure decompression — nothing to think about"});
+  const hipFlexorStretch = (dur) => ({name:"Hip Flexor Stretch", dur, critical:true,
+    feel:"Front of hip and upper thigh of back leg",
+    cues:["Tuck pelvis under","Breathe out and sink","Shift back knee further if nothing felt"],
+    tip:"Cable pull-through and hip thrust extend hip all session — psoas needs full release at home"});
+  const sciaticFloss = (tip) => ({name:"Sciatic Nerve Floss", dur:"10 reps each side",
+    feel:"Mild tension down back of leg — never sharp or electrical",
+    cues:["Sit upright one leg hanging","Straighten knee while tilting chin to chest — reverse both together","2s out 2s back","Back off if sharp sensation"],
+    tip:tip || "⚠️ Never hold. Never force. Rhythmic and gentle only."});
+  const floor9090 = (dur) => ({name:"90/90 Floor Stretch", dur, mod:true,
+    feel:"Outer hip of back leg, inner thigh front leg",
+    cues:["Yoga block highest setting","Sit bones on block","Rotate pelvis not spine"],
+    tip:"Hip external rotation work — relevant after every leg session"});
+  const couchStretch = (dur) => ({name:"Couch Stretch", dur, mod:true,
+    feel:"Deep front of hip",
+    cues:["⚠️ ACL: thick padding under back knee","Squeeze glute of back leg","Torso upright"],
+    tip:"Deeper hip flexor release than 90/90 — worth the setup time"});
+  const standingHamstring = (dur, cuesOverride) => ({name:"Standing Hamstring Stretch", dur, mod:true,
+    feel:"Back of thigh — pulling not sharp",
+    cues: cuesOverride || ["Open hip version","Left side extra time"],
+    tip:"Additional hamstring release beyond gym cooldown"});
+  const deadBugs = {name:"Dead Bugs", dur:"3 × 5 reps",
+    feel:"Deep core below navel — not hip flexors",
+    cues:["Exhale fully before each rep","Maintain neutral lumbar — don't flatten aggressively into floor","3s down 3s up","Reset if lower back lifts"],
+    tip:"Neutral spine throughout — aggressive posterior tilt creates flexion which is contraindicated given your history"};
+  const diaphragmatic = {name:"Diaphragmatic Breathing", dur:"10 breaths",
+    feel:"Belly rising and falling — chest stays mostly still",
+    cues:["Inhale 4 counts nose","Hold 2","Exhale 6 counts mouth"],
+    tip:"Longer exhale activates parasympathetic system — signal to nervous system day is done"};
+
+  return {
+    15: [psoRite("90s each side"), elevatedPigeon("2.5 min each side", "Hip thrust and pull-through compress posterior hip more than any other day — longest pigeon holds of the week belong here"), supine("2.5 min"), legsUpWall("3 min")],
+    30: [psoRite("90s each side"), elevatedPigeon("3 min each side", "Hip thrust and pull-through compress posterior hip more than any other day — longest pigeon holds of the week belong here"), hipFlexorStretch("90s each side"), supine("3 min"), sciaticFloss("⚠️ Never hold. Never force."), legsUpWall("3.5 min")],
+    45: [psoRite("90s each side"), elevatedPigeon("3 min each side", "Hip thrust and pull-through compress posterior hip more than any other day — longest pigeon holds of the week belong here"), hipFlexorStretch("90s each side"), supine("3.5 min"), floor9090("75s each side"), couchStretch("90s each side"), sciaticFloss("⚠️ Never hold. Never force."), legsUpWall("4 min"), deadBugs, diaphragmatic],
+    60: [psoRite("90s each side"), elevatedPigeon("3.5 min each side", "Hip thrust and pull-through compress posterior hip more than any other day — longest pigeon holds of the week belong here"), hipFlexorStretch("2 min each side"), supine("4 min", "Longest supine butterfly hold of the week — hip thrust demands maximum external rotation"), floor9090("90s each side"), couchStretch("2 min each side"), sciaticFloss("⚠️ Never hold. Never force."), standingHamstring("90s each side", ["Open hip version","Left side extra time and gentler — significantly more restricted"]), legsUpWall("5 min"), deadBugs, diaphragmatic]
+  };
+}
+
 const TABS = {
   daily: {label:"Daily", theme:"daily", type:"daily"},
-  pushA: {label:"Push A", theme:"push", type:"training", subtitle:"Primary: chest, front/side delts, triceps. Movements: Incline Barbell Press, Flat DB Press, Cable Flyes, Overhead Rope Extension, Pushdowns, Cable Lateral Raise.", timeBands:pushATimeBands},
-  pullA: {label:"Pull A", theme:"pull", type:"training", subtitle:"Primary: lats, mid-back, biceps, rear delts. Movements: Pull-Ups, Barbell Row, Lat Pulldown, Seated Cable Row, Incline DB Curl, Face Pull.", timeBands:pullATimeBands},
-  legsA: {label:"Legs A", theme:"legs", type:"training", subtitle:"Primary: quads, hamstrings, calves. Movements: Front Squat, Leg Press, Leg Extension, Seated Leg Curl, Calf Raise.", timeBands:legsATimeBands},
-  pushB: {label:"Push B", theme:"push", type:"training", subtitle:"Primary: front/side/rear delts, chest, triceps. Movements: Overhead Press, Incline DB Press, Close-Grip Bench/Dips, Overhead Rope Extension, Rear Delt Flye, Cable Lateral Raise.", timeBands:pushBTimeBands},
-  pullB: {label:"Pull B", theme:"pull", type:"training", subtitle:"Primary: lats, mid-back, biceps, core, traps. Movements: Weighted Pull-Up, Seal Row, T-Bar Row, Straight-Arm Pulldown, Incline DB Curl, Cable Curl, Pallof Press, Shrugs.", timeBands:pullBTimeBands},
-  legsB: {label:"Legs B", theme:"legs", type:"training", subtitle:"Primary: hamstrings, glutes, quads, calves. Movements: Cable Pull-Through, Hip Thrust, Lying Leg Curl, Walking Lunge/Bulgarian Split Squat, Leg Extension, Calf Raises.", timeBands:legsBTimeBands}
+  pushA: {label:"Push A", theme:"push", type:"training", subtitle:"Primary: chest, front/side delts, triceps. Movements: Incline Barbell Press, Flat DB Press, Cable Flyes, Overhead Rope Extension, Pushdowns, Cable Lateral Raise.", timeBands:pushATimeBands, homeBands:pushAHomeBands},
+  pullA: {label:"Pull A", theme:"pull", type:"training", subtitle:"Primary: lats, mid-back, biceps, rear delts. Movements: Pull-Ups, Barbell Row, Lat Pulldown, Seated Cable Row, Incline DB Curl, Face Pull.", timeBands:pullATimeBands, homeBands:pullAHomeBands},
+  legsA: {label:"Legs A", theme:"legs", type:"training", subtitle:"Primary: quads, hamstrings, calves. Movements: Front Squat, Leg Press, Leg Extension, Seated Leg Curl, Calf Raise.", timeBands:legsATimeBands, homeBands:legsAHomeBands},
+  pushB: {label:"Push B", theme:"push", type:"training", subtitle:"Primary: front/side/rear delts, chest, triceps. Movements: Overhead Press, Incline DB Press, Close-Grip Bench/Dips, Overhead Rope Extension, Rear Delt Flye, Cable Lateral Raise.", timeBands:pushBTimeBands, homeBands:pushBHomeBands},
+  pullB: {label:"Pull B", theme:"pull", type:"training", subtitle:"Primary: lats, mid-back, biceps, core, traps. Movements: Weighted Pull-Up, Seal Row, T-Bar Row, Straight-Arm Pulldown, Incline DB Curl, Cable Curl, Pallof Press, Shrugs.", timeBands:pullBTimeBands, homeBands:pullBHomeBands},
+  legsB: {label:"Legs B", theme:"legs", type:"training", subtitle:"Primary: hamstrings, glutes, quads, calves. Movements: Cable Pull-Through, Hip Thrust, Lying Leg Curl, Walking Lunge/Bulgarian Split Squat, Leg Extension, Calf Raises.", timeBands:legsBTimeBands, homeBands:legsBHomeBands}
 };
 const TAB_ORDER = ["daily","pushA","pullA","legsA","pushB","pullB","legsB"];
 
@@ -1961,6 +2319,7 @@ function renderDaily(){
 }
 
 const BAND_KEYS = [30,45,60,75,90,105,120];
+const HOME_BAND_KEYS = [15,30,45,60];
 
 function trainingPhaseSectionsHTML(tabKey, band, data){
   return `
@@ -1978,6 +2337,15 @@ function trainingPhaseSectionsHTML(tabKey, band, data){
   `;
 }
 
+function homeSessionHTML(tabKey, band, exercises){
+  return `
+    <div class="phase-section">
+      <div class="phase-head"><h3>🏠 Home Session — ${band} min</h3></div>
+      <div class="ex-list">${exercises.map((ex,i) => exerciseHTML(ex, `${tabKey}__home__${band}__${i}`)).join("")}</div>
+    </div>
+  `;
+}
+
 function getSelectedBand(tabKey, bands){
   let saved = null;
   try { saved = localStorage.getItem(`mt-band-${tabKey}`); } catch(e){}
@@ -1985,11 +2353,23 @@ function getSelectedBand(tabKey, bands){
   return (n && bands[n]) ? n : 60;
 }
 
-function renderTraining(tab, tabKey){
+function getSelectedHomeBand(tabKey, homeBands){
+  let saved = null;
+  try { saved = localStorage.getItem(`mt-home-band-${tabKey}`); } catch(e){}
+  const n = saved ? parseInt(saved,10) : null;
+  return (n && homeBands[n]) ? n : 30;
+}
+
+function getSelectedView(tabKey){
+  let saved = null;
+  try { saved = localStorage.getItem(`mt-view-${tabKey}`); } catch(e){}
+  return saved === "home" ? "home" : "gym";
+}
+
+function gymViewHTML(tab, tabKey){
   const bands = tab.timeBands();
   const selected = getSelectedBand(tabKey, bands);
   return `
-    <p class="tab-subtitle">${esc(tab.subtitle)}</p>
     <div class="band-selector" data-tab-key="${tabKey}">
       ${BAND_KEYS.map(b => `<button type="button" class="band-btn ${b===selected ? "active" : ""}" data-action="selectBand" data-tab-key="${tabKey}" data-band="${b}">${b}</button>`).join("")}
     </div>
@@ -1997,6 +2377,44 @@ function renderTraining(tab, tabKey){
       ${trainingPhaseSectionsHTML(tabKey, selected, bands[selected])}
     </div>
   `;
+}
+
+function homeViewHTML(tab, tabKey){
+  const homeBands = tab.homeBands();
+  const selected = getSelectedHomeBand(tabKey, homeBands);
+  return `
+    <div class="band-selector" data-tab-key="${tabKey}">
+      ${HOME_BAND_KEYS.map(b => `<button type="button" class="band-btn ${b===selected ? "active" : ""}" data-action="selectHomeBand" data-tab-key="${tabKey}" data-band="${b}">${b}</button>`).join("")}
+    </div>
+    <div class="band-content" id="bandContent">
+      ${homeSessionHTML(tabKey, selected, homeBands[selected])}
+    </div>
+  `;
+}
+
+function renderTraining(tab, tabKey){
+  const view = getSelectedView(tabKey);
+  return `
+    <p class="tab-subtitle">${esc(tab.subtitle)}</p>
+    <div class="view-toggle" data-tab-key="${tabKey}">
+      <button type="button" class="view-btn ${view === "gym" ? "active" : ""}" data-action="selectView" data-tab-key="${tabKey}" data-view="gym">Gym</button>
+      <button type="button" class="view-btn ${view === "home" ? "active" : ""}" data-action="selectView" data-tab-key="${tabKey}" data-view="home">Home</button>
+    </div>
+    <div class="view-content" id="viewContent">
+      ${view === "gym" ? gymViewHTML(tab, tabKey) : homeViewHTML(tab, tabKey)}
+    </div>
+  `;
+}
+
+function selectView(tabKey, view){
+  try { localStorage.setItem(`mt-view-${tabKey}`, view); } catch(e){}
+  document.querySelectorAll(`.view-toggle[data-tab-key="${tabKey}"] .view-btn`).forEach(b => {
+    b.classList.toggle("active", b.dataset.view === view);
+  });
+  const tab = TABS[tabKey];
+  const contentEl = document.getElementById("viewContent");
+  if (contentEl) contentEl.innerHTML = view === "gym" ? gymViewHTML(tab, tabKey) : homeViewHTML(tab, tabKey);
+  renderActiveTimer();
 }
 
 function selectBand(tabKey, band){
@@ -2008,6 +2426,17 @@ function selectBand(tabKey, band){
   });
   const contentEl = document.getElementById("bandContent");
   if (contentEl) contentEl.innerHTML = trainingPhaseSectionsHTML(tabKey, band, data);
+  renderActiveTimer();
+}
+
+function selectHomeBand(tabKey, band){
+  try { localStorage.setItem(`mt-home-band-${tabKey}`, band); } catch(e){}
+  const homeBands = TABS[tabKey].homeBands();
+  document.querySelectorAll(`.band-selector[data-tab-key="${tabKey}"] .band-btn`).forEach(b => {
+    b.classList.toggle("active", b.dataset.band === String(band));
+  });
+  const contentEl = document.getElementById("bandContent");
+  if (contentEl) contentEl.innerHTML = homeSessionHTML(tabKey, band, homeBands[band]);
   renderActiveTimer();
 }
 
@@ -2058,11 +2487,11 @@ function parseDuration(dur){
     return /min/i.test(unit) ? Math.round(n * 60) : Math.round(n);
   }
 
-  const setsMatch = d.match(/(\d+)\s*[×xX]\s*(\d+)\s*reps/);
+  const setsMatch = d.match(/(\d+)\s*[×xX]\s*(\d+)\s*(?:reps|breaths)/);
   if (setsMatch) {
     return { mode:"reps", sets:parseInt(setsMatch[1],10), repsPerSet:parseInt(setsMatch[2],10), eachSide:/each side/i.test(d) };
   }
-  const repsMatch = d.match(/(\d+)\s*reps/i);
+  const repsMatch = d.match(/(\d+)\s*(?:reps|breaths)/i);
   if (repsMatch) {
     return { mode:"reps", sets:1, repsPerSet:parseInt(repsMatch[1],10), eachSide:/each side/i.test(d) };
   }
@@ -2514,6 +2943,8 @@ document.addEventListener("click", e => {
     if (action === "toggleReminderPicker") { scoresUI.pickerOpen = !scoresUI.pickerOpen; refreshReminderBanner(); return; }
     if (action === "setLastSession") { setLastSession(actionEl.dataset.key); return; }
     if (action === "selectBand") { selectBand(actionEl.dataset.tabKey, parseInt(actionEl.dataset.band, 10)); return; }
+    if (action === "selectHomeBand") { selectHomeBand(actionEl.dataset.tabKey, parseInt(actionEl.dataset.band, 10)); return; }
+    if (action === "selectView") { selectView(actionEl.dataset.tabKey, actionEl.dataset.view); return; }
     if (action === "selectMorningTier") { selectedMorningTier = actionEl.dataset.tier; refreshMorningSection(); return; }
   }
 
