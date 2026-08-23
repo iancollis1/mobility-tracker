@@ -675,49 +675,64 @@
     margin:0 0 14px;
     line-height:1.6;
   }
-  .section-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
+  .band-selector{
+    display:flex;
+    gap:5px;
+    margin-bottom:16px;
   }
-  @media (max-width:420px){
-    .section-grid{grid-template-columns:1fr}
+  .band-btn{
+    flex:1;
+    background:var(--iron-soft);
+    border:2px solid var(--line);
+    border-radius:5px;
+    padding:9px 2px;
+    font-family:'DM Mono', monospace;
+    font-size:12px;
+    font-weight:700;
+    color:var(--chalk);
+    cursor:pointer;
+    text-align:center;
   }
-  details.section-card{
+  .band-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .phase-section{
     background:var(--iron-soft);
     border:1px solid var(--line);
     border-top:4px solid var(--accent);
     border-radius:6px;
-    overflow:hidden;
-    grid-column:span 1;
-  }
-  details.section-card[open]{grid-column:1 / -1}
-  details.section-card summary{
-    list-style:none;
-    cursor:pointer;
     padding:13px 12px;
+    margin-bottom:14px;
+  }
+  .phase-head{
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:6px;
+    margin-bottom:8px;
   }
-  details.section-card summary::-webkit-details-marker{display:none}
-  details.section-card summary h3{
+  .phase-head h3{
     font-family:'Bebas Neue', sans-serif;
-    font-size:21px;
+    font-size:22px;
     letter-spacing:.02em;
     color:var(--chalk);
     margin:0;
     line-height:1.2;
   }
-  details.section-card summary .sec-time{
+  .phase-time{
     font-family:'DM Mono', monospace;
     font-size:11px;
     color:var(--dim);
     font-weight:600;
     white-space:nowrap;
   }
-  details.section-card .sec-body{padding:0 12px 12px}
+  .workout-info{
+    text-align:center;
+    font-family:'DM Mono', monospace;
+    font-size:13px;
+    font-weight:700;
+    color:var(--dim);
+    padding:10px 0;
+    letter-spacing:.03em;
+  }
 
   footer.app-footer{
     max-width:640px;
@@ -965,44 +980,62 @@ let scoresUI = {editingKey:null, expandedKey:null, mappingKey:null, notesExpande
 
 // exercise: {name, dur, feel, cues:[...], tip, critical, mod}
 
+const MORNING = {
+  short: {time:"5 min", exercises:[
+    {name:"Pso-Rite Release", dur:"60s each side", critical:true,
+      feel:"Deep dull ache inside front of hip — different from surface pressure",
+      cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten on that side","Left side first 60s, right side 45s"],
+      tip:"Pulsing = near femoral artery, shift outward. Sharp = support more weight through forearms."},
+    {name:"Supine Butterfly", dur:"90s", critical:true,
+      feel:"Inner thighs and deep outer hips — gravity-driven opening",
+      cues:["Lie on back, knees bent, feet flat — let knees fall outward naturally","Hands lightly on inner thighs, no pushing","Every exhale knees drop further"],
+      tip:"Directly targets 0% external rotation — do this every single morning without exception"},
+    {name:"Glute Bridges", dur:"10 reps, 2s hold", mod:true,
+      feel:"Deep in both glutes — not hamstrings or lower back",
+      cues:["Piriformis prep first if cramping: ball 30s → gun 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
+      tip:"Wakes up glutes before the day starts — especially important before sitting at a desk"}
+  ]},
+  standard: {time:"8 min", exercises:[
+    {name:"Pso-Rite Release", dur:"75s each side", critical:true,
+      feel:"Deep dull ache inside front of hip — different from surface pressure",
+      cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten on that side","Left side gets the extra time"],
+      tip:"Pulsing = near femoral artery, shift outward. Sharp = support more weight through forearms."},
+    {name:"Supine Butterfly", dur:"2 min", critical:true,
+      feel:"Inner thighs and deep outer hips — gravity-driven opening",
+      cues:["Lie on back, knees bent, feet flat — let knees fall outward naturally","Hands lightly on inner thighs, no pushing","Every exhale knees drop further"],
+      tip:"Directly targets 0% external rotation — do this every single morning without exception"},
+    {name:"90/90 Hip Flexor Stretch", dur:"60s each side", mod:true,
+      feel:"Front of hip and upper thigh of back leg",
+      cues:["Tuck pelvis slightly under","Breathe out and let hip sink forward","If nothing, shift back knee further behind you"],
+      tip:"🧱 Yoga block on highest setting if doing floor 90/90 afterward"},
+    {name:"Glute Bridges", dur:"12 reps, 2s hold", mod:true,
+      feel:"Deep in both glutes — not hamstrings or lower back",
+      cues:["Piriformis prep first if cramping: ball 30s → gun 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
+      tip:"Wakes up glutes before the day starts — especially important before sitting at a desk"}
+  ]},
+  full: {time:"10 min", exercises:[
+    {name:"Pso-Rite Release (Extended)", dur:"90s each side", critical:true,
+      feel:"Deep dull ache inside front of hip — different from surface pressure",
+      cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten on that side","90s each side now — both sides equal time"],
+      tip:"Pulsing = near femoral artery, shift outward. Sharp = support more weight through forearms."},
+    {name:"Supine Butterfly (Extended)", dur:"2.5 min", critical:true,
+      feel:"Inner thighs and deep outer hips — gravity-driven opening",
+      cues:["After 90s try feet slightly closer to hips to change the angle","Every exhale release further","Progress marker: when knees reach floor, move to Phase 2 — small active pulses outward"],
+      tip:"Directly targets 0% external rotation — highest priority stretch in the entire program"},
+    {name:"90/90 Hip Flexor Stretch", dur:"60s each side", mod:true,
+      feel:"Front of hip and upper thigh of back leg",
+      cues:["Tuck pelvis slightly under","Breathe out and let hip sink forward","If nothing, shift back knee further behind you"],
+      tip:"🧱 Yoga block on highest setting if doing floor 90/90 afterward"},
+    {name:"Glute Bridges (Extended)", dur:"15 reps, 2s hold", mod:true,
+      feel:"Deep in both glutes — not hamstrings or lower back",
+      cues:["Piriformis prep first if cramping: ball 30s → gun 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
+      tip:"Same cues as quick version, just more reps"}
+  ]}
+};
+
 const DAILY = {
   note: "Training days: Morning → training day pre → train → training day post → Evening. Rest days: use Extended versions of all three.",
   sessions: [
-    {
-      id:"morning", title:"Morning", quickTime:"5 min", extTime:"10 min", replaceOnExtended:true,
-      quick:[
-        {name:"Pso-Rite Release", dur:"60s each side", critical:true,
-          feel:"Deep dull ache inside front of hip — different from surface pressure",
-          cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten on that side","Left side first 60s, right side 45s"],
-          tip:"Pulsing = near femoral artery, shift outward. Sharp = support more weight through forearms."},
-        {name:"Supine Butterfly", dur:"90s", critical:true,
-          feel:"Inner thighs and deep outer hips — gravity-driven opening",
-          cues:["Lie on back, knees bent, feet flat — let knees fall outward naturally","Hands lightly on inner thighs, no pushing","Every exhale knees drop further"],
-          tip:"Directly targets 0% external rotation — do this every single morning without exception"},
-        {name:"Glute Bridges", dur:"10 reps, 2s hold", mod:true,
-          feel:"Deep in both glutes — not hamstrings or lower back",
-          cues:["Piriformis prep first if cramping: ball 30s → gun 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
-          tip:"Wakes up glutes before the day starts — especially important before sitting at a desk"}
-      ],
-      extendedAdds:[
-        {name:"Pso-Rite Release (Extended)", dur:"90s each side", critical:true,
-          feel:"Deep dull ache inside front of hip — different from surface pressure",
-          cues:["One inch inside and below hip bone (ASIS)","Belly breathe — inhale increases pressure, exhale releases","Slow knee bend and straighten on that side","90s each side now — both sides equal time"],
-          tip:"Pulsing = near femoral artery, shift outward. Sharp = support more weight through forearms."},
-        {name:"Supine Butterfly (Extended)", dur:"2.5 min", critical:true,
-          feel:"Inner thighs and deep outer hips — gravity-driven opening",
-          cues:["After 90s try feet slightly closer to hips to change the angle","Every exhale release further","Progress marker: when knees reach floor, move to Phase 2 — small active pulses outward"],
-          tip:"Directly targets 0% external rotation — highest priority stretch in the entire program"},
-        {name:"90/90 Hip Flexor Stretch", dur:"60s each side", mod:true,
-          feel:"Front of hip and upper thigh of back leg",
-          cues:["Tuck pelvis slightly under","Breathe out and let hip sink forward","If nothing, shift back knee further behind you"],
-          tip:"🧱 Yoga block on highest setting if doing floor 90/90 afterward"},
-        {name:"Glute Bridges (Extended)", dur:"15 reps, 2s hold", mod:true,
-          feel:"Deep in both glutes — not hamstrings or lower back",
-          cues:["Piriformis prep first if cramping: ball 30s → gun 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
-          tip:"Same cues as quick version, just more reps"}
-      ]
-    },
     {
       id:"desk-break", title:"Desk Break", quickTime:"3–5 min", extTime:"8–10 min",
       note:"Hip flexor + figure-four every break without fail.",
@@ -1066,748 +1099,351 @@ const DAILY = {
   ]
 };
 
-function pushASections(){
-  return [
-    {id:"pre-quick", title:"Pre Quick", time:"8.5 min", exercises:[
-      {name:"Wall-Supported ER Stretch", dur:"60s right, 90s left", critical:true, mod:true,
-        feel:"Deep posterior shoulder and external rotators",
-        cues:["Arm at 90 degrees forearm against wall","Rotate chest away gently","Shoulder blade stays down","Left side 30s extra — 41% vs 87% right"],
-        tip:"Critical before pressing — activates external rotators to protect shoulder under load"},
-      {name:"Overhead Shoulder Stretch", dur:"90s each side", critical:true,
-        feel:"Lat and tricep of reaching arm, side of shoulder",
-        cues:["Arm overhead elbow bent","Other hand pulls elbow","Ribs stay down — don't flare"],
-        tip:"Your overhead scores 54% — highest priority pre-push stretch"},
-      {name:"Chest Opener", dur:"90s",
-        feel:"Front of chest and front delts",
-        cues:["Forearm on doorframe at 90 degrees","Step through gently","Shoulder blade doesn't wing out"],
-        tip:"Releases pec before pressing for full shoulder range"},
-      {name:"Band Pull-Apart", dur:"15 reps",
-        feel:"Rear delts and mid-back engaging",
-        cues:["Arms straight, pull to T","Squeeze shoulder blades","Controlled return"],
-        tip:"Activates rear delt to balance pressing load"},
-      {name:"Wrist Prep", dur:"60s",
-        feel:"Forearm extensors and wrist joint",
-        cues:["Slow full circles each direction","Then prayer stretch","Then reverse prayer"],
-        tip:"Pressing volume is hard on wrists — prep them"}
-    ]},
-    {id:"pre-extended", title:"Pre Extended", time:"12 min", exercises:[
-      {name:"Wall-Supported ER Stretch", dur:"75s right, 105s left", critical:true, mod:true,
-        feel:"Deep posterior shoulder and external rotators",
-        cues:["Arm at 90 degrees forearm against wall","Rotate chest away gently","Shoulder blade stays down","Left side 30s extra — 75s right, 105s left"],
-        tip:"Critical before pressing — activates external rotators to protect shoulder under load"},
-      {name:"Overhead Shoulder Stretch", dur:"90s each side", critical:true,
-        feel:"Lat and tricep of reaching arm, side of shoulder",
-        cues:["Arm overhead elbow bent","Other hand pulls elbow","Ribs stay down — don't flare"],
-        tip:"Your overhead scores 54% — highest priority pre-push stretch"},
-      {name:"Chest Opener", dur:"90s",
-        feel:"Front of chest and front delts",
-        cues:["Forearm on doorframe at 90 degrees","Step through gently","Shoulder blade doesn't wing out"],
-        tip:"Releases pec before pressing for full shoulder range"},
-      {name:"Pec Minor Stretch", dur:"90s each side",
-        feel:"Deep chest just inside shoulder joint",
-        cues:["Arm at 90/90 on wall slightly below shoulder","Rotate chest away gently","Don't force"],
-        tip:"Tight pec minor forces shoulder into impingement during pressing — releasing it is essential"},
-      {name:"Band Pull-Apart", dur:"15 reps",
-        feel:"Rear delts and mid-back engaging",
-        cues:["Arms straight, pull to T","Squeeze shoulder blades","Controlled return"],
-        tip:"Activates rear delt to balance pressing load"},
-      {name:"Thoracic Extension", dur:"90s",
-        feel:"Mid-back opening backward",
-        cues:["Hands behind head, extend backward over bench edge","Let gravity work","Don't extend from lower back"],
-        tip:"Extension improves pressing mechanics and reduces lower back compensation"},
-      {name:"Wrist Prep", dur:"60s",
-        feel:"Forearm extensors and wrist joint",
-        cues:["Slow full circles each direction","Then prayer stretch","Then reverse prayer"],
-        tip:"Pressing volume is hard on wrists — prep them"}
-    ]},
-    {id:"post-quick", title:"Post Quick", time:"13 min", exercises:[
-      {name:"Doorway Pec Stretch", dur:"90s each side", critical:true,
-        feel:"Chest and front delt at three heights",
-        cues:["Try low (lower chest), mid (main pec), high (upper pec/front delt)","30s each or focus on tightest"],
-        tip:"Non-negotiable after every push session"},
-      {name:"Foam Roller Thoracic Extension", dur:"90s", critical:true,
-        feel:"Mid-back opening and extending",
-        cues:["Roller perpendicular to spine at mid-back","Arms crossed or hands behind head","Let gravity extend you over roller","Work up and down a few segments"],
-        tip:"Counters forward flexion from pressing"},
-      {name:"Wall-Supported ER Stretch", dur:"75s right, 105s left", critical:true, mod:true,
-        feel:"Deep posterior shoulder and external rotators",
-        cues:["Arm at 90 degrees forearm against wall","Rotate chest away","Shoulder blade down","Left side 30s extra always"],
-        tip:"Pressing repeatedly internally rotates the shoulder — this directly counteracts that"},
-      {name:"Overhead Tricep Stretch", dur:"60s each side",
-        feel:"Long head of tricep",
-        cues:["Arm overhead elbow bent behind head","Gently pull elbow with other hand","Ribs down"],
-        tip:"Overhead extension volume loads long head heavily"},
-      {name:"Cross-Body Shoulder", dur:"60s each side",
-        feel:"Rear delt and posterior shoulder",
-        cues:["Arm across chest, other arm pulls","Shoulder stays down — don't shrug"],
-        tip:"Balances internal rotation from heavy pressing"},
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep dull ache front of hip",
-        cues:["Standard placement","Breathing test to confirm","Left side first and longer"],
-        tip:"Daily psoas release regardless of training day — your restriction level requires consistent attention"}
-    ]},
-    {id:"post-extended", title:"Post Extended", time:"20 min", exercises:[
-      {name:"Doorway Pec Stretch", dur:"90s each side", critical:true,
-        feel:"Chest and front delt at three heights",
-        cues:["Try low (lower chest), mid (main pec), high (upper pec/front delt)","30s each or focus on tightest"],
-        tip:"Non-negotiable after every push session"},
-      {name:"Foam Roller Thoracic Extension", dur:"90s", critical:true,
-        feel:"Mid-back opening and extending",
-        cues:["Roller perpendicular to spine at mid-back","Arms crossed or hands behind head","Let gravity extend you over roller","Work up and down a few segments"],
-        tip:"Counters forward flexion from pressing"},
-      {name:"Wall-Supported ER Stretch", dur:"75s right, 105s left", critical:true, mod:true,
-        feel:"Deep posterior shoulder and external rotators",
-        cues:["Arm at 90 degrees forearm against wall","Rotate chest away","Shoulder blade down","Left side 30s extra always"],
-        tip:"Pressing repeatedly internally rotates the shoulder — this directly counteracts that"},
-      {name:"Overhead Tricep Stretch", dur:"60s each side",
-        feel:"Long head of tricep",
-        cues:["Arm overhead elbow bent behind head","Gently pull elbow with other hand","Ribs down"],
-        tip:"Overhead extension volume loads long head heavily"},
-      {name:"Cross-Body Shoulder", dur:"60s each side",
-        feel:"Rear delt and posterior shoulder",
-        cues:["Arm across chest, other arm pulls","Shoulder stays down — don't shrug"],
-        tip:"Balances internal rotation from heavy pressing"},
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep dull ache front of hip",
-        cues:["Standard placement","Breathing test to confirm","Left side first and longer"],
-        tip:"Daily psoas release regardless of training day — your restriction level requires consistent attention"},
-      {name:"Sleeper Stretch", dur:"90s right, 2 min left", mod:true,
-        feel:"Deep posterior shoulder capsule",
-        cues:["Lie on side, arm at 90 degrees","Other hand gently presses forearm toward floor","Don't force — subtle movement only","Left side 30s extra always"],
-        tip:"Reaches posterior capsule deeper than wall version — worth doing after heavy pressing volume"},
-      {name:"Supine Butterfly", dur:"2 min",
-        feel:"Inner thighs and deep outer hips — gravity-driven opening",
-        cues:["Lie on back, knees bent, feet flat — let knees fall outward","Hands lightly on inner thighs, no pushing","Every exhale knees drop further"],
-        tip:"Directly targets your 0% external rotation — do this after every heavy pressing session"},
-      {name:"Legs Up the Wall", dur:"3 min",
-        feel:"Gentle stretch back of legs, sense of relief in lower legs",
-        cues:["Hips close to wall","Arms relaxed at sides, palms up","Breathe slow, longer exhale than inhale"],
-        tip:"Best done at the very end of a heavy session — signals to your nervous system that training is over"}
-    ]}
-  ];
+function pushATimeBands(){
+  const wallERWarmup = (dur) => ({name:"Wall-Supported ER Stretch", dur, critical:true, mod:true,
+    feel:"Deep posterior shoulder and external rotators",
+    cues:["Arm at 90 degrees forearm against wall","Rotate chest away gently","Shoulder blade stays down","Left side double time — 41% vs 87% right"],
+    tip:"Activates external rotators to protect shoulder under pressing load"});
+  const bandPullApart = {name:"Band Pull-Apart", dur:"15 reps",
+    feel:"Rear delts and mid-back engaging",
+    cues:["Arms straight pull to T","Squeeze shoulder blades","Controlled return"],
+    tip:"Balances anterior pressing load on shoulder"};
+  const doorwayPec = (dur) => ({name:"Doorway Pec Stretch", dur, critical:true,
+    feel:"Chest and front delt — try low, mid, high",
+    cues:["Forearm on doorframe at 90 degrees","Step through gently","Shoulder blade doesn't wing"],
+    tip:"Most time-sensitive post-push release — chest is Tier 1 priority"});
+  const wallERCooldown = (dur) => ({name:"Wall-Supported ER Stretch", dur, critical:true, mod:true,
+    feel:"Deep posterior shoulder",
+    cues:["Standard placement","Left double time"],
+    tip:"Pressing repeatedly internally rotates shoulder — restore ER while tissue is warm"});
+  const foamRollerThoracic = (dur) => ({name:"Foam Roller Thoracic Extension", dur,
+    feel:"Mid-back opening and extending",
+    cues:["Roller perpendicular to spine at mid-back","Arms crossed or hands behind head","Let gravity extend you over roller"],
+    tip:"Counters forward flexion from pressing — best done at gym while roller is available. Requires foam roller — substitute with static stretch if unavailable at your gym."});
+  const overheadTricep = (dur) => ({name:"Overhead Tricep Stretch", dur,
+    feel:"Long head of tricep",
+    cues:["Arm overhead elbow bent","Pull with other hand","Ribs stay down"],
+    tip:"Overhead extension volume loads long head"});
+  const crossBodyShoulder = (dur) => ({name:"Cross-Body Shoulder", dur,
+    feel:"Rear delt and posterior shoulder",
+    cues:["Arm across chest","Other arm pulls","Shoulder stays down"],
+    tip:"Balances internal rotation from pressing"});
+  const latStretchOverhead = (dur) => ({name:"Lat Stretch Overhead", dur,
+    feel:"Lat from armpit to hip",
+    cues:["Grab rack or doorframe overhead","Lean away slightly","Breathe into ribcage"],
+    tip:"Ab wheel rollout loads lats significantly — release post-push even on a push day"});
+  const wristFlexor = (dur) => ({name:"Wrist Flexor Stretch", dur,
+    feel:"Inside of forearm",
+    cues:["Arm straight palm up","Pull fingers back"],
+    tip:"Pressing volume accumulates wrist stress"});
+
+  const warmup60 = [wallERWarmup("30s right, 60s left"), bandPullApart];
+  const cooldown90 = [doorwayPec("2 min each side"), wallERCooldown("75s right, 105s left"), foamRollerThoracic("2 min"), overheadTricep("60s each side"), crossBodyShoulder("45s each side"), latStretchOverhead("45s each side"), wristFlexor("30s each side")];
+
+  return {
+    30: {warmupMin:0, workoutMin:27, cooldownMin:3, warmup:[], cooldown:[doorwayPec("90s each side")]},
+    45: {warmupMin:0, workoutMin:40, cooldownMin:5, warmup:[], cooldown:[doorwayPec("90s each side"), wallERCooldown("30s right, 60s left")]},
+    60: {warmupMin:2, workoutMin:50, cooldownMin:8, warmup:warmup60, cooldown:[doorwayPec("90s each side"), wallERCooldown("45s right, 75s left"), foamRollerThoracic("90s"), overheadTricep("45s each side")]},
+    75: {warmupMin:2, workoutMin:63, cooldownMin:10, warmup:warmup60, cooldown:[doorwayPec("2 min each side"), wallERCooldown("60s right, 90s left"), foamRollerThoracic("90s"), overheadTricep("45s each side"), crossBodyShoulder("30s each side")]},
+    90: {warmupMin:2, workoutMin:73, cooldownMin:15, warmup:warmup60, cooldown:cooldown90},
+    105: {warmupMin:2, workoutMin:88, cooldownMin:15, warmup:warmup60, cooldown:cooldown90},
+    120: {warmupMin:2, workoutMin:103, cooldownMin:15, warmup:warmup60, cooldown:cooldown90}
+  };
 }
 
-function pushBSections(){
-  return [
-    {id:"pre-quick", title:"Pre Quick", time:"8.5 min", exercises:[
-      {name:"Wall-Supported ER Stretch", dur:"60s right, 90s left", critical:true, mod:true,
-        feel:"Deep posterior shoulder and external rotators",
-        cues:["Arm at 90 degrees forearm against wall","Rotate chest away","Shoulder blade down","Left side 30s extra — critical before OHP"],
-        tip:"OHP is the highest shoulder demand movement you do — ER activation here is non-negotiable"},
-      {name:"Overhead Shoulder Stretch", dur:"90s each side", critical:true,
-        feel:"Lat, tricep, side of shoulder",
-        cues:["Arm overhead elbow bent","Pull elbow gently","Ribs stay down"],
-        tip:"Your overhead scores 54% — single most important pre-OHP stretch"},
-      {name:"Pec Minor Stretch", dur:"60s each side", critical:true,
-        feel:"Deep chest inside shoulder joint",
-        cues:["Arm at 90/90 on wall","Rotate chest away","Don't force"],
-        tip:"Tight pec minor causes shoulder impingement during OHP — more critical here than Push A"},
-      {name:"Band Pull-Apart", dur:"15 reps",
-        feel:"Rear delts and mid-back",
-        cues:["Arms straight, pull to T","Squeeze shoulder blades","Controlled return"],
-        tip:"Critical before OHP to balance anterior/posterior shoulder load"},
-      {name:"Wrist Prep", dur:"60s",
-        feel:"Forearm extensors and wrist joint",
-        cues:["Slow full circles each direction","Then prayer stretch","Then reverse prayer"],
-        tip:"OHP and close-grip bench stress wrists from different angles — prep both"}
-    ]},
-    {id:"pre-extended", title:"Pre Extended", time:"12 min", exercises:[
-      {name:"Wall-Supported ER Stretch", dur:"75s right, 105s left", critical:true, mod:true,
-        feel:"Deep posterior shoulder and external rotators",
-        cues:["Arm at 90 degrees forearm against wall","Rotate chest away","Shoulder blade down","Left side 30s extra — critical before OHP"],
-        tip:"OHP is the highest shoulder demand movement you do — ER activation here is non-negotiable"},
-      {name:"Overhead Shoulder Stretch", dur:"90s each side", critical:true,
-        feel:"Lat, tricep, side of shoulder",
-        cues:["Arm overhead elbow bent","Pull elbow gently","Ribs stay down"],
-        tip:"Your overhead scores 54% — single most important pre-OHP stretch"},
-      {name:"Pec Minor Stretch", dur:"90s each side", critical:true,
-        feel:"Deep chest inside shoulder joint",
-        cues:["Arm at 90/90 on wall","Rotate chest away","Don't force"],
-        tip:"Tight pec minor causes shoulder impingement during OHP — more critical here than Push A"},
-      {name:"Band Pull-Apart", dur:"15 reps",
-        feel:"Rear delts and mid-back",
-        cues:["Arms straight, pull to T","Squeeze shoulder blades","Controlled return"],
-        tip:"Critical before OHP to balance anterior/posterior shoulder load"},
-      {name:"Thoracic Extension", dur:"90s",
-        feel:"Mid-back opening backward",
-        cues:["Hands behind head, extend backward over bench edge","Let gravity work","Don't extend from lower back"],
-        tip:"OHP demands thoracic extension — your 51% thorax score means this needs attention specifically on Push B"},
-      {name:"Wrist Prep", dur:"60s",
-        feel:"Forearm extensors and wrist joint",
-        cues:["Slow full circles each direction","Then prayer stretch","Then reverse prayer"],
-        tip:"OHP and close-grip bench stress wrists from different angles — prep both"}
-    ]},
-    {id:"post-quick", title:"Post Quick", time:"13 min", exercises:[
-      {name:"Doorway Pec Stretch", dur:"90s each side", critical:true,
-        feel:"Chest and front delt at three heights",
-        cues:["Try low (lower chest), mid (main pec), high (upper pec/front delt)","30s each or focus on tightest"],
-        tip:"After OHP and incline volume — non-negotiable"},
-      {name:"Foam Roller Thoracic Extension", dur:"90s", critical:true,
-        feel:"Mid-back opening",
-        cues:["Roller perpendicular to spine at mid-back","Arms crossed or hands behind head","Let gravity extend you over roller"],
-        tip:"OHP compresses thoracic spine significantly — restore it immediately after"},
-      {name:"Wall-Supported ER Stretch", dur:"75s right, 105s left", critical:true, mod:true,
-        feel:"Deep posterior shoulder",
-        cues:["Standard placement","Left 30s extra","Shoulder blade down"],
-        tip:"OHP is the highest internal rotation load you do — ER restore is critical post-session"},
-      {name:"Overhead Tricep Stretch", dur:"60s each side",
-        feel:"Long head tricep",
-        cues:["Arm overhead elbow bent behind head","Gently pull elbow with other hand","Ribs down"],
-        tip:"Overhead extension volume is highest on Push B"},
-      {name:"Cross-Body Shoulder", dur:"60s each side",
-        feel:"Rear delt and posterior shoulder",
-        cues:["Arm across chest, other arm pulls","Shoulder stays down — don't shrug"],
-        tip:"Balances pressing load"},
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep front of hip",
-        cues:["Standard placement","Breathing test to confirm","Left side first and longer"],
-        tip:"Daily psoas release — left side priority"}
-    ]},
-    {id:"post-extended", title:"Post Extended", time:"20 min", exercises:[
-      {name:"Doorway Pec Stretch", dur:"90s each side", critical:true,
-        feel:"Chest and front delt at three heights",
-        cues:["Try low (lower chest), mid (main pec), high (upper pec/front delt)","30s each or focus on tightest"],
-        tip:"After OHP and incline volume — non-negotiable"},
-      {name:"Foam Roller Thoracic Extension", dur:"90s", critical:true,
-        feel:"Mid-back opening",
-        cues:["Roller perpendicular to spine at mid-back","Arms crossed or hands behind head","Let gravity extend you over roller"],
-        tip:"OHP compresses thoracic spine significantly — restore it immediately after"},
-      {name:"Wall-Supported ER Stretch", dur:"75s right, 105s left", critical:true, mod:true,
-        feel:"Deep posterior shoulder",
-        cues:["Standard placement","Left 30s extra","Shoulder blade down"],
-        tip:"OHP is the highest internal rotation load you do — ER restore is critical post-session"},
-      {name:"Overhead Tricep Stretch", dur:"60s each side",
-        feel:"Long head tricep",
-        cues:["Arm overhead elbow bent behind head","Gently pull elbow with other hand","Ribs down"],
-        tip:"Overhead extension volume is highest on Push B"},
-      {name:"Cross-Body Shoulder", dur:"60s each side",
-        feel:"Rear delt and posterior shoulder",
-        cues:["Arm across chest, other arm pulls","Shoulder stays down — don't shrug"],
-        tip:"Balances pressing load"},
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep front of hip",
-        cues:["Standard placement","Breathing test to confirm","Left side first and longer"],
-        tip:"Daily psoas release — left side priority"},
-      {name:"Sleeper Stretch", dur:"90s right, 2 min left", mod:true,
-        feel:"Deep posterior shoulder capsule",
-        cues:["Lie on side, arm at 90 degrees","Other hand gently presses forearm toward floor","Don't force — subtle movement only","Left side 30s extra always"],
-        tip:"Deeper posterior capsule release after your heaviest overhead pressing session"},
-      {name:"Supine Butterfly", dur:"2 min",
-        feel:"Inner thighs and deep outer hips — gravity-driven opening",
-        cues:["Lie on back, knees bent, feet flat — let knees fall outward","Hands lightly on inner thighs, no pushing","Every exhale knees drop further"],
-        tip:"Directly targets your 0% external rotation — do this after every heavy pressing session"},
-      {name:"Legs Up the Wall", dur:"3 min",
-        feel:"Gentle stretch back of legs, sense of relief in lower legs",
-        cues:["Hips close to wall","Arms relaxed at sides, palms up","Breathe slow, longer exhale than inhale"],
-        tip:"Best done at the very end of a heavy session — signals to your nervous system that training is over"}
-    ]}
-  ];
+function pushBTimeBands(){
+  const wallERWarmup = (dur) => ({name:"Wall-Supported ER Stretch", dur, critical:true, mod:true,
+    feel:"Deep posterior shoulder and external rotators",
+    cues:["Arm at 90 degrees forearm against wall","Rotate chest away gently","Shoulder blade stays down","Left side double time — 41% vs 87% right"],
+    tip:"Activates external rotators to protect shoulder under pressing load"});
+  const overheadShoulder = (dur) => ({name:"Overhead Shoulder Stretch", dur,
+    feel:"Lat and tricep of reaching arm, side of shoulder",
+    cues:["Arm overhead elbow bent","Pull elbow gently","Ribs stay down"],
+    tip:"OHP demands overhead range — brief prep matters more here than Push A"});
+  const bandPullApart = {name:"Band Pull-Apart", dur:"15 reps",
+    feel:"Rear delts and mid-back engaging",
+    cues:["Arms straight pull to T","Squeeze shoulder blades","Controlled return"],
+    tip:"Balances anterior pressing load on shoulder"};
+  const doorwayPec = (dur) => ({name:"Doorway Pec Stretch", dur, critical:true,
+    feel:"Chest and front delt — try low, mid, high",
+    cues:["Forearm on doorframe at 90 degrees","Step through gently","Shoulder blade doesn't wing"],
+    tip:"Most time-sensitive post-push release — chest is Tier 1 priority"});
+  const wallERCooldown = (dur) => ({name:"Wall-Supported ER Stretch", dur, critical:true, mod:true,
+    feel:"Deep posterior shoulder",
+    cues:["Standard placement","Left double time"],
+    tip:"Pressing repeatedly internally rotates shoulder — restore ER while tissue is warm"});
+  const foamRollerThoracic = (dur) => ({name:"Foam Roller Thoracic Extension", dur, critical:true,
+    feel:"Mid-back opening",
+    cues:["Roller perpendicular to spine at mid-back","Arms crossed or hands behind head","Let gravity extend you over roller"],
+    tip:"OHP compresses thoracic spine more than any other push movement — more critical here than Push A. Requires foam roller — substitute with static stretch if unavailable at your gym."});
+  const lateralChildsPose = (dur) => ({name:"Lateral Child's Pose", dur,
+    feel:"QL and lateral lower back",
+    cues:["From child's pose walk hands to one side","Let hip sink opposite direction","Breathe into stretch"],
+    tip:"Suitcase carry loads QL asymmetrically — release at gym while still warm"});
+  const overheadTricep = (dur) => ({name:"Overhead Tricep Stretch", dur,
+    feel:"Long head of tricep",
+    cues:["Arm overhead elbow bent","Pull with other hand","Ribs stay down"],
+    tip:"Overhead extension volume loads long head"});
+  const crossBodyShoulder = (dur) => ({name:"Cross-Body Shoulder", dur,
+    feel:"Rear delt and posterior shoulder",
+    cues:["Arm across chest","Other arm pulls","Shoulder stays down"],
+    tip:"Balances internal rotation from pressing"});
+
+  const warmup45 = [wallERWarmup("30s right, 60s left"), bandPullApart];
+  const warmup60 = [wallERWarmup("30s right, 60s left"), overheadShoulder("30s each side"), bandPullApart];
+  const cooldown90 = [doorwayPec("2 min each side"), wallERCooldown("75s right, 105s left"), foamRollerThoracic("2.5 min"), lateralChildsPose("60s each side"), overheadTricep("60s each side"), crossBodyShoulder("45s each side")];
+
+  return {
+    30: {warmupMin:0, workoutMin:27, cooldownMin:3, warmup:[], cooldown:[doorwayPec("90s each side")]},
+    45: {warmupMin:2, workoutMin:38, cooldownMin:5, warmup:warmup45, cooldown:[doorwayPec("90s each side"), wallERCooldown("30s right, 60s left")]},
+    60: {warmupMin:3, workoutMin:49, cooldownMin:8, warmup:warmup60, cooldown:[doorwayPec("90s each side"), wallERCooldown("45s right, 75s left"), foamRollerThoracic("2 min"), lateralChildsPose("30s each side")]},
+    75: {warmupMin:3, workoutMin:62, cooldownMin:10, warmup:warmup60, cooldown:[doorwayPec("2 min each side"), wallERCooldown("60s right, 90s left"), foamRollerThoracic("2 min"), lateralChildsPose("45s each side")]},
+    90: {warmupMin:3, workoutMin:72, cooldownMin:15, warmup:warmup60, cooldown:cooldown90},
+    105: {warmupMin:3, workoutMin:87, cooldownMin:15, warmup:warmup60, cooldown:cooldown90},
+    120: {warmupMin:3, workoutMin:102, cooldownMin:15, warmup:warmup60, cooldown:cooldown90}
+  };
 }
 
-function pullASections(){
-  return [
-    {id:"pre-quick", title:"Pre Quick", time:"7.5 min", exercises:[
-      {name:"Child's Pose with Lat Reach", dur:"2 min each side", critical:true,
-        feel:"Full lat from hip to armpit",
-        cues:["From child's pose walk both hands to one side","Let hip sink opposite direction","Breathe into the stretch"],
-        tip:"Best pre-pull lat opener — hits full lat from hip to armpit"},
-      {name:"Lat Stretch Overhead", dur:"90s each side", critical:true,
-        feel:"Lat from armpit to hip",
-        cues:["Grab rack or doorframe overhead","Lean away","Breathe into side of ribcage"],
-        tip:"Tight lats limit pull-up depth and row range"},
-      {name:"Band Pull-Apart", dur:"15 reps",
-        feel:"Rear delts and mid-back",
-        cues:["Arms straight, pull to T","Squeeze shoulder blades","Controlled return"],
-        tip:"Activates exact muscles you're about to train"},
-      {name:"Bicep Tendon Warmup", dur:"90s",
-        feel:"Front of elbow and bicep tendon",
-        cues:["Light weight or band supinated curl","Very slow eccentric","Full range"],
-        tip:"Pull volume stresses bicep tendon — warm it up before heavy curls"}
-    ]},
-    {id:"pre-extended", title:"Pre Extended", time:"12 min", exercises:[
-      {name:"Child's Pose with Lat Reach", dur:"2 min each side", critical:true,
-        feel:"Full lat from hip to armpit",
-        cues:["From child's pose walk both hands to one side","Let hip sink opposite direction","Breathe into the stretch"],
-        tip:"Best pre-pull lat opener — hits full lat from hip to armpit"},
-      {name:"Lat Stretch Overhead", dur:"90s each side", critical:true,
-        feel:"Lat from armpit to hip",
-        cues:["Grab rack or doorframe overhead","Lean away","Breathe into side of ribcage"],
-        tip:"Tight lats limit pull-up depth and row range"},
-      {name:"Doorway Chest Opener", dur:"90s",
-        feel:"Chest and front delt opening",
-        cues:["Forearm on doorframe at 90 degrees","Step through gently","Shoulder blade doesn't wing out"],
-        tip:"Tight chest limits how far back you can pull — releasing it increases row and pull-up range"},
-      {name:"Wall-Supported ER Stretch", dur:"60s right, 90s left", mod:true,
-        feel:"Posterior shoulder and external rotators",
-        cues:["Standard placement","Left 30s extra"],
-        tip:"External rotation is required for proper overhead pulling position"},
-      {name:"Band Pull-Apart", dur:"15 reps",
-        feel:"Rear delts and mid-back",
-        cues:["Arms straight, pull to T","Squeeze shoulder blades","Controlled return"],
-        tip:"Activates exact muscles you're about to train"},
-      {name:"Thoracic Extension", dur:"90s",
-        feel:"Mid-back opening",
-        cues:["Hands behind head, extend backward over bench edge","Let gravity work","Don't extend from lower back"],
-        tip:"Mid-back extension improves row mechanics"},
-      {name:"Bicep Tendon Warmup", dur:"90s",
-        feel:"Front of elbow and bicep tendon",
-        cues:["Light weight or band supinated curl","Very slow eccentric","Full range"],
-        tip:"Pull volume stresses bicep tendon — warm it up before heavy curls"}
-    ]},
-    {id:"post-quick", title:"Post Quick", time:"13 min", exercises:[
-      {name:"Lat Stretch", dur:"90s each side", critical:true,
-        feel:"Lat from armpit to hip",
-        cues:["Grab rack or doorframe overhead","Lean away","Breathe into side of ribcage"],
-        tip:"Lats shorten significantly under pull volume — non-negotiable post-pull"},
-      {name:"Wall-Supported ER Stretch", dur:"75s right, 105s left", critical:true, mod:true,
-        feel:"Deep posterior shoulder",
-        cues:["Standard placement","Left 30s extra always"],
-        tip:"Rows repeatedly internally rotate the shoulder — ER restore is essential post-pull"},
-      {name:"Trap/Neck Release", dur:"60s each side",
-        feel:"Side of neck and upper trap",
-        cues:["Ear toward shoulder gently","No forcing","Slight forward chin tuck to increase stretch"],
-        tip:"Pull B has shrugs but Pull A still accumulates upper trap tension from rows"},
-      {name:"Posterior Shoulder", dur:"60s each side",
-        feel:"Rear delt and posterior capsule",
-        cues:["Cross-body arm pull","Shoulder stays down — don't shrug"],
-        tip:"Rows compress posterior shoulder significantly"},
-      {name:"Bicep Stretch", dur:"45s each side",
-        feel:"Front of upper arm and bicep tendon",
-        cues:["Arm behind you palm facing back","Gently extend elbow","Don't force"],
-        tip:"Curl volume accumulates tendon stress"},
-      {name:"Forearm Flexor Stretch", dur:"45s each side",
-        feel:"Inside of forearm",
-        cues:["Arm straight palm up","Pull fingers back gently"],
-        tip:"Grip-heavy pull sessions accumulate forearm fatigue fast"},
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep front of hip",
-        cues:["Standard placement","Breathing test to confirm","Left side first and longer"],
-        tip:"Daily psoas release — left side priority always"}
-    ]},
-    {id:"post-extended", title:"Post Extended", time:"20 min", exercises:[
-      {name:"Lat Stretch", dur:"90s each side", critical:true,
-        feel:"Lat from armpit to hip",
-        cues:["Grab rack or doorframe overhead","Lean away","Breathe into side of ribcage"],
-        tip:"Lats shorten significantly under pull volume — non-negotiable post-pull"},
-      {name:"Wall-Supported ER Stretch", dur:"75s right, 105s left", critical:true, mod:true,
-        feel:"Deep posterior shoulder",
-        cues:["Standard placement","Left 30s extra always"],
-        tip:"Rows repeatedly internally rotate the shoulder — ER restore is essential post-pull"},
-      {name:"Trap/Neck Release", dur:"60s each side",
-        feel:"Side of neck and upper trap",
-        cues:["Ear toward shoulder gently","No forcing","Slight forward chin tuck to increase stretch"],
-        tip:"Pull B has shrugs but Pull A still accumulates upper trap tension from rows"},
-      {name:"Posterior Shoulder", dur:"60s each side",
-        feel:"Rear delt and posterior capsule",
-        cues:["Cross-body arm pull","Shoulder stays down — don't shrug"],
-        tip:"Rows compress posterior shoulder significantly"},
-      {name:"Bicep Stretch", dur:"45s each side",
-        feel:"Front of upper arm and bicep tendon",
-        cues:["Arm behind you palm facing back","Gently extend elbow","Don't force"],
-        tip:"Curl volume accumulates tendon stress"},
-      {name:"Forearm Flexor Stretch", dur:"45s each side",
-        feel:"Inside of forearm",
-        cues:["Arm straight palm up","Pull fingers back gently"],
-        tip:"Grip-heavy pull sessions accumulate forearm fatigue fast"},
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep front of hip",
-        cues:["Standard placement","Breathing test to confirm","Left side first and longer"],
-        tip:"Daily psoas release — left side priority always"},
-      {name:"Sleeper Stretch", dur:"90s right, 2 min left", mod:true,
-        feel:"Deep posterior shoulder capsule",
-        cues:["Lie on side arm at 90","Other hand presses forearm toward floor gently","Left side 30s extra"],
-        tip:"Rows and pull-ups compress posterior capsule — sleeper stretch reaches deeper than wall version"},
-      {name:"Thoracic Rotation", dur:"60s each side",
-        feel:"Mid-back rotating",
-        cues:["Side-lying, knees stacked and bent 90°","Rotate top arm across body, follow with eyes","Let shoulder blade lift off floor"],
-        tip:"Restore rotation after rows compress it"},
-      {name:"Supine Butterfly", dur:"2 min",
-        feel:"Inner thighs and deep outer hips — gravity-driven opening",
-        cues:["Lie on back, knees bent, feet flat — let knees fall outward","Hands lightly on inner thighs, no pushing","Every exhale knees drop further"],
-        tip:"Directly targets your 0% external rotation"},
-      {name:"Legs Up the Wall", dur:"2.5 min",
-        feel:"Gentle stretch back of legs, sense of relief in lower legs",
-        cues:["Hips close to wall","Arms relaxed at sides, palms up","Breathe slow, longer exhale than inhale"],
-        tip:"Signals to your nervous system that training is over"}
-    ]}
-  ];
+function pullATimeBands(){
+  const latStretchOverhead = (dur) => ({name:"Lat Stretch Overhead", dur, critical:true,
+    feel:"Lat from armpit to hip",
+    cues:["Grab rack overhead","Lean away","Breathe into ribcage"],
+    tip:"Tight lats limit pull-up depth — brief opening before pulling matters"});
+  const bicepTendonWarmup = {name:"Bicep Tendon Warmup", dur:"60s",
+    feel:"Front of elbow and bicep tendon",
+    cues:["Light weight or band supinated curl","Very slow eccentric","Full range"],
+    tip:"Pull volume stresses bicep tendon — one minute reduces injury risk significantly"};
+  const latStretchCooldown = (dur, tip) => ({name:"Lat Stretch Overhead", dur, critical:true,
+    feel:"Lat from armpit to hip",
+    cues:["Grab rack overhead","Lean away","Breathe into ribcage"],
+    tip:tip || "Lat is Tier 1 — most important post-pull release and most time-sensitive"});
+  const bicepStretch = (dur) => ({name:"Bicep Stretch", dur,
+    feel:"Front of upper arm and bicep tendon",
+    cues:["Arm behind you palm facing back","Gently extend elbow","Don't force"],
+    tip:"Curl volume accumulates tendon stress — release while warm"});
+  const wallERCooldown = (dur) => ({name:"Wall-Supported ER Stretch", dur, critical:true, mod:true,
+    feel:"Deep posterior shoulder",
+    cues:["Standard placement","Left side extra time"],
+    tip:"Rows repeatedly internally rotate shoulder — ER restore essential post-pull"});
+  const posteriorShoulder = (dur) => ({name:"Posterior Shoulder", dur,
+    feel:"Rear delt and posterior capsule",
+    cues:["Cross-body arm pull","Shoulder stays down"],
+    tip:"Rows compress posterior shoulder significantly"});
+  const forearmFlexor = (dur, tip) => ({name:"Forearm Flexor Stretch", dur,
+    feel:"Inside of forearm",
+    cues:["Arm straight palm up","Pull fingers back gently"],
+    tip:tip || "Grip-heavy pull sessions accumulate forearm fatigue fast"});
+  const trapNeckRelease = (dur, tip) => ({name:"Trap/Neck Release", dur,
+    feel:"Side of neck and upper trap",
+    cues:["Ear toward shoulder gently","No forcing","Slight forward chin tuck to increase stretch"],
+    tip:tip || "Rows accumulate upper trap tension — release before it becomes neck tightness"});
+  const childsPoseLatReach = (dur) => ({name:"Child's Pose with Lat Reach", dur,
+    feel:"Full lat from hip to armpit",
+    cues:["From child's pose walk hands to one side","Let hip sink opposite direction"],
+    tip:"Final lat release — different angle than overhead stretch"});
+
+  const warmup60 = [latStretchOverhead("30s each side"), bicepTendonWarmup];
+  const cooldown90 = [latStretchCooldown("2 min each side"), wallERCooldown("75s right, 105s left"), bicepStretch("60s each side"), posteriorShoulder("60s each side"), trapNeckRelease("45s each side"), forearmFlexor("45s each side"), childsPoseLatReach("30s each side")];
+
+  return {
+    30: {warmupMin:0, workoutMin:27, cooldownMin:3, warmup:[], cooldown:[latStretchCooldown("90s each side")]},
+    45: {warmupMin:0, workoutMin:40, cooldownMin:5, warmup:[], cooldown:[latStretchCooldown("90s each side"), bicepStretch("45s each side")]},
+    60: {warmupMin:2, workoutMin:50, cooldownMin:8, warmup:warmup60, cooldown:[latStretchCooldown("90s each side"), wallERCooldown("45s right, 75s left"), bicepStretch("45s each side"), posteriorShoulder("45s each side")]},
+    75: {warmupMin:2, workoutMin:63, cooldownMin:10, warmup:warmup60, cooldown:[latStretchCooldown("2 min each side"), wallERCooldown("60s right, 90s left"), bicepStretch("45s each side"), posteriorShoulder("45s each side"), forearmFlexor("30s each side")]},
+    90: {warmupMin:2, workoutMin:73, cooldownMin:15, warmup:warmup60, cooldown:cooldown90},
+    105: {warmupMin:2, workoutMin:88, cooldownMin:15, warmup:warmup60, cooldown:cooldown90},
+    120: {warmupMin:2, workoutMin:103, cooldownMin:15, warmup:warmup60, cooldown:cooldown90}
+  };
 }
 
-function pullBSections(){
-  return [
-    {id:"pre-quick", title:"Pre Quick", time:"7.5 min", exercises:[
-      {name:"Lat Stretch Overhead", dur:"2 min each side", critical:true,
-        feel:"Lat from armpit to hip",
-        cues:["Grab rack overhead","Lean away","Breathe into ribcage"],
-        tip:"Weighted pull-ups demand full lat length — this directly improves range"},
-      {name:"Thoracic Extension", dur:"60s",
-        feel:"Mid-back opening",
-        cues:["Hands behind head extend backward over bench edge","Gravity does the work","Don't extend from lower back"],
-        tip:"Heavy rows compress thoracic spine — extend it before loading. More justified here than Pull A due to heavier row volume."},
-      {name:"Pallof Press Activation", dur:"10 reps each side",
-        feel:"Deep core anti-rotation tension",
-        cues:["Light band or cable","Press straight out hold 2s return","Hips square throughout"],
-        tip:"Also in your program — activation first improves recruitment during working sets"},
-      {name:"Bicep Tendon Warmup", dur:"90s",
-        feel:"Front of elbow and bicep tendon",
-        cues:["Light weight or band supinated curl","Very slow eccentric","Full range"],
-        tip:"Pull B has the most curl volume — tendon warmup is critical"}
-    ]},
-    {id:"pre-extended", title:"Pre Extended", time:"12 min", exercises:[
-      {name:"Lat Stretch Overhead", dur:"2 min each side", critical:true,
-        feel:"Lat from armpit to hip",
-        cues:["Grab rack overhead","Lean away","Breathe into ribcage"],
-        tip:"Weighted pull-ups demand full lat length — this directly improves range"},
-      {name:"Child's Pose with Lat Reach", dur:"2 min each side", critical:true,
-        feel:"Full lat from hip to armpit",
-        cues:["From child's pose walk both hands to one side","Let hip sink opposite direction","Breathe into the stretch"],
-        tip:"Best pre-pull lat opener — especially important before weighted pull-up volume"},
-      {name:"Thoracic Extension", dur:"90s",
-        feel:"Mid-back opening",
-        cues:["Hands behind head extend backward over bench edge","Gravity does the work","Don't extend from lower back"],
-        tip:"Heavy rows compress thoracic spine — extend it before loading"},
-      {name:"Wall-Supported ER Stretch", dur:"60s right, 90s left", mod:true,
-        feel:"Posterior shoulder and external rotators",
-        cues:["Standard placement","Left 30s extra"],
-        tip:"Overhead pulling requires external rotation — prep it before heavy weighted pull-ups"},
-      {name:"Pallof Press Activation", dur:"10 reps each side",
-        feel:"Deep core anti-rotation tension",
-        cues:["Light band or cable","Press straight out hold 2s return","Hips square throughout"],
-        tip:"Activation first improves recruitment during working sets"},
-      {name:"Bicep Tendon Warmup", dur:"90s",
-        feel:"Front of elbow and bicep tendon",
-        cues:["Light weight or band supinated curl","Very slow eccentric","Full range"],
-        tip:"Pull B has the most curl volume — tendon warmup is critical"},
-      {name:"Doorway Chest Opener", dur:"60s",
-        feel:"Chest and front delt opening",
-        cues:["Forearm on doorframe at 90 degrees","Step through gently","Shoulder blade doesn't wing out"],
-        tip:"Tight chest limits pulling range"}
-    ]},
-    {id:"post-quick", title:"Post Quick", time:"13 min", exercises:[
-      {name:"Lat Stretch", dur:"90s each side", critical:true,
-        feel:"Lat from armpit to hip",
-        cues:["Grab rack or doorframe overhead","Lean away","Breathe into side of ribcage"],
-        tip:"Weighted pull-up volume significantly shortens the lat — non-negotiable"},
-      {name:"Wall-Supported ER Stretch", dur:"75s right, 105s left", critical:true, mod:true,
-        feel:"Deep posterior shoulder",
-        cues:["Standard placement","Left 30s extra always"],
-        tip:"Seal rows and T-bar rows create significant internal rotation load — restore ER after every Pull B session"},
-      {name:"Trap/Neck Release", dur:"60s each side",
-        feel:"Side of neck and upper trap",
-        cues:["Ear toward shoulder","Chin tuck slightly"],
-        tip:"Shrugs create significant upper trap tension — release it before it becomes neck tightness"},
-      {name:"Posterior Shoulder", dur:"60s each side",
-        feel:"Rear delt and posterior capsule",
-        cues:["Cross-body arm pull","Shoulder stays down"],
-        tip:"Heavy rows compress posterior shoulder"},
-      {name:"Bicep Stretch", dur:"45s each side",
-        feel:"Front of upper arm and tendon",
-        cues:["Arm behind you palm facing back","Gently extend elbow","Don't force"],
-        tip:"Pull B has the most curl volume of any session"},
-      {name:"Forearm Flexor Stretch", dur:"45s each side",
-        feel:"Inside of forearm",
-        cues:["Arm straight palm up","Pull fingers back gently"],
-        tip:"Pull B has the most grip volume of any session"},
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep front of hip",
-        cues:["Standard placement","Breathing test to confirm","Left side first and longer"],
-        tip:"Daily psoas release — left side priority always"}
-    ]},
-    {id:"post-extended", title:"Post Extended", time:"20 min", exercises:[
-      {name:"Lat Stretch", dur:"90s each side", critical:true,
-        feel:"Lat from armpit to hip",
-        cues:["Grab rack or doorframe overhead","Lean away","Breathe into side of ribcage"],
-        tip:"Weighted pull-up volume significantly shortens the lat — non-negotiable"},
-      {name:"Wall-Supported ER Stretch", dur:"75s right, 105s left", critical:true, mod:true,
-        feel:"Deep posterior shoulder",
-        cues:["Standard placement","Left 30s extra always"],
-        tip:"Seal rows and T-bar rows create significant internal rotation load — restore ER after every Pull B session"},
-      {name:"Trap/Neck Release", dur:"60s each side",
-        feel:"Side of neck and upper trap",
-        cues:["Ear toward shoulder","Chin tuck slightly"],
-        tip:"Shrugs create significant upper trap tension — release it before it becomes neck tightness"},
-      {name:"Posterior Shoulder", dur:"60s each side",
-        feel:"Rear delt and posterior capsule",
-        cues:["Cross-body arm pull","Shoulder stays down"],
-        tip:"Heavy rows compress posterior shoulder"},
-      {name:"Bicep Stretch", dur:"45s each side",
-        feel:"Front of upper arm and tendon",
-        cues:["Arm behind you palm facing back","Gently extend elbow","Don't force"],
-        tip:"Pull B has the most curl volume of any session"},
-      {name:"Forearm Flexor Stretch", dur:"45s each side",
-        feel:"Inside of forearm",
-        cues:["Arm straight palm up","Pull fingers back gently"],
-        tip:"Pull B has the most grip volume of any session"},
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep front of hip",
-        cues:["Standard placement","Breathing test to confirm","Left side first and longer"],
-        tip:"Daily psoas release — left side priority always"},
-      {name:"Sleeper Stretch", dur:"90s right, 2 min left", mod:true,
-        feel:"Deep posterior shoulder capsule",
-        cues:["Lie on side arm at 90","Other hand presses forearm toward floor","Left side 30s extra always"],
-        tip:"Pull B is your heaviest pulling session — posterior capsule release is most important here"},
-      {name:"Thoracic Rotation", dur:"60s each side",
-        feel:"Mid-back rotating",
-        cues:["Side-lying, knees stacked and bent 90°","Rotate top arm across body, follow with eyes","Let shoulder blade lift off floor"],
-        tip:"Restore rotation after heavy row compression"},
-      {name:"Supine Butterfly", dur:"2 min",
-        feel:"Inner thighs and deep outer hips — gravity-driven opening",
-        cues:["Lie on back, knees bent, feet flat — let knees fall outward","Hands lightly on inner thighs, no pushing","Every exhale knees drop further"],
-        tip:"Directly targets your 0% external rotation"},
-      {name:"Legs Up the Wall", dur:"2.5 min",
-        feel:"Gentle stretch back of legs, sense of relief in lower legs",
-        cues:["Hips close to wall","Arms relaxed at sides, palms up","Breathe slow, longer exhale than inhale"],
-        tip:"Signals to your nervous system that training is over"}
-    ]}
-  ];
+function pullBTimeBands(){
+  const latStretchOverhead = (dur) => ({name:"Lat Stretch Overhead", dur, critical:true,
+    feel:"Lat from armpit to hip",
+    cues:["Grab rack overhead","Lean away","Breathe into ribcage"],
+    tip:"Tight lats limit pull-up depth — brief opening before pulling matters"});
+  const pallofPress = {name:"Pallof Press Activation", dur:"10 reps each side",
+    feel:"Deep core anti-rotation tension",
+    cues:["Light band or cable","Press straight out hold 2s return","Hips square throughout"],
+    tip:"Already in your program — activation first improves neuromuscular recruitment during working sets"};
+  const latStretchCooldown = (dur) => ({name:"Lat Stretch Overhead", dur, critical:true,
+    feel:"Lat from armpit to hip",
+    cues:["Grab rack overhead","Lean away","Breathe into ribcage"],
+    tip:"Lat is Tier 1 — most important post-pull release and most time-sensitive"});
+  const trapNeckRelease = (dur, critical, tip) => ({name:"Trap/Neck Release", dur, critical,
+    feel:"Side of neck and upper trap",
+    cues:["Ear toward shoulder gently","No forcing","Slight forward chin tuck to increase stretch"],
+    tip});
+  const wallERCooldown = (dur) => ({name:"Wall-Supported ER Stretch", dur, critical:true, mod:true,
+    feel:"Deep posterior shoulder",
+    cues:["Standard placement","Left side extra time"],
+    tip:"Rows repeatedly internally rotate shoulder — ER restore essential post-pull"});
+  const forearmFlexor = (dur) => ({name:"Forearm Flexor Stretch", dur,
+    feel:"Inside of forearm",
+    cues:["Arm straight palm up","Pull fingers back gently"],
+    tip:"Pull B has most grip volume — farmer's carry adds significantly"});
+  const lateralChildsPose = (dur) => ({name:"Lateral Child's Pose", dur,
+    feel:"QL and lateral lower back",
+    cues:["From child's pose walk hands to one side","Let hip sink opposite direction","Breathe into stretch"],
+    tip:"Side plank adds QL demand — release at gym while still warm"});
+  const bicepStretch = (dur) => ({name:"Bicep Stretch", dur,
+    feel:"Front of upper arm and bicep tendon",
+    cues:["Arm behind you palm facing back","Gently extend elbow","Don't force"],
+    tip:"Curl volume accumulates tendon stress — release while warm"});
+  const posteriorShoulder = (dur) => ({name:"Posterior Shoulder", dur,
+    feel:"Rear delt and posterior capsule",
+    cues:["Cross-body arm pull","Shoulder stays down"],
+    tip:"Rows compress posterior shoulder significantly"});
+
+  const warmup60 = [latStretchOverhead("30s each side"), pallofPress];
+  const cooldown90 = [latStretchCooldown("2 min each side"), wallERCooldown("75s right, 105s left"), trapNeckRelease("60s each side", true, "Shrugs create significant upper trap tension — more critical here than Pull A"), forearmFlexor("45s each side"), bicepStretch("45s each side"), posteriorShoulder("45s each side"), lateralChildsPose("45s each side")];
+
+  return {
+    30: {warmupMin:0, workoutMin:27, cooldownMin:3, warmup:[], cooldown:[latStretchCooldown("90s each side")]},
+    45: {warmupMin:0, workoutMin:40, cooldownMin:5, warmup:[], cooldown:[latStretchCooldown("90s each side"), trapNeckRelease("45s each side", true, "Shrugs create significant upper trap tension — more critical here than Pull A")]},
+    60: {warmupMin:2, workoutMin:50, cooldownMin:8, warmup:warmup60, cooldown:[latStretchCooldown("90s each side"), wallERCooldown("45s right, 75s left"), trapNeckRelease("45s each side", true, "Shrugs create significant upper trap tension — more critical here than Pull A"), forearmFlexor("45s each side")]},
+    75: {warmupMin:2, workoutMin:63, cooldownMin:10, warmup:warmup60, cooldown:[latStretchCooldown("2 min each side"), wallERCooldown("60s right, 90s left"), trapNeckRelease("45s each side", true, "Shrugs create significant upper trap tension — more critical here than Pull A"), forearmFlexor("45s each side"), lateralChildsPose("30s each side")]},
+    90: {warmupMin:2, workoutMin:73, cooldownMin:15, warmup:warmup60, cooldown:cooldown90},
+    105: {warmupMin:2, workoutMin:88, cooldownMin:15, warmup:warmup60, cooldown:cooldown90},
+    120: {warmupMin:2, workoutMin:103, cooldownMin:15, warmup:warmup60, cooldown:cooldown90}
+  };
 }
 
-function legsASections(){
-  return [
-    {id:"pre-quick", title:"Pre Quick", time:"7.5 min", exercises:[
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep dull ache front of hip — breathing test to confirm",
-        cues:["Standard placement","Left side first and longer","Knee bend and straighten for active release"],
-        tip:"Front squat demands full hip flexion — released psoas directly improves squat depth"},
-      {name:"Hip Flexor Stretch 90/90", dur:"60s each side", critical:true, mod:true,
-        feel:"Front of hip and upper thigh of back leg",
-        cues:["Tuck pelvis","Breathe out and sink","After 45s lean slightly forward"],
-        tip:"Tight hip flexors limit squat depth and cause forward lean"},
-      {name:"Glute Bridges", dur:"15 reps, 2s hold", critical:true, mod:true,
-        feel:"Deep in both glutes",
-        cues:["Piriformis prep first if cramping","Drive through heels","Squeeze 2s at top"],
-        tip:"Activating glutes before squatting reduces lower back compensation"},
-      {name:"Standing Hamstring Stretch", dur:"45s each side", mod:true,
-        feel:"Back of thigh — pulling not sharp",
-        cues:["Open hip version","Flat back","Left side extra time"],
-        tip:"Warm hamstrings reduce injury risk on leg curl"}
-    ]},
-    {id:"pre-extended", title:"Pre Extended", time:"13 min", exercises:[
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep dull ache front of hip — breathing test to confirm",
-        cues:["Standard placement","Left side first and longer","Knee bend and straighten for active release"],
-        tip:"Front squat demands full hip flexion — released psoas directly improves squat depth"},
-      {name:"Hip Flexor Stretch 90/90", dur:"60s each side", critical:true, mod:true,
-        feel:"Front of hip and upper thigh of back leg",
-        cues:["Tuck pelvis","Breathe out and sink","After 45s lean slightly forward"],
-        tip:"Tight hip flexors limit squat depth and cause forward lean"},
-      {name:"Glute Bridges", dur:"15 reps, 2s hold", critical:true, mod:true,
-        feel:"Deep in both glutes",
-        cues:["Piriformis prep first if cramping","Drive through heels","Squeeze 2s at top"],
-        tip:"Activating glutes before squatting reduces lower back compensation"},
-      {name:"Supine Butterfly", dur:"2 min", critical:true,
-        feel:"Inner thighs and deep outer hips",
-        cues:["Lie on back, knees bent, feet flat — let knees fall outward","Hands lightly on inner thighs, no pushing","Every exhale knees drop further"],
-        tip:"0% external rotation directly limits squat mechanics — do before every leg session"},
-      {name:"Elevated Pigeon", dur:"90s each side", mod:true,
-        feel:"Deep outer glute",
-        cues:["Shin as parallel to bench as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
-        tip:"Opens hip for squat depth"},
-      {name:"Clamshells", dur:"15 reps each side",
-        feel:"Outer glute medius",
-        cues:["Feet and hips stacked","Only rotate as far as hip allows","2s lowering"],
-        tip:"Isolates glute medius which bridges don't hit as directly"},
-      {name:"Standing Hamstring Stretch", dur:"60s each side", mod:true,
-        feel:"Back of thigh — pulling not sharp",
-        cues:["Open hip version","Flat back","Left side extra time"],
-        tip:"Warm hamstrings reduce injury risk on leg curl"},
-      {name:"Calf Stretch", dur:"30s each side",
-        feel:"Mid-calf",
-        cues:["Heel off step","Straight knee then bent knee"],
-        tip:"Maintain your 100% ankle score"}
-    ]},
-    {id:"post-quick", title:"Post Quick", time:"10 min", exercises:[
-      {name:"Elevated Pigeon", dur:"2 min each side", critical:true, mod:true,
-        feel:"Deep outer glute",
-        cues:["Shin as parallel to bench as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
-        tip:"Front squats compress the hip — release it immediately after"},
-      {name:"Standing Hamstring Stretch", dur:"75s each side", critical:true, mod:true,
-        feel:"Back of thigh — pulling not sharp",
-        cues:["Open hip version","Flat back","Left side extra time and gentler"],
-        tip:"Leg curl volume shortens hamstring — release while warm"},
-      {name:"Quad Stretch", dur:"45s each side",
-        feel:"Front of thigh",
-        cues:["Pull heel to glute","Tuck pelvis slightly","Wall for balance if needed"],
-        tip:"Leg extension and leg press accumulate significant quad shortening"},
-      {name:"Calf Stretch", dur:"45s each side",
-        feel:"Calf and achilles",
-        cues:["Heel off step","Straight knee then bent knee"],
-        tip:"Always stretch calves after calf raises"},
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep front of hip",
-        cues:["Standard placement","Breathing test to confirm","Left side first and longer"],
-        tip:"Front squat loads hip flexor heavily — release post-session"}
-    ]},
-    {id:"post-extended", title:"Post Extended", time:"20 min", exercises:[
-      {name:"Elevated Pigeon", dur:"2.5 min each side", critical:true, mod:true,
-        feel:"Deep outer glute",
-        cues:["Shin as parallel to bench as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
-        tip:"Front squats compress the hip — release it immediately after"},
-      {name:"Standing Hamstring Stretch", dur:"90s each side", critical:true, mod:true,
-        feel:"Back of thigh — pulling not sharp",
-        cues:["Open hip","Left side priority","Flat back hinge"],
-        tip:"Leg curl volume shortens hamstring — release while warm"},
-      {name:"Couch Stretch", dur:"2 min each side", mod:true,
-        feel:"Deep front of hip — deeper than quad stretch",
-        cues:["⚠️ ACL: thick padding under back knee","Squeeze glute of back leg","Torso upright"],
-        tip:"Replaces 90/90 which isn't accessible yet — hits same hip flexor tissue more effectively for your current flexibility"},
-      {name:"Quad Stretch", dur:"30s each side",
-        feel:"Front of thigh",
-        cues:["Pull heel to glute","Tuck pelvis slightly","Wall for balance if needed"],
-        tip:"Leg extension and leg press accumulate significant quad shortening"},
-      {name:"Calf Stretch", dur:"30s each side",
-        feel:"Calf and achilles",
-        cues:["Heel off step","Straight knee then bent knee"],
-        tip:"Always stretch calves after calf raises"},
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep front of hip",
-        cues:["Standard placement","Breathing test to confirm","Left side first and longer"],
-        tip:"Front squat loads hip flexor heavily — release post-session"},
-      {name:"Supine Butterfly", dur:"2.5 min", critical:true,
-        feel:"Inner thighs and deep outer hips",
-        cues:["Lie on back, knees bent, feet flat — let knees fall outward","Hands lightly on inner thighs, no pushing","Every exhale knees drop further"],
-        tip:"Directly targets your 0% external rotation — highest priority stretch in the entire program"},
-      {name:"Sciatic Nerve Floss", dur:"90s", mod:true,
-        feel:"Mild tension down back of leg — never sharp",
-        cues:["Sit upright","Straighten knee while tilting chin to chest — reverse together","2s out 2s back"],
-        tip:"⚠️ Never hold. Never force."},
-      {name:"Legs Up the Wall", dur:"2.5 min",
-        feel:"Gentle stretch back of legs, sense of relief in lower legs",
-        cues:["Hips close to wall","Arms relaxed at sides, palms up","Breathe slow, longer exhale than inhale"],
-        tip:"Signals to your nervous system that training is over"}
-    ]}
-  ];
+function legsATimeBands(){
+  const psoRite = (dur) => ({name:"Pso-Rite Release", dur, critical:true,
+    feel:"Deep dull ache front of hip — breathing test to confirm",
+    cues:["One inch inside and below hip bone","Belly breathe — inhale increases pressure","Slow knee bend and straighten"],
+    tip:"Non-negotiable before front squat even at shortest session — nothing else fits at 30 min"});
+  const glueBridgesWarmup = (dur) => ({name:"Glute Bridges", dur, mod:true,
+    feel:"Deep in both glutes",
+    cues:["Drive through heels","Squeeze 2s at top","Piriformis prep first if cramping"],
+    tip:"Activates glutes before squatting — reduces lower back compensation"});
+  const hipFlexorWarmup = (dur) => ({name:"Hip Flexor Stretch", dur, critical:true,
+    feel:"Front of hip and upper thigh of back leg",
+    cues:["Tuck pelvis under","Breathe out and sink","If nothing shift back knee further"],
+    tip:"Front squat demands full hip flexion — brief opening here directly improves squat depth"});
+  const quadStretch = (dur) => ({name:"Quad Stretch", dur, critical:true,
+    feel:"Front of thigh",
+    cues:["Pull heel to glute","Tuck pelvis slightly","Wall for balance if needed"],
+    tip:"Quads are Tier 1 — most time-sensitive release after front squat volume"});
+  const hipFlexorCooldown = (dur) => ({name:"Hip Flexor Stretch", dur, critical:true,
+    feel:"Front of hip",
+    cues:["Tuck pelvis under","Breathe out and sink","If nothing shift back knee further"],
+    tip:"Hanging leg raise loads psoas heavily — release immediately after even in short sessions"});
+  const calfStretch = (dur) => ({name:"Calf Stretch", dur,
+    feel:"Calf and achilles",
+    cues:["Heel off step, straight knee first","Then bent knee for soleus"],
+    tip:"Ankle mobility maintenance — quick stretch to close out the session"});
+  const elevatedPigeon = (dur) => ({name:"Elevated Pigeon", dur, critical:true,
+    feel:"Deep outer glute",
+    cues:["Bench or desk at right height","Shin as parallel as flexibility allows","Hinge from hips not spine"],
+    tip:"Hip compression from squatting — release while tissue is warm at gym"});
+  const standingHamstring = (dur) => ({name:"Standing Hamstring Stretch", dur,
+    feel:"Back of thigh — pulling not sharp",
+    cues:["Open hip version","Flat back","Left side extra time"],
+    tip:"Hamstring is Tier 3 — briefer than quad"});
+  const foamRollerQuad = (dur) => ({name:"Foam Roller Quad Roll", dur,
+    feel:"Deep into quad tissue",
+    cues:["Face down on roller under quads","Slow roll from hip to knee","Pause on tender spots"],
+    tip:"Leg press and leg extension accumulate quad density — rolling releases it. Requires foam roller — substitute with static stretch if unavailable at your gym."});
+  const seatedLegCurl = (dur) => ({name:"Seated Leg Curl Stretch", dur,
+    feel:"Hamstring in a different position than standing version",
+    cues:["Sit on floor leg extended","Gentle forward lean with flat back","Open hip version still — no deep forward fold"],
+    tip:"Targets hamstring at a different point in its length — complements standing version"});
+
+  const warmup60 = [psoRite("75s each side"), glueBridgesWarmup("15 reps"), hipFlexorWarmup("45s each side")];
+  const cooldown90 = [quadStretch("90s each side"), hipFlexorCooldown("2 min each side"), elevatedPigeon("2.5 min each side"), standingHamstring("75s each side"), foamRollerQuad("75s each side"), calfStretch("45s each side"), seatedLegCurl("30s each side")];
+
+  return {
+    30: {warmupMin:2, workoutMin:23, cooldownMin:5, warmup:[psoRite("60s each side")], cooldown:[quadStretch("60s each side"), hipFlexorCooldown("45s each side"), calfStretch("30s each side")]},
+    45: {warmupMin:3, workoutMin:34, cooldownMin:8, warmup:[psoRite("60s each side"), glueBridgesWarmup("10 reps")], cooldown:[quadStretch("75s each side"), hipFlexorCooldown("60s each side"), elevatedPigeon("60s each side"), calfStretch("30s each side")]},
+    60: {warmupMin:5, workoutMin:43, cooldownMin:12, warmup:warmup60, cooldown:[quadStretch("90s each side"), hipFlexorCooldown("75s each side"), elevatedPigeon("90s each side"), standingHamstring("60s each side"), calfStretch("45s each side")]},
+    75: {warmupMin:5, workoutMin:55, cooldownMin:15, warmup:warmup60, cooldown:[quadStretch("90s each side"), hipFlexorCooldown("90s each side"), elevatedPigeon("2 min each side"), standingHamstring("60s each side"), foamRollerQuad("60s each side"), calfStretch("45s each side")]},
+    90: {warmupMin:5, workoutMin:65, cooldownMin:20, warmup:warmup60, cooldown:cooldown90},
+    105: {warmupMin:5, workoutMin:80, cooldownMin:20, warmup:warmup60, cooldown:cooldown90},
+    120: {warmupMin:5, workoutMin:95, cooldownMin:20, warmup:warmup60, cooldown:cooldown90}
+  };
 }
 
-function legsBSections(){
-  return [
-    {id:"pre-quick", title:"Pre Quick", time:"10 min", exercises:[
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep dull ache front of hip — breathing test to confirm",
-        cues:["Left side first 90s","Right side 75s","Knee bend and straighten for active release"],
-        tip:"Hip thrust and cable pull-through both demand full hip extension — tight psoas directly limits this and loads lower back instead"},
-      {name:"Piriformis Prep", dur:"3–4 min", critical:true, mod:true,
-        feel:"Deep outer glute releasing progressively",
-        cues:["Massage ball on outer right glute 30–60s on tender spots","Massage gun 20–30s same area","Figure-four stretch 45s right side","Repeat sequence left side"],
-        tip:"Hip thrust and pull-through require full glute firing — piriformis cramping will dominate the movement if you skip this"},
-      {name:"Glute Bridges", dur:"15 reps, 2s hold", critical:true, mod:true,
-        feel:"Deep in both glutes — not hamstrings or lower back",
-        cues:["Drive through heels","Squeeze 2s at top","Think of this as a practice rep for hip thrust — same pattern unloaded"],
-        tip:"If right outer hip still cramps after piriformis prep, reduce squeeze intensity slightly"},
-      {name:"Standing Hamstring Stretch", dur:"45s each side", mod:true,
-        feel:"Back of thigh — pulling not sharp",
-        cues:["Open hip version","Left side extra time","Flat back"],
-        tip:"Lying leg curl and lunge need warm pliable hamstrings"}
-    ]},
-    {id:"pre-extended", title:"Pre Extended", time:"15 min", exercises:[
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep dull ache front of hip — breathing test to confirm",
-        cues:["Left side first 90s","Right side 75s","Knee bend and straighten for active release"],
-        tip:"Hip thrust and cable pull-through both demand full hip extension — tight psoas directly limits this and loads lower back instead"},
-      {name:"Piriformis Prep", dur:"3–4 min", critical:true, mod:true,
-        feel:"Deep outer glute releasing progressively",
-        cues:["Massage ball on outer right glute 30–60s on tender spots","Massage gun 20–30s same area","Figure-four stretch 45s right side","Repeat sequence left side"],
-        tip:"Hip thrust and pull-through require full glute firing — piriformis cramping will dominate the movement if you skip this"},
-      {name:"Glute Bridges", dur:"15 reps, 2s hold", critical:true, mod:true,
-        feel:"Deep in both glutes — not hamstrings or lower back",
-        cues:["Drive through heels","Squeeze 2s at top","Think of this as a practice rep for hip thrust — same pattern unloaded"],
-        tip:"If right outer hip still cramps after piriformis prep, reduce squeeze intensity slightly"},
-      {name:"Supine Butterfly", dur:"2 min", critical:true,
-        feel:"Inner thighs and deep outer hips",
-        cues:["Lie on back, knees bent, feet flat — let knees fall outward","Hands lightly on inner thighs, no pushing","Every exhale knees drop further"],
-        tip:"Hip thrust requires hip external rotation — your 0% score makes this essential before loading"},
-      {name:"Elevated Pigeon", dur:"90s each side", mod:true,
-        feel:"Deep outer glute and hip",
-        cues:["Shin as parallel to bench as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
-        tip:"Opens hip for lunge and split squat depth"},
-      {name:"Hip Flexor Stretch", dur:"60s each side", mod:true,
-        feel:"Front of hip",
-        cues:["Tuck pelvis under","Breathe out and let hip sink","If nothing, shift back knee further behind"],
-        tip:"Cable pull-through and hip thrust both extend the hip — tight psoas fights that motion"},
-      {name:"Standing Hamstring Stretch", dur:"60s each side", mod:true,
-        feel:"Back of thigh — pulling not sharp",
-        cues:["Open hip version","Left side extra time","Flat back"],
-        tip:"Lying leg curl and lunge need warm pliable hamstrings"}
-    ]},
-    {id:"post-quick", title:"Post Quick", time:"10 min", exercises:[
-      {name:"Elevated Pigeon", dur:"2 min each side", critical:true, mod:true,
-        feel:"Deep outer glute",
-        cues:["Shin as parallel to bench as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
-        tip:"Hip thrust and pull-through compress posterior hip — most important post-Legs B stretch"},
-      {name:"Standing Hamstring Stretch", dur:"75s each side", critical:true, mod:true,
-        feel:"Back of thigh — pulling not sharp",
-        cues:["Open hip version","Left side extra time and gentler — significantly more restricted"],
-        tip:"Lying leg curl creates significant hamstring shortening — release while tissue is warm"},
-      {name:"Quad Stretch", dur:"45s each side",
-        feel:"Front of thigh",
-        cues:["Pull heel to glute","Tuck pelvis","Wall for balance"],
-        tip:"Lunge and split squat volume shortens quad — especially rectus femoris which crosses the hip"},
-      {name:"Calf Stretch", dur:"45s each side",
-        feel:"Calf and achilles",
-        cues:["Heel off step","Straight knee then bent knee"],
-        tip:"Release after calf raises"},
-      {name:"Pso-Rite Release", dur:"90s each side", critical:true, mod:true,
-        feel:"Deep front of hip",
-        cues:["Standard placement","Breathing test to confirm","Left side first and longer"],
-        tip:"Legs B is your highest hip demand day — post-session psoas release is essential"}
-    ]},
-    {id:"post-extended", title:"Post Extended", time:"21 min", exercises:[
-      {name:"Elevated Pigeon", dur:"2.5 min each side", critical:true, mod:true,
-        feel:"Deep outer glute",
-        cues:["Shin as parallel to bench as flexibility allows","Hinge from hips not spine","Every exhale let hips drop further"],
-        tip:"Hip thrust and pull-through compress posterior hip — most important post-Legs B stretch"},
-      {name:"Standing Hamstring Stretch", dur:"75s each side", critical:true, mod:true,
-        feel:"Back of thigh — pulling not sharp",
-        cues:["Open hip","Left side priority and gentler","Flat back"],
-        tip:"Lying leg curl creates significant hamstring shortening — release while tissue is warm"},
-      {name:"Couch Stretch", dur:"2 min each side", mod:true,
-        feel:"Deep front of hip",
-        cues:["⚠️ ACL: thick padding under back knee","Squeeze glute of back leg","Torso upright"],
-        tip:"Replaces 90/90 — hits hip flexor tissue more effectively for your current flexibility"},
-      {name:"Quad Stretch", dur:"30s each side",
-        feel:"Front of thigh",
-        cues:["Pull heel to glute","Tuck pelvis","Wall for balance"],
-        tip:"Lunge and split squat volume shortens quad — especially rectus femoris which crosses the hip"},
-      {name:"Calf Stretch", dur:"30s each side",
-        feel:"Calf and achilles",
-        cues:["Heel off step","Straight knee then bent knee"],
-        tip:"Release after calf raises"},
-      {name:"Pso-Rite Release", dur:"75s each side", critical:true, mod:true,
-        feel:"Deep front of hip",
-        cues:["Standard placement","Breathing test to confirm","Left side first and longer"],
-        tip:"Legs B is your highest hip demand day — post-session psoas release is essential"},
-      {name:"Supine Butterfly", dur:"2.5 min", critical:true,
-        feel:"Inner thighs and deep outer hips",
-        cues:["Lie on back, knees bent, feet flat — let knees fall outward","Hands lightly on inner thighs, no pushing","Every exhale knees drop further"],
-        tip:"Directly targets your 0% external rotation — highest priority stretch in the entire program"},
-      {name:"Wall-Supported ER Stretch", dur:"60s right, 90s left", mod:true,
-        feel:"Deep posterior shoulder",
-        cues:["Standard placement","Left 30s extra"],
-        tip:"General shoulder ER maintenance — left asymmetry warrants daily attention regardless of training day"},
-      {name:"Sciatic Nerve Floss", dur:"90s", mod:true,
-        feel:"Mild tension down back of leg — never sharp",
-        cues:["⚠️ Never hold. Never force.","Sit upright, straighten knee while tilting chin to chest — reverse together","2s out 2s back"],
-        tip:"Gentle and rhythmic only — never bounce"},
-      {name:"Legs Up the Wall", dur:"2 min",
-        feel:"Gentle stretch back of legs, sense of relief in lower legs",
-        cues:["Hips close to wall","Arms relaxed at sides, palms up","Breathe slow, longer exhale than inhale"],
-        tip:"Signals to your nervous system that training is over"},
-      {name:"Diaphragmatic Breathing", dur:"2 min",
-        feel:"Belly rising and falling — chest stays still",
-        cues:["Inhale 4 counts nose","Hold 2","Exhale 6 counts mouth"],
-        tip:"Signal to nervous system the session is done"}
-    ]}
-  ];
+function legsBTimeBands(){
+  const psoRite = (dur, tip) => ({name:"Pso-Rite Release", dur, critical:true,
+    feel:"Deep dull ache front of hip — breathing test to confirm",
+    cues:["One inch inside and below hip bone","Belly breathe — inhale increases pressure","Slow knee bend and straighten"],
+    tip});
+  const glueBridges = (dur, tip) => ({name:"Glute Bridges", dur, critical:true, mod:true,
+    feel:"Deep in both glutes",
+    cues:["Drive through heels","Squeeze 2s at top"],
+    tip});
+  const piriformisAbbrev = {name:"Piriformis Prep (abbreviated)", dur:"90s", critical:true,
+    feel:"Deep outer glute releasing progressively",
+    cues:["Massage ball only on right side — 30–45s on tender spots","Abbreviated but better than nothing before hip thrust"],
+    tip:"Full sequence skipped due to time — prioritize right side since that's where cramping occurs"};
+  const piriformisFull = {name:"Piriformis Prep (full sequence)", dur:"3 min", critical:true,
+    feel:"Deep outer glute releasing progressively",
+    cues:["Ball → gun → figure-four both sides","Right side first","30–60s ball on tender spots","20–30s gun same area","45s figure-four each side"],
+    tip:"Full sequence non-negotiable at this session length before hip thrust and cable pull-through"};
+  const elevatedPigeon = (dur) => ({name:"Elevated Pigeon", dur, critical:true,
+    feel:"Deep outer glute",
+    cues:["Bench or desk at right height","Shin as parallel as flexibility allows","Hinge from hips not spine"],
+    tip:"Hip thrust and pull-through compress posterior hip — most critical post-Legs B release"});
+  const standingHamstring = (dur, critical) => ({name:"Standing Hamstring Stretch", dur, critical,
+    feel:"Back of thigh — pulling not sharp",
+    cues:["Open hip version","Left side extra time"],
+    tip:"Lying leg curl creates significant hamstring shortening — release while tissue is warm"});
+  const calfStretch = (dur) => ({name:"Calf Stretch", dur,
+    feel:"Calf and achilles",
+    cues:["Heel off step, straight knee first","Then bent knee for soleus"],
+    tip:"Ankle mobility maintenance — quick stretch to close out the session"});
+  const quadStretch = (dur) => ({name:"Quad Stretch", dur,
+    feel:"Front of thigh",
+    cues:["Pull heel to glute","Tuck pelvis slightly","Wall for balance if needed"],
+    tip:"Lunge and split squat volume shortens quad"});
+  const trapNeckRelease = (dur) => ({name:"Trap/Neck Release", dur,
+    feel:"Side of neck and upper trap",
+    cues:["Ear toward shoulder gently","No forcing","Slight forward chin tuck to increase stretch"],
+    tip:"Farmer's carry accumulates upper trap tension"});
+  const hipFlexorStretch = (dur) => ({name:"Hip Flexor Stretch", dur, critical:true,
+    feel:"Front of hip",
+    cues:["Tuck pelvis under","Breathe out and sink","If nothing shift back knee further"],
+    tip:"Cable pull-through and hip thrust extend the hip all session — psoas was fighting that motion under load"});
+  const foamRollerQuad = (dur) => ({name:"Foam Roller Quad Roll", dur,
+    feel:"Deep into quad tissue",
+    cues:["Face down on roller under quads","Slow roll from hip to knee","Pause on tender spots"],
+    tip:"Leg press and leg extension accumulate quad density — rolling releases it. Requires foam roller — substitute with static stretch if unavailable at your gym."});
+  const wallER = {name:"Wall-Supported ER Stretch", dur:"30s right, 60s left", mod:true,
+    feel:"Deep posterior shoulder",
+    cues:["Standard placement","Left double time"],
+    tip:"General shoulder ER maintenance — left asymmetry warrants attention even on leg days when time allows"};
+
+  const warmup60 = [psoRite("75s each side", "Hip thrust and cable pull-through both demand full hip extension — tight psoas directly limits this and loads lower back instead"), piriformisFull, glueBridges("15 reps")];
+
+  return {
+    30: {warmupMin:3, workoutMin:22, cooldownMin:5,
+      warmup:[psoRite("60s each side", "Non-negotiable before hip thrust — piriformis prep skipped at this length, do it if you have any extra time"), glueBridges("10 reps", "Absolute minimum before hip thrust")],
+      cooldown:[elevatedPigeon("75s each side"), standingHamstring("45s each side", true), calfStretch("30s each side")]},
+    45: {warmupMin:5, workoutMin:32, cooldownMin:8,
+      warmup:[psoRite("75s each side", "Non-negotiable before hip thrust — piriformis prep skipped at this length, do it if you have any extra time"), piriformisAbbrev, glueBridges("10 reps", "Absolute minimum before hip thrust")],
+      cooldown:[elevatedPigeon("90s each side"), standingHamstring("60s each side", true), quadStretch("45s each side"), trapNeckRelease("30s each side"), calfStretch("30s each side")]},
+    60: {warmupMin:7, workoutMin:41, cooldownMin:12, warmup:warmup60,
+      cooldown:[elevatedPigeon("2 min each side"), standingHamstring("75s each side", true), hipFlexorStretch("60s each side"), quadStretch("45s each side"), trapNeckRelease("45s each side"), calfStretch("30s each side")]},
+    75: {warmupMin:7, workoutMin:53, cooldownMin:15, warmup:warmup60,
+      cooldown:[elevatedPigeon("2.5 min each side"), standingHamstring("75s each side", true), hipFlexorStretch("75s each side"), quadStretch("60s each side"), trapNeckRelease("45s each side"), calfStretch("45s each side")]},
+    90: {warmupMin:7, workoutMin:63, cooldownMin:20, warmup:warmup60,
+      cooldown:[elevatedPigeon("3 min each side"), standingHamstring("90s each side", true), hipFlexorStretch("90s each side"), quadStretch("60s each side"), trapNeckRelease("60s each side"), foamRollerQuad("60s each side"), calfStretch("30s each side"), wallER]},
+    105: {warmupMin:7, workoutMin:78, cooldownMin:20, warmup:warmup60,
+      cooldown:[elevatedPigeon("3 min each side"), standingHamstring("90s each side", true), hipFlexorStretch("90s each side"), quadStretch("60s each side"), trapNeckRelease("60s each side"), foamRollerQuad("60s each side"), calfStretch("30s each side"), wallER]},
+    120: {warmupMin:7, workoutMin:93, cooldownMin:20, warmup:warmup60,
+      cooldown:[elevatedPigeon("3 min each side"), standingHamstring("90s each side", true), hipFlexorStretch("90s each side"), quadStretch("60s each side"), trapNeckRelease("60s each side"), foamRollerQuad("60s each side"), calfStretch("30s each side"), wallER]}
+  };
 }
 
 const TABS = {
   daily: {label:"Daily", theme:"daily", type:"daily"},
-  pushA: {label:"Push A", theme:"push", type:"training", subtitle:"Primary: chest, front/side delts, triceps. Movements: Incline Barbell Press, Flat DB Press, Cable Flyes, Overhead Rope Extension, Pushdowns, Cable Lateral Raise.", sections:pushASections},
-  pullA: {label:"Pull A", theme:"pull", type:"training", subtitle:"Primary: lats, mid-back, biceps, rear delts. Movements: Pull-Ups, Barbell Row, Lat Pulldown, Seated Cable Row, Incline DB Curl, Face Pull.", sections:pullASections},
-  legsA: {label:"Legs A", theme:"legs", type:"training", subtitle:"Primary: quads, hamstrings, calves. Movements: Front Squat, Leg Press, Leg Extension, Seated Leg Curl, Calf Raise.", sections:legsASections},
-  pushB: {label:"Push B", theme:"push", type:"training", subtitle:"Primary: front/side/rear delts, chest, triceps. Movements: Overhead Press, Incline DB Press, Close-Grip Bench/Dips, Overhead Rope Extension, Rear Delt Flye, Cable Lateral Raise.", sections:pushBSections},
-  pullB: {label:"Pull B", theme:"pull", type:"training", subtitle:"Primary: lats, mid-back, biceps, core, traps. Movements: Weighted Pull-Up, Seal Row, T-Bar Row, Straight-Arm Pulldown, Incline DB Curl, Cable Curl, Pallof Press, Shrugs.", sections:pullBSections},
-  legsB: {label:"Legs B", theme:"legs", type:"training", subtitle:"Primary: hamstrings, glutes, quads, calves. Movements: Cable Pull-Through, Hip Thrust, Lying Leg Curl, Walking Lunge/Bulgarian Split Squat, Leg Extension, Calf Raises.", sections:legsBSections}
+  pushA: {label:"Push A", theme:"push", type:"training", subtitle:"Primary: chest, front/side delts, triceps. Movements: Incline Barbell Press, Flat DB Press, Cable Flyes, Overhead Rope Extension, Pushdowns, Cable Lateral Raise.", timeBands:pushATimeBands},
+  pullA: {label:"Pull A", theme:"pull", type:"training", subtitle:"Primary: lats, mid-back, biceps, rear delts. Movements: Pull-Ups, Barbell Row, Lat Pulldown, Seated Cable Row, Incline DB Curl, Face Pull.", timeBands:pullATimeBands},
+  legsA: {label:"Legs A", theme:"legs", type:"training", subtitle:"Primary: quads, hamstrings, calves. Movements: Front Squat, Leg Press, Leg Extension, Seated Leg Curl, Calf Raise.", timeBands:legsATimeBands},
+  pushB: {label:"Push B", theme:"push", type:"training", subtitle:"Primary: front/side/rear delts, chest, triceps. Movements: Overhead Press, Incline DB Press, Close-Grip Bench/Dips, Overhead Rope Extension, Rear Delt Flye, Cable Lateral Raise.", timeBands:pushBTimeBands},
+  pullB: {label:"Pull B", theme:"pull", type:"training", subtitle:"Primary: lats, mid-back, biceps, core, traps. Movements: Weighted Pull-Up, Seal Row, T-Bar Row, Straight-Arm Pulldown, Incline DB Curl, Cable Curl, Pallof Press, Shrugs.", timeBands:pullBTimeBands},
+  legsB: {label:"Legs B", theme:"legs", type:"training", subtitle:"Primary: hamstrings, glutes, quads, calves. Movements: Cable Pull-Through, Hip Thrust, Lying Leg Curl, Walking Lunge/Bulgarian Split Squat, Leg Extension, Calf Raises.", timeBands:legsBTimeBands}
 };
 const TAB_ORDER = ["daily","pushA","pullA","legsA","pushB","pullB","legsB"];
 
@@ -2285,6 +1921,33 @@ function sessionCardHTML(session){
   </div>`;
 }
 
+let selectedMorningTier = "short";
+
+function morningSectionHTML(){
+  const tiers = [
+    {key:"short", label:"Short", time:MORNING.short.time},
+    {key:"standard", label:"Standard", time:MORNING.standard.time},
+    {key:"full", label:"Full", time:MORNING.full.time}
+  ];
+  const data = MORNING[selectedMorningTier];
+  return `<div class="session-card" data-session-id="morning">
+    <div class="session-head">
+      <h3>Morning</h3>
+      <div class="toggle" role="group">
+        ${tiers.map(t => `<button class="toggle-btn ${t.key===selectedMorningTier ? "active" : ""}" data-action="selectMorningTier" data-tier="${t.key}" type="button">${t.label}<span>${esc(t.time)}</span></button>`).join("")}
+      </div>
+    </div>
+    <div class="ex-list">
+      ${data.exercises.map((ex,i) => exerciseHTML(ex, `daily__morning__${selectedMorningTier}__${i}`)).join("")}
+    </div>
+  </div>`;
+}
+
+function refreshMorningSection(){
+  const el = document.querySelector('.session-card[data-session-id="morning"]');
+  if (el) el.outerHTML = morningSectionHTML();
+}
+
 function renderDaily(){
   return `
     ${reminderBannerHTML()}
@@ -2292,28 +1955,60 @@ function renderDaily(){
     ${modsBannerHTML()}
     ${scoresCardHTML()}
     ${streakCardHTML()}
+    ${morningSectionHTML()}
     ${DAILY.sessions.map(sessionCardHTML).join("")}
   `;
 }
 
-function renderTraining(tab, tabKey){
-  const sections = tab.sections();
+const BAND_KEYS = [30,45,60,75,90,105,120];
+
+function trainingPhaseSectionsHTML(tabKey, band, data){
   return `
-    <p class="tab-subtitle">${esc(tab.subtitle)}</p>
-    <div class="section-grid">
-      ${sections.map(sec => `
-        <details class="section-card">
-          <summary>
-            <h3>${esc(sec.title)}</h3>
-            <span class="sec-time">${esc(sec.time)}</span>
-          </summary>
-          <div class="sec-body ex-list">
-            ${sec.exercises.map((ex,i) => exerciseHTML(ex, `${tabKey}__${sec.id}__${i}`)).join("")}
-          </div>
-        </details>
-      `).join("")}
+    ${data.warmup.length ? `
+      <div class="phase-section">
+        <div class="phase-head"><h3>Warmup</h3><span class="phase-time">${data.warmupMin} min</span></div>
+        <div class="ex-list">${data.warmup.map((ex,i) => exerciseHTML(ex, `${tabKey}__warmup__${band}__${i}`)).join("")}</div>
+      </div>
+    ` : ""}
+    <div class="workout-info">🏋️ Workout: ${data.workoutMin} min</div>
+    <div class="phase-section">
+      <div class="phase-head"><h3>Cooldown</h3><span class="phase-time">${data.cooldownMin} min</span></div>
+      <div class="ex-list">${data.cooldown.map((ex,i) => exerciseHTML(ex, `${tabKey}__cooldown__${band}__${i}`)).join("")}</div>
     </div>
   `;
+}
+
+function getSelectedBand(tabKey, bands){
+  let saved = null;
+  try { saved = localStorage.getItem(`mt-band-${tabKey}`); } catch(e){}
+  const n = saved ? parseInt(saved,10) : null;
+  return (n && bands[n]) ? n : 60;
+}
+
+function renderTraining(tab, tabKey){
+  const bands = tab.timeBands();
+  const selected = getSelectedBand(tabKey, bands);
+  return `
+    <p class="tab-subtitle">${esc(tab.subtitle)}</p>
+    <div class="band-selector" data-tab-key="${tabKey}">
+      ${BAND_KEYS.map(b => `<button type="button" class="band-btn ${b===selected ? "active" : ""}" data-action="selectBand" data-tab-key="${tabKey}" data-band="${b}">${b}</button>`).join("")}
+    </div>
+    <div class="band-content" id="bandContent">
+      ${trainingPhaseSectionsHTML(tabKey, selected, bands[selected])}
+    </div>
+  `;
+}
+
+function selectBand(tabKey, band){
+  try { localStorage.setItem(`mt-band-${tabKey}`, band); } catch(e){}
+  const bands = TABS[tabKey].timeBands();
+  const data = bands[band];
+  document.querySelectorAll(`.band-selector[data-tab-key="${tabKey}"] .band-btn`).forEach(b => {
+    b.classList.toggle("active", b.dataset.band === String(band));
+  });
+  const contentEl = document.getElementById("bandContent");
+  if (contentEl) contentEl.innerHTML = trainingPhaseSectionsHTML(tabKey, band, data);
+  renderActiveTimer();
 }
 
 function renderTab(key){
@@ -2818,6 +2513,8 @@ document.addEventListener("click", e => {
     if (action === "undoStreak") { undoStreakComplete(); return; }
     if (action === "toggleReminderPicker") { scoresUI.pickerOpen = !scoresUI.pickerOpen; refreshReminderBanner(); return; }
     if (action === "setLastSession") { setLastSession(actionEl.dataset.key); return; }
+    if (action === "selectBand") { selectBand(actionEl.dataset.tabKey, parseInt(actionEl.dataset.band, 10)); return; }
+    if (action === "selectMorningTier") { selectedMorningTier = actionEl.dataset.tier; refreshMorningSection(); return; }
   }
 
   if (e.target.closest("#stickyTimerBar .sticky-timer-text")) {
