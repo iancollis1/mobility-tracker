@@ -116,6 +116,39 @@
     margin-bottom:14px;
   }
 
+  /* ---- flare-up day protocol ---- */
+  .flareup-card{
+    background:#fffbeb;
+    border:2px solid #fde68a;
+    border-radius:6px;
+    padding:16px;
+    margin-bottom:16px;
+  }
+  .flareup-title-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  .flareup-head h2{font-family:'Bebas Neue', sans-serif;font-size:26px;letter-spacing:.02em;color:#78350f;margin:0;line-height:1.1}
+  .flareup-subtitle{font-family:'DM Mono', monospace;font-size:12px;color:#92400e;margin-bottom:4px}
+  .flareup-badge{display:inline-block;background:#fde68a;color:#78350f;font-family:'DM Mono', monospace;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:4px 9px;border-radius:4px;white-space:nowrap}
+  .flareup-note{font-family:'Inter', sans-serif;font-size:13px;line-height:1.55;color:#78350f;background:rgba(255,255,255,.55);border:1px solid #fde68a;border-radius:6px;padding:10px 12px;margin:10px 0 0}
+  .flareup-note-heat{font-family:'DM Mono', monospace;font-size:12.5px}
+  .flareup-sections{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+  details.flareup-section{background:var(--iron-soft);border:1px solid #fde68a;border-radius:6px;overflow:hidden}
+  details.flareup-section summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  details.flareup-section summary::-webkit-details-marker{display:none}
+  .flareup-section-title{font-family:'Bebas Neue', sans-serif;font-size:19px;letter-spacing:.01em;color:var(--chalk);line-height:1.2}
+  .flareup-section-time{font-family:'DM Mono', monospace;font-size:11px;color:var(--dim);font-weight:600;white-space:nowrap}
+  .flareup-chevron{color:var(--dim);font-size:20px;line-height:1;transform:rotate(90deg);transition:transform .15s;flex:0 0 auto;margin-left:auto}
+  details.flareup-section[open] .flareup-chevron{transform:rotate(270deg)}
+  .flareup-section-body{padding:0 14px 14px}
+  .flareup-section-note{font-family:'DM Mono', monospace;font-size:12px;color:var(--dim);line-height:1.5;margin:0 0 10px}
+  details.flareup-section.flareup-morning{background:#fffdf5}
+  details.flareup-section.flareup-hourly{background:#fff7ed}
+  details.flareup-section.flareup-evening{background:#eff6ff}
+  details.flareup-section.flareup-skip{background:#fef2f2;border-color:#fecaca}
+  details.flareup-section.flareup-skip .flareup-section-title{color:#991b1b}
+  .flareup-skip-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  .flareup-skip-list li{font-family:'Inter', sans-serif;font-size:12.5px;line-height:1.5;color:#991b1b;padding-left:16px;position:relative}
+  .flareup-skip-list li::before{content:"✕";position:absolute;left:0;top:1px;font-size:11px;color:#dc2626}
+
   /* ---- personal mods banner ---- */
   details.mods-banner{
     background:var(--iron-soft);
@@ -1055,6 +1088,105 @@ const MORNING = {
       cues:["Piriformis prep first if cramping: ball 30s → foam roller 20s → figure-four 45s right side","Drive through heels","Squeeze 2s at top"],
       tip:"Same cues as quick version, just more reps"}
   ]}
+};
+
+const FLAREUP = {
+  intro: "Your back pain is flexion-intolerant. On flare-up days, all sustained hip flexion positions make things worse not better. This protocol replaces your normal daily routine on bad days — do not combine with your standard Morning, Desk Break or Evening sessions. Heat before stretching always. Short sessions every hour beat one long session.",
+  heatNote: "🌡️ Apply heating pad 15–20 min BEFORE starting. Lie face down with heat on lower back while it works. Do not stretch during heating — just let it work.",
+  morning: {
+    label: "Morning — do after 15–20 min heating pad",
+    time: "~10 min",
+    exercises: [
+      {name:"Prone Lying", dur:"2 min", critical:true,
+        feel:"Natural arch returning to lower back — passive, no forcing",
+        cues:["Face down completely flat","arms relaxed at sides or under forehead","let lower back find its natural position","if uncomfortable place small pillow under hips","do not skip this — decompression before movement"],
+        tip:"Your pain pattern is flexion-intolerant — extension positions calm it, flexion aggravates it. This is your starting position on all flare-up days."},
+      {name:"Sphinx Pose", dur:"90s", critical:true,
+        feel:"Gentle opening through front of lower back — mild extension never sharp",
+        cues:["From face down prop onto forearms","elbows under shoulders","let lower back sag toward floor — don't push up","breathe slowly let gravity work","sharp pain = come back flat immediately"],
+        tip:"McKenzie extension approach — specifically for flexion-intolerant lower back pain. Repeat this throughout the day — it is your most powerful tool on flare-up days."},
+      {name:"Standing Lumbar Extension", dur:"10 reps",
+        feel:"Gentle opening through lower back",
+        cues:["Stand up slowly — roll to side first, push up with arms, avoid sit-up motion","hands on lower back","gently arch backward 10 times","hold 2–3 seconds at end range each rep","do this every single time you stand up today"],
+        tip:"Resets spine after transitioning to vertical. The moment you stand up, do this before anything else."},
+      {name:"Pso-Rite Release", dur:"60s each side", critical:true,
+        feel:"Deep dull ache front of hip — different from surface pressure",
+        cues:["Standard placement one inch inside and below hip bone","belly breathe","left side first always","slow knee bend and straighten"],
+        tip:"Psoas tightening is driving your lumbar compression — release it before you load it"},
+      {name:"Sphinx Pose", dur:"60s",
+        feel:"Gentle extension through lower back",
+        cues:["Same as above — prop on forearms","let lower back sag","breathe slowly"],
+        tip:"Second sphinx after Pso-Rite release — extension bookends the release work"},
+      {name:"Standing Hip Flexor Stretch", dur:"45s left, 30s right",
+        feel:"Front of hip of standing leg",
+        cues:["Tuck pelvis under — key move","stand tall don't lean forward","left side first and longer always"],
+        tip:"Left side only if right side provokes pain — never stretch into provocation on flare-up days"}
+    ]
+  },
+  hourly: {
+    label: "Every hour — 3 min, do not skip",
+    time: "3 min",
+    note: "Set a timer. Sitting is sustained flexion load on already irritated tissue — interrupting it every hour is non-negotiable today.",
+    exercises: [
+      {name:"Standing Lumbar Extension", dur:"10 reps", critical:true,
+        feel:"Gentle opening through lower back",
+        cues:["Stand up using arms not sit-up motion","hands on lower back","arch gently backward","hold 2–3 sec each rep"],
+        tip:"Do this the moment you stand up — every single time today without exception"},
+      {name:"Sphinx at countertop", dur:"45s",
+        feel:"Gentle extension through lower back",
+        cues:["Stand at kitchen counter or desk","hands on surface","let hips sag forward and lower back arch gently","don't need to get on the floor for this version"],
+        tip:"Standing sphinx variation — use this at the office or anywhere you can't get to the floor. Same extension benefit without the floor transition."},
+      {name:"Standing Hip Flexor Stretch", dur:"30s",
+        feel:"Front of hip of standing leg",
+        cues:["Left side only on flare-up days unless right side feels completely fine","tuck pelvis","stand tall"],
+        tip:"Skip right side if it provokes pain — never stretch into provocation"}
+    ]
+  },
+  evening: {
+    label: "Evening — after heating pad if still sore",
+    time: null,
+    note: "Heat for 15–20 min first if still aggravated. Skip any exercise that reproduces your pain — on flare-up days provocation is always wrong.",
+    exercises: [
+      {name:"Prone Lying", dur:"2 min",
+        feel:"Natural arch returning to lower back",
+        cues:["Face down flat","arms relaxed","let lower back decompress passively"],
+        tip:"Start here every evening on a flare-up day — not legs up the wall, not supine butterfly"},
+      {name:"Sphinx Pose", dur:"2 min",
+        feel:"Gentle extension through lower back",
+        cues:["Prop onto forearms","elbows under shoulders","let lower back sag toward floor","breathe slowly","this should feel relieving — if it doesn't reduce intensity"],
+        tip:"Longer hold in the evening — tissue has accumulated load all day and needs sustained extension input to reset"},
+      {name:"Standing Lumbar Extension", dur:"10 reps",
+        feel:"Gentle opening lower back",
+        cues:["Hands on lower back","arch gently backward","10 slow reps"],
+        tip:"Resets spine after transitioning to vertical. The moment you stand up, do this before anything else."},
+      {name:"Pso-Rite Release", dur:"90s each side", critical:true,
+        feel:"Deep dull ache front of hip",
+        cues:["Standard placement","left side first","belly breathe","slow knee bend and straighten"],
+        tip:"Most important release of the evening — psoas has been working all day"},
+      {name:"Sphinx Pose", dur:"90s",
+        feel:"Gentle extension",
+        cues:["Same as above"],
+        tip:"Final extension bookend before bed"},
+      {name:"Standing Hip Flexor Stretch", dur:"45s left, 30s right",
+        feel:"Front of hip of standing leg",
+        cues:["Left side first","tuck pelvis","stand tall","skip right side if it provokes"],
+        tip:"Final psoas lengthening before bed — sets you up better for tomorrow morning"},
+      {name:"Diaphragmatic Breathing", dur:"10 breaths",
+        feel:"Belly rising and falling — chest stays still",
+        cues:["Inhale 4 counts nose","hold 2","exhale 6 counts mouth"],
+        tip:"Calms the nervous system before sleep — pain sensitization is partly driven by nervous system upregulation, breathing downregulates it"}
+    ]
+  },
+  skip: [
+    "Legs Up the Wall — sustained hip flexion, aggravates flexion-intolerant pattern",
+    "90/90 Floor Stretch — sustained hip flexion",
+    "Child's Pose — lumbar flexion",
+    "Supine Butterfly — hip flexion load",
+    "Seated Sciatic Nerve Floss — flexion position",
+    "Dead Bugs — can create unwanted flexion stress",
+    "Right side hamstring stretch — skip if it reproduces pain",
+    "Any stretch that reproduces your pain — provocation is always the wrong signal on flare-up days"
+  ]
 };
 
 const DAILY = {
@@ -2306,8 +2438,53 @@ function refreshMorningSection(){
   if (el) el.outerHTML = morningSectionHTML();
 }
 
+function flareUpSectionHTML(key, data, extraClass){
+  return `<details class="flareup-section ${extraClass || ""}">
+    <summary>
+      <span class="flareup-section-title">${esc(data.label)}</span>
+      ${data.time ? `<span class="flareup-section-time">${esc(data.time)}</span>` : ""}
+      <span class="flareup-chevron">›</span>
+    </summary>
+    <div class="flareup-section-body">
+      ${data.note ? `<p class="flareup-section-note">${esc(data.note)}</p>` : ""}
+      <div class="ex-list">${data.exercises.map((ex,i) => exerciseHTML(ex, `daily__flareup__${key}__${i}`)).join("")}</div>
+    </div>
+  </details>`;
+}
+
+function flareUpCardHTML(){
+  return `<div class="flareup-card">
+    <div class="flareup-head">
+      <div class="flareup-title-row">
+        <h2>🔥 Flare-Up Day Protocol</h2>
+        <span class="flareup-badge">⚠️ Use on bad days only</span>
+      </div>
+      <div class="flareup-subtitle">Acute lower back aggravation</div>
+    </div>
+    <p class="flareup-note">${esc(FLAREUP.intro)}</p>
+    <p class="flareup-note flareup-note-heat">${esc(FLAREUP.heatNote)}</p>
+    <div class="flareup-sections">
+      ${flareUpSectionHTML("morning", FLAREUP.morning, "flareup-morning")}
+      ${flareUpSectionHTML("hourly", FLAREUP.hourly, "flareup-hourly")}
+      ${flareUpSectionHTML("evening", FLAREUP.evening, "flareup-evening")}
+      <details class="flareup-section flareup-skip">
+        <summary>
+          <span class="flareup-section-title">❌ Skip these today</span>
+          <span class="flareup-chevron">›</span>
+        </summary>
+        <div class="flareup-section-body">
+          <ul class="flareup-skip-list">
+            ${FLAREUP.skip.map(s => `<li>${esc(s)}</li>`).join("")}
+          </ul>
+        </div>
+      </details>
+    </div>
+  </div>`;
+}
+
 function renderDaily(){
   return `
+    ${flareUpCardHTML()}
     ${reminderBannerHTML()}
     <div class="intro-note">${esc(DAILY.note)}</div>
     ${modsBannerHTML()}
